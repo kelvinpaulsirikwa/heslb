@@ -1,0 +1,24 @@
+# Example File Structure
+
+Place your PDF files in this directory with these exact names:
+
+heslb-act-2004.pdf
+heslb-act-amendments-2020.pdf
+national-higher-education-policy-2021.pdf
+education-policy-framework-2022.pdf
+heslb-strategic-plan-2023-2028.pdf
+heslb-client-service-charter.pdf
+complaints-handling-policy.pdf
+heslb-annual-report-2023.pdf
+heslb-financial-statements-2023.pdf
+student-loan-application-guidelines.pdf
+loan-repayment-guidelines.pdf
+heslb-20th-anniversary-book.pdf
+heslb-newsletter-january-2024.pdf
+heslb-newsletter-february-2024.pdf
+
+When you run the seeder, these files will be:
+1. Copied to public/storage/downloads/
+2. Publication records created in database
+3. Properly linked to categories
+4. Ready for download on the website

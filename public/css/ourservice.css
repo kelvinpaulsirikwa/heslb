@@ -1,0 +1,258 @@
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .spi-service-wrapper {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e3f2fd;
+            min-height: auto;
+            display: block;
+            padding: 60px 0;
+            border: 3px solid #2196f3;
+            margin: 20px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .spi-container-fluid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        /* Service Section */
+        .spi-service-section {
+            text-align: center;
+        }
+
+        .spi-service-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #2d3748;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .spi-service-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 50px;
+            color: #4a5568;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        /* Stories Container */
+        .spi-stories-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .spi-story-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 380px;
+            border: 1px solid #f1f5f9;
+            height: 580px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .spi-story-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .spi-story-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .spi-story-content {
+            padding: 35px 25px 30px 25px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .spi-story-quote {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #4a5568;
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 100%;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            max-height: 100px;
+            overflow: hidden;
+        }
+
+        .spi-story-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .spi-story-author {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .spi-story-title {
+            font-size: 0.95rem;
+            color: #0e9bd5;
+            font-weight: 600;
+            margin-bottom: 0;
+            text-align: center;
+        }
+
+        .spi-read-story-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 0;
+            background-color: #0e9bd5;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        .spi-read-story-btn:hover {
+            background-color: #0c87b8;
+            transform: translateY(-1px);
+        }
+
+        .spi-read-story-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .spi-stories-container {
+                gap: 30px;
+                max-width: 900px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .spi-container-fluid {
+                padding: 0 16px;
+            }
+
+            .spi-service-wrapper {
+                padding: 40px 0;
+            }
+
+            .spi-service-title {
+                font-size: 1.6rem;
+                margin-bottom: 18px;
+            }
+
+            .spi-service-subtitle {
+                font-size: 1rem;
+                margin-bottom: 35px;
+            }
+
+            .spi-stories-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+            }
+
+            .spi-story-card {
+                max-width: 100%;
+                height: auto;
+                min-height: 480px;
+            }
+
+            .spi-story-content {
+                padding: 30px;
+            }
+
+            .spi-story-quote {
+                font-size: 0.95rem;
+                margin-bottom: 20px;
+                max-height: 90px;
+            }
+
+            .spi-story-author {
+                font-size: 1.3rem;
+            }
+
+            .spi-story-title {
+                font-size: 1rem;
+                margin-bottom: 30px;
+            }
+
+            .spi-read-story-btn {
+                padding: 14px 0;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .spi-service-title {
+                font-size: 1.3rem;
+            }
+
+            .spi-service-subtitle {
+                font-size: 0.95rem;
+            }
+
+            .spi-story-image {
+                height: 280px;
+            }
+
+            .spi-story-content {
+                padding: 25px;
+            }
+
+            .spi-story-quote {
+                font-size: 0.95rem;
+            }
+
+            .spi-story-author {
+                font-size: 1.2rem;
+            }
+
+            .spi-read-story-btn {
+                padding: 12px 0;
+                font-size: 0.95rem;
+            }
+        }
+    

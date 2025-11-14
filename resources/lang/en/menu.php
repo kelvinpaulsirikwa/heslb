@@ -1,0 +1,33 @@
+<?php
+
+return [
+    'home' => 'Home',
+    'about_us' => 'About Us',
+    'publications' => 'Publications',
+    'loan_application' => 'Loan Issuance',
+    'about_loan_application' => 'About Loan Application',
+    'obligations' => 'Obligations',
+    'application_guideline' => 'Application Guideline',
+    'faqs' => 'FAQs',
+    'olams' => 'Online Application (OLAMS)',
+    'loan_repayment' => 'Loan Repayment',
+    'samiascholarship' => 'Scholarships',
+    'about_loan_repayment' => 'About Loan Repayment',
+    'repayment_portal' => 'Repayment Portal',
+    'payment_gepg' => 'Payment Through GEPG',
+    'contacts' => 'Contacts',
+    'emrejesho' => 'e-Mrejesho',
+    'tanzania' => 'The United Republic of Tanzania',
+    'heslblongform' => 'Higher Education Students\' Loans Board',
+    'heslbmotto' => 'Investing in the Future',
+    'staffmail' => 'Staff Mail',
+    'repayloan' => 'Repay Loan',
+    'beneficiary' => 'Beneficiary',
+    'pgd_guideline_2022' => 'Postgraduate Loan Guideline (Revised) - 2022/2023',
+    'employer' => 'Employer Repayment Portal',
+    'postgraduate_loan' => 'Postgraduate Loan',
+    'pgd_guideline_revised' => 'PGD Guideline',
+    'loan' => 'Our Services',
+    'news' => 'News',
+
+];

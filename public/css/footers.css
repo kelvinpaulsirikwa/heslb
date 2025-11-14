@@ -1,0 +1,627 @@
+/* GLOBAL FONT FAMILY - Tahoma for entire website */
+body {
+    font-family: Tahoma, Geneva, sans-serif !important;
+}
+
+/* Ensure Font Awesome CSS is available */
+/* Using local Font Awesome from public/vendor; CDN import removed */
+
+/* Apply font family to text elements only, NOT to icons */
+h1, h2, h3, h4, h5, h6, p, span, div, a, button, input, textarea, select, label {
+    font-family: Tahoma, Geneva, sans-serif !important;
+}
+
+/* IMPORTANT: Preserve icon font families */
+.fas, .far, .fab, .fa, i[class*="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "FontAwesome" !important;
+}
+
+.bi, i[class*="bi-"] {
+    font-family: "Bootstrap Icons" !important;
+}
+
+/* Footer Base Styles - Higher Specificity to Override Page-Specific Styles */
+body footer,
+html footer,
+footer {
+    font-family: Tahoma, Geneva, sans-serif !important;
+    color: #ffffff !important;
+    background: transparent !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+/* Footer Top Info Section */
+body .footer-top-info,
+footer .footer-top-info {
+    background: #0c1f38 !important;
+    padding: 20px 0 !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.footer-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.footer-col {
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+    padding: 0 15px;
+}
+
+.info-item {
+    position: relative;
+}
+
+.info-icon {
+    font-size: 24px !important;
+    height: 50px;
+    line-height: 50px;
+    margin-top: -25px;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    width: 40px;
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "FontAwesome" !important;
+    color: #ffffff !important;
+}
+
+.info-item h4 {
+    margin-left: 55px;
+    font-size: 15px;
+    line-height: 23px;
+    margin-bottom: 0;
+}
+
+.info-item span {
+    display: block;
+    font-size: 80%;
+    font-weight: normal;
+}
+
+/* Main Footer Section */
+body .footer-main,
+footer .footer-main {
+    background: #0c1f38 !important;
+    background-image: url('/images/static_files/un-home-bg.jpg') !important;
+    background-size: cover !important;
+    background-position: top center !important;
+    background-repeat: no-repeat !important;
+    position: relative !important;
+    z-index: 10 !important;
+    padding: 60px 0 0 !important;
+}
+
+body .footer-overlay,
+footer .footer-overlay {
+    background: #0c1f38 !important;
+    content: '' !important;
+    height: 100% !important;
+    left: 0 !important;
+    opacity: 0.9 !important;
+    position: absolute !important;
+    top: 0 !important;
+    width: 100% !important;
+    z-index: -1 !important;
+}
+
+body .footer-col-lg,
+footer .footer-col-lg {
+    flex: 0 0 25% !important;
+    max-width: 25% !important;
+    padding: 0 15px !important;
+    margin-bottom: 40px !important;
+}
+
+body .footer-title,
+footer .footer-title {
+    color: #fff !important;
+    font-size: 18px !important;
+    margin-bottom: 30px !important;
+    position: relative !important;
+}
+
+body .title-underline,
+footer .title-underline {
+    background: #0e9bd5 !important;
+    height: 3px !important;
+    width: 45px !important;
+    margin-top: 15px !important;
+}
+
+body .footer-links,
+footer .footer-links {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+body .footer-links li,
+footer .footer-links li {
+    margin-bottom: 10px !important;
+    font-size: 14px !important;
+    width: 100% !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: flex-start !important;
+}
+
+.link-arrow {
+    flex-shrink: 0;
+    margin-right: 10px;
+    margin-top: 2px;
+    min-width: 16px;
+    display: inline-block !important;
+    text-align: left;
+    line-height: 1.4;
+}
+
+.link-arrow i {
+    color: #ffffff !important;
+    font-size: 14px !important;
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    display: inline-block !important;
+}
+
+.footer-links li a {
+    flex: 1;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.footer-subsection {
+    margin-top: 30px;
+}
+
+.footer-contact {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.footer-contact li {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.contact-icon {
+    font-size: 16px !important;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    width: 20px;
+    color: #ffffff !important;
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "FontAwesome" !important;
+}
+
+.footer-contact p {
+    margin-left: 25px;
+    margin-top: 4px;
+    color: #fff;
+    margin-bottom: 0;
+}
+
+/* Copyright Section */
+.footer-copyright {
+    border-top: 1px solid #ffffff;
+    font-weight: 400;
+    color: #939aa5;
+    font-size: 13px;
+    padding: 20px 0;
+    margin-top: 20px;
+}
+
+.copyright-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.copyright-text {
+    flex: 0 0 66.666667%;
+    max-width: 66.666667%;
+}
+
+.copyright-text p {
+    margin: 0;
+    color: #939aa5;
+}
+
+.social-links {
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+    text-align: right;
+}
+
+.social-link {
+    color: #ffffff;
+    text-decoration: none;
+    margin-left: 10px;
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    border: 1px solid #ffffff;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+/* Hover Effects */
+footer a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: #0e9bd5 !important;
+}
+
+.social-link:hover {
+    background-color: #0e9bd5;
+    border-color: #0e9bd5;
+}
+
+/* Responsive Design */
+@media (max-width: 991px) {
+    .footer-col-lg {
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .footer-col,
+    .footer-col-lg,
+    .copyright-text,
+    .social-links {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .footer-col,
+    .footer-col-lg {
+        margin-bottom: 30px;
+    }
+    
+    .social-links {
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    .footer-row,
+    .copyright-row {
+        flex-direction: column;
+    }
+}
+
+ 
+.icon-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #ffffff40;
+    border-radius: 8px;
+    color: #ffffff !important;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.icon-box:hover {
+    background-color: #ffffff20;
+}
+
+.icon-box i {
+    font-size: 16px !important;
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "FontAwesome" !important;
+}
+
+.info-item h4 {
+    flex: 1;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-contact li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Fix for long category names in footer */
+.footer-links li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.footer-links li a {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    display: block;
+    padding-left: 0;
+}
+
+.link-arrow {
+    flex-shrink: 0;
+    margin-right: 10px;
+    margin-top: 2px;
+    min-width: 16px;
+    display: inline-block !important;
+    text-align: left;
+    line-height: 1.4;
+}
+
+.link-arrow i {
+    color: #ffffff !important;
+    font-size: 14px !important;
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    display: inline-block !important;
+}
+
+/* Responsive design for footer columns */
+@media (max-width: 768px) {
+    .footer-col-lg {
+        margin-bottom: 20px;
+    }
+    
+    .footer-links li a {
+        font-size: 14px;
+    }
+}
+
+/* Ensure footer columns don't overflow */
+.footer-col-lg {
+    overflow: hidden;
+}
+
+.footer-col-lg > div {
+    overflow: hidden;
+}
+
+/* Additional footer link styling */
+.footer-link {
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+}
+
+/* Ensure footer row doesn't overflow */
+.footer-row {
+    overflow: hidden;
+    flex-wrap: wrap;
+}
+
+/* Container overflow protection */
+.container {
+    overflow: hidden;
+}
+
+/* Footer main overflow protection */
+.footer-main {
+    overflow: hidden;
+}
+
+/* CRITICAL: Force Font Awesome to load properly in footer */
+footer i.fas,
+footer i.far,
+footer i.fab {
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-transform: none !important;
+    line-height: 1 !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Specific fix for angle-right icon */
+footer .fa-angle-right::before {
+    content: "\f105" !important;
+}
+
+/* Override any global font settings for icons */
+footer .footer-links i,
+footer .info-icon,
+footer .contact-icon,
+footer .icon-box i {
+    font-family: "Font Awesome 6 Free" !important;
+}
+
+/* Additional Font Awesome icon fixes for footer */
+footer .fas, 
+footer .far, 
+footer .fab, 
+footer .fa, 
+footer i[class*="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "FontAwesome" !important;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Ensure social media icons display properly */
+footer .fab {
+    font-weight: 400 !important;
+}
+
+footer .fas {
+    font-weight: 900 !important;
+}
+
+footer .far {
+    font-weight: 400 !important;
+}
+
+/* Fix for specific icon classes in footer */
+footer .fa-phone,
+footer .fa-envelope-o,
+footer .fa-envelope,
+footer .fa-bullhorn,
+footer .fa-angle-right,
+footer .fa-map-marker,
+footer .fa-map-marker-alt,
+footer .fa-clock-o,
+footer .fa-clock,
+footer .fa-twitter,
+footer .fa-facebook-f,
+footer .fa-instagram,
+footer .fa-youtube {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "FontAwesome" !important;
+}
+
+/* Ensure arrows are visible and properly positioned */
+footer .footer-links li {
+    display: flex !important;
+    align-items: flex-start !important;
+    margin-bottom: 12px;
+}
+
+/* Footer link arrows - Font Awesome icons */
+footer .footer-links .link-arrow {
+    display: inline-block !important;
+    margin-right: 12px !important;
+    margin-top: 2px;
+    flex-shrink: 0 !important;
+    min-width: 16px;
+    text-align: left;
+}
+
+footer .footer-links .link-arrow i {
+    color: #ffffff !important;
+    font-size: 14px !important;
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    display: inline-block !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+}
+
+/* CRITICAL: Global Footer Override - Ensures consistent footer appearance on all pages */
+/* This section overrides any page-specific styles that might interfere with footer */
+
+body footer,
+html body footer,
+main + footer,
+div footer,
+.container footer {
+    background: transparent !important;
+    position: relative !important;
+    z-index: 100 !important;
+    clear: both !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Ensure footer sections maintain proper styling */
+body footer .footer-top-info,
+body footer .footer-main,
+html body footer .footer-top-info,
+html body footer .footer-main {
+    background-color: #0c1f38 !important;
+    color: #ffffff !important;
+    position: relative !important;
+    z-index: 100 !important;
+}
+
+/* Ensure footer content maintains proper layout */
+body footer .container,
+body footer .footer-row,
+body footer .footer-col,
+body footer .footer-col-lg {
+    position: relative !important;
+    z-index: 100 !important;
+}
+
+/* Override any body background that might interfere */
+body footer * {
+    color: inherit !important;
+}
+
+body footer a {
+    color: #ffffff !important;
+    text-decoration: none !important;
+}
+
+body footer a:hover {
+    color: #0e9bd5 !important;
+}
+
+/* Ensure footer icons are always visible */
+body footer i,
+body footer .fas,
+body footer .far,
+body footer .fab {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "FontAwesome" !important;
+    color: #ffffff !important;
+    display: inline-block !important;
+    visibility: visible !important;
+}
+
+/* Footer layout protection */
+body footer .footer-col-lg {
+    flex: 0 0 25% !important;
+    max-width: 25% !important;
+    padding: 0 15px !important;
+    margin-bottom: 40px !important;
+    box-sizing: border-box !important;
+}
+
+body footer .footer-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    margin: 0 -15px !important;
+}
+
+/* Responsive footer fixes */
+@media (max-width: 991px) {
+    body footer .footer-col-lg {
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+    }
+}
+
+@media (max-width: 767px) {
+    body footer .footer-col,
+    body footer .footer-col-lg {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        margin-bottom: 30px !important;
+    }
+}

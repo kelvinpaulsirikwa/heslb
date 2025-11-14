@@ -1,0 +1,234 @@
+
+ * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        background: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
+    }
+    
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+    }
+    
+    .login-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px 25px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border-top: 4px solid #004085;
+        width: 100%;
+        max-width: 400px;
+    }
+    
+    .gov-logo {
+        display: block;
+        margin: 0 auto 15px;
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+    }
+    
+    .login-title {
+        font-weight: 600;
+        color: #004085;
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 1.4rem;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-label {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 6px;
+        display: block;
+        font-size: 0.9rem;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        background: #fafafa;
+        transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #004085;
+        background: #fff;
+        box-shadow: 0 0 0 2px rgba(0, 64, 133, 0.1);
+    }
+    
+    .form-control::placeholder {
+        color: #999;
+        font-size: 15px;
+    }
+    
+    .btn-primary {
+        background: #004085;
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 12px;
+        border-radius: 6px;
+        width: 100%;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .btn-primary:hover {
+        background: #003366;
+    }
+    
+    .btn-primary:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+    
+    .btn-primary:disabled:hover {
+        background: #6c757d;
+    }
+    
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 12px 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        border: 1px solid #f5c6cb;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    /* Mobile Optimization */
+    @media (max-width: 768px) {
+        .login-container {
+            padding: 20px 15px;
+            align-items: flex-start;
+            padding-top: 60px;
+        }
+        
+        .login-card {
+            padding: 25px 20px;
+            margin: 0;
+            max-width: none;
+            border-radius: 10px;
+        }
+        
+        .login-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+        
+        .gov-logo {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 12px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .login-container {
+            padding: 15px 10px;
+            padding-top: 40px;
+        }
+        
+        .login-card {
+            padding: 20px 15px;
+            border-radius: 8px;
+        }
+        
+        .login-title {
+            font-size: 1.2rem;
+            margin-bottom: 18px;
+        }
+        
+        .gov-logo {
+            width: 45px;
+            height: 45px;
+            margin-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            font-size: 0.85rem;
+        }
+        
+        .form-control {
+            padding: 10px 12px;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+    }
+    
+    @media (max-width: 360px) {
+        .login-container {
+            padding: 10px 8px;
+            padding-top: 30px;
+        }
+        
+        .login-card {
+            padding: 18px 12px;
+        }
+        
+        .login-title {
+            font-size: 1.1rem;
+        }
+        
+        .form-control {
+            padding: 9px 10px;
+        }
+    }
+    
+    /* Landscape mobile */
+    @media (max-height: 600px) and (orientation: landscape) {
+        .login-container {
+            padding-top: 20px;
+            align-items: flex-start;
+        }
+        
+        .login-card {
+            padding: 15px 20px;
+        }
+        
+        .login-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+        
+        .gov-logo {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 12px;
+        }
+    }

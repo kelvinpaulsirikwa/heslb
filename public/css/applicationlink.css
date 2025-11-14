@@ -1,0 +1,232 @@
+/* OLAMS Application Link Page Styles */
+
+.olams-main-container {
+    min-height: 70vh;
+}
+
+.olams-hero-card {
+    border-radius: 20px;
+    min-height: 450px;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.olams-bg-image {
+    background-image: url('/images/static_files/ADAPT_IT.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.3;
+}
+
+.olams-pattern-overlay {
+    background-image: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.08"><circle cx="7" cy="7" r="1.5"/><circle cx="27" cy="7" r="1.5"/><circle cx="47" cy="7" r="1.5"/><circle cx="17" cy="17" r="1.5"/><circle cx="37" cy="17" r="1.5"/><circle cx="7" cy="27" r="1.5"/><circle cx="27" cy="27" r="1.5"/><circle cx="47" cy="27" r="1.5"/><circle cx="17" cy="37" r="1.5"/><circle cx="37" cy="37" r="1.5"/><circle cx="7" cy="47" r="1.5"/><circle cx="27" cy="47" r="1.5"/><circle cx="47" cy="47" r="1.5"/></g></g></svg>');
+}
+
+.olams-main-title {
+    font-size: 2.8rem;
+    color: #0c1f38 !important;
+    text-shadow: 0 2px 4px rgba(255,255,255,0.8);
+    line-height: 1.2;
+    font-weight: bold;
+}
+
+.olams-subtitle {
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: #0c1f38 !important;
+    opacity: 0.8;
+}
+
+.olams-description {
+    font-size: 1.3rem;
+    line-height: 1.7;
+    color: #0c1f38 !important;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+    opacity: 0.9;
+}
+
+.olams-description strong {
+    color: #0c1f38 !important;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+}
+
+.olams-btn-container {
+    z-index: 4;
+}
+
+.olams-circular-button {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    background: #0c1f38;
+    backdrop-filter: blur(15px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    border: 3px solid rgba(255,255,255,0.4);
+    box-shadow: 
+        0 20px 45px rgba(0,0,0,0.15),
+        0 8px 25px rgba(0,0,0,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+    overflow: hidden;
+}
+
+.olams-circular-button:hover {
+    background: #0e9bd5;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 
+        0 25px 55px rgba(0,0,0,0.2),
+        0 12px 35px rgba(0,0,0,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+.olams-feature-badge {
+    font-size: 0.9rem;
+    border-radius: 25px;
+    font-weight: 500;
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.olams-feature-badge:nth-child(1) {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border: 1px solid #047857;
+}
+
+.olams-feature-badge:nth-child(2) {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border: 1px solid #1d4ed8;
+}
+
+.olams-feature-badge:nth-child(3) {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border: 1px solid #b45309;
+}
+
+.olams-pulse-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    animation: olams-pulse 2s infinite ease-out;
+}
+
+@keyframes olams-pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.1);
+        opacity: 0;
+    }
+}
+
+/* Responsive adjustments for OLAMS components */
+@media (max-width: 768px) {
+    .olams-circular-button {
+        width: 160px;
+        height: 160px;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 10;
+    }
+    
+    .olams-main-title {
+        font-size: 1.8rem !important;
+        text-align: left;
+        margin-bottom: 1rem !important;
+        padding-right: 180px;
+    }
+    
+    .olams-subtitle {
+        font-size: 1.0rem !important;
+        text-align: left;
+    }
+    
+    .olams-description {
+        font-size: 0.95rem !important;
+        text-align: left;
+        padding-right: 0;
+        margin-top: 1.5rem;
+    }
+    
+    .olams-hero-card {
+        min-height: 520px;
+        margin: 1rem;
+    }
+    
+    .olams-badges-container {
+        justify-content: flex-start !important;
+        margin-top: 1rem;
+    }
+    
+    .col-lg-7 {
+        padding-right: 0 !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .olams-circular-button {
+        width: 120px;
+        height: 120px;
+        font-size: 0.8rem;
+        top: 10px !important;
+        right: 10px !important;
+    }
+    
+    .olams-btn-main-text {
+        font-size: 0.9rem;
+    }
+    
+    .olams-btn-sub-text {
+        font-size: 0.7rem;
+    }
+    
+    .olams-btn-action-text {
+        font-size: 0.6rem;
+    }
+    
+    .olams-btn-arrow-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .olams-main-title {
+        font-size: 1.5rem !important;
+        padding-right: 140px;
+    }
+    
+    .olams-subtitle {
+        font-size: 0.9rem !important;
+    }
+    
+    .olams-description {
+        font-size: 0.85rem !important;
+        margin-top: 1rem;
+    }
+    
+    .olams-hero-card {
+        min-height: 480px;
+        margin: 0.5rem;
+    }
+    
+    .card-body {
+        padding: 1.5rem 1rem !important;
+    }
+    
+    .olams-feature-badge {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+    }
+}

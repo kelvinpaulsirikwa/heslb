@@ -1,0 +1,156 @@
+/* GLOBAL FONT FAMILY - Tahoma for entire website */
+body {
+    font-family: Tahoma, Geneva, sans-serif !important;
+}
+
+/* Apply font family to text elements only, NOT to icons */
+h1, h2, h3, h4, h5, h6, p, span, div, a, button, input, textarea, select, label {
+    font-family: Tahoma, Geneva, sans-serif !important;
+}
+
+/* IMPORTANT: Preserve icon font families */
+.fas, .far, .fab, .fa, i[class*="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "FontAwesome" !important;
+}
+
+.bi, i[class*="bi-"] {
+    font-family: "Bootstrap Icons" !important;
+}
+
+/* Story Card Styles */
+.stories-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 40px 0;
+}
+
+.story-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.story-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.story-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 20px 20px 0 0;
+}
+
+.story-content {
+    padding: 25px;
+    background: linear-gradient(135deg, #0e9bd5 0%, #0c1f38 100%);
+    color: white;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.story-quote {
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    opacity: 0.9;
+}
+
+.story-author {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #fff;
+}
+
+.story-title {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+.read-story-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: inline-block;
+    text-align: center;
+}
+
+.read-story-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Loan Services Section */
+.loan-services-functions-wrapper {
+    background: #ffffff;
+    padding: 15px 0;
+    min-height: auto;
+}
+
+.lsf-loan-types-section {
+    text-align: center;
+    margin-bottom: 10px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
+}
+
+.lsf-loan-types-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #0c1f38;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.lsf-loan-types-subtitle {
+    font-size: 1rem;
+    color: #64748b;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.5;
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .stories-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 20px 15px;
+    }
+    
+    .story-content {
+        padding: 20px;
+        min-height: 180px;
+    }
+    
+    .lsf-loan-types-title {
+        font-size: 1.6rem;
+    }
+    
+    .lsf-loan-types-subtitle {
+        font-size: 0.9rem;
+        padding: 0 15px;
+    }
+}

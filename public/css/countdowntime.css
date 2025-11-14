@@ -1,0 +1,905 @@
+/* GLOBAL FONT FAMILY - Tahoma for entire website */
+body {
+    font-family: Tahoma, Geneva, sans-serif !important;
+}
+
+/* Apply font family to text elements only, NOT to icons */
+h1, h2, h3, h4, h5, h6, p, span, div, a, button, input, textarea, select, label {
+    font-family: Tahoma, Geneva, sans-serif !important;
+}
+
+/* IMPORTANT: Preserve icon font families */
+.fas, .far, .fab, .fa, i[class*="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "FontAwesome" !important;
+}
+
+.bi, i[class*="bi-"] {
+    font-family: "Bootstrap Icons" !important;
+}
+
+    .education-loan-wrapper {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: 1fr 400px 320px;
+        gap: 20px;
+        align-items: start;
+        font-family: Tahoma, Geneva, sans-serif !important;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    .education-loan-wrapper *,
+    .education-loan-wrapper *::before,
+    .education-loan-wrapper *::after {
+        box-sizing: border-box;
+    }
+
+    /* Main Green Card */
+    .main-loan-card {
+        background: linear-gradient(135deg, #0c1f38 0%, #0c1f38 100%);
+        border-radius: 25px;
+        padding: 45px 40px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(39, 174, 96, 0.2);
+        min-height: 500px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .main-content {
+        flex: 1;
+    }
+
+    .loan-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        line-height: 1.25;
+        margin-bottom: 25px;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .program-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin: 15px 0;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        
+    }
+
+    
+    .loan-description {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 30px;
+        opacity: 0.95;
+    }
+
+    .deadline-highlight {
+        background: rgba(255,255,255,0.15);
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-weight: 600;
+    }
+
+    .apply-btn {
+        background: linear-gradient(135deg, #07bff2 0%, #e67e22 100%);
+        color: white;
+        padding: 15px 35px;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        box-shadow: 0 8px 25px rgba(243, 156, 18, 0.3);
+        align-self: flex-start;
+    }
+
+    .apply-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(243, 156, 18, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    /* Clock Container - Proper responsive positioning */
+    .clock-section {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .clock-container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(15px);
+        border-radius: 25px;
+        padding: 25px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        border: 1px solid rgba(255,255,255,0.3);
+        text-align: center;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    /* Analog Clock with colorful static border */
+    .analog-clock {
+        position: relative;
+        width: 280px;
+        height: 280px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        padding: 8px;
+        background: conic-gradient(
+            from 0deg,
+            #3498db 0deg 90deg,     /* Blue */
+            #27ae60 90deg 180deg,   /* Green */
+            #f1c40f 180deg 270deg,  /* Yellow */
+            #2c3e50 270deg 360deg   /* Black */
+        );
+        box-shadow: 0 15px 30px rgba(52, 73, 94, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .clock-face {
+        position: relative;
+        width: 260px;
+        height: 260px;
+        background-color: #f3f3f3;
+        border-radius: 50%;
+        box-shadow: inset 0 5px 15px rgba(0,0,0,0.2);
+        overflow: hidden;
+    }
+
+    /* Smaller 50% inner circle with faint image - FIXED RESPONSIVE SIZING */
+    .clock-face::after {
+        content: '';
+        position: absolute;
+        width: 50%;
+        height: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: 
+            linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)),
+            url('/images/static_files/heslblogos.png');
+        background-size: 80% 80%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-blend-mode: overlay;
+        border-radius: 50%;
+        z-index: 1;
+        transition: none;
+    }
+
+    .clock-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 12px;
+        height: 12px;
+        background: #e74c3c;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+
+    .clock-number {
+        position: absolute;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #2c3e50;
+        transform: translate(-50%, -50%);
+        text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+        background: rgba(255,255,255,0.7);
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+    }
+
+    .clock-number:nth-child(1) { top: 15px; left: 50%; }
+    .clock-number:nth-child(2) { top: 50%; right: 15px; }
+    .clock-number:nth-child(3) { bottom: 15px; left: 50%; }
+    .clock-number:nth-child(4) { top: 50%; left: 15px; }
+
+    .clock-hand {
+        position: absolute;
+        background: #2c3e50;
+        transform-origin: bottom center;
+        border-radius: 2px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hour-hand {
+        width: 4px;
+        height: 60px;
+        top: 70px;
+        left: 50%;
+        margin-left: -2px;
+        z-index: 8;
+    }
+
+    .minute-hand {
+        width: 3px;
+        height: 80px;
+        top: 50px;
+        left: 50%;
+        margin-left: -1.5px;
+        z-index: 9;
+    }
+
+    .second-hand {
+        width: 1px;
+        height: 90px;
+        top: 40px;
+        left: 50%;
+        margin-left: -0.5px;
+        background: #e74c3c;
+        z-index: 7;
+    }
+
+    /* Digital Countdown */
+    .digital-countdown {
+        background: linear-gradient(135deg, #0c1f38 0%, #2980b9 100%);
+        border-radius: 15px;
+        padding: 20px;
+        color: white;
+        margin-top: 15px;
+    }
+
+    .countdown-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        opacity: 0.9;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .countdown-digits {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .digit-box {
+        background: rgba(255,255,255,0.15);
+        padding: 10px 8px;
+        border-radius: 8px;
+        text-align: center;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255,255,255,0.2);
+        min-width: 0;
+    }
+
+    .digit-value {
+        font-size: 1.4rem;
+        font-weight: 700;
+        display: block;
+        font-family: 'Courier New', monospace;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .digit-text {
+        font-size: 0.75rem;
+        opacity: 0.8;
+        text-transform: uppercase;
+        margin-top: 2px;
+    }
+
+    .deadline-info {
+        font-size: 0.85rem;
+        opacity: 0.8;
+        margin-top: 10px;
+    }
+
+    /* Right Side Cards */
+    .right-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 50px;
+        width: 100%;
+    }
+
+    .side-card {
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: white;
+        width: 100%;
+    }
+
+    .side-card:hover {
+        transform: translateY(-3px);
+        text-decoration: none;
+        color: white;
+    }
+
+    .card-image {
+        width: 100%;
+        height: 120px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    .compliance-image {
+        background: linear-gradient(rgba(41, 128, 185, 0.05), rgba(41, 128, 185, 0.05)),
+                    url('/images/static_files/guideline.png');
+        background-size: cover;
+        background-position: center;
+    }
+
+    .repay-image {
+        background: linear-gradient(rgba(41, 128, 185, 0.05), rgba(41, 128, 185, 0.05)),
+                    url('/images/static_files/olamsimagelink.png');
+        background-size: cover;
+        background-position: center;
+    }
+
+    .card-content {
+        padding: 20px;
+        background: linear-gradient(135deg, #007bff 0%, #2980b9 100%);
+        position: relative;
+    }
+
+    .repay-card .card-content {
+        background: linear-gradient(135deg, #2980b9 0%, #34495e 100%);
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        line-height: 1.3;
+    }
+
+    .card-btn {
+        background: rgba(255,255,255,0.2);
+        color: white;
+        padding: 10px 20px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .card-btn:hover {
+        background: rgba(255,255,255,0.3);
+        border-color: rgba(255,255,255,0.5);
+        color: white;
+        text-decoration: none;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+        .education-loan-wrapper {
+            grid-template-columns: 1fr 350px;
+            padding: 15px;
+        }
+        
+        .clock-section {
+            grid-row: 1;
+            grid-column: 2;
+        }
+        
+        .right-sidebar {
+            grid-row: 2;
+            grid-column: 1 / -1;
+            flex-direction: row;
+            gap: 20px;
+        }
+        
+        .side-card {
+            flex: 1;
+        }
+    }
+
+    @media (max-width: 968px) {
+        .education-loan-wrapper {
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 15px;
+            max-width: 100%;
+        }
+        
+        .main-loan-card {
+            padding: 30px 25px;
+            min-height: auto;
+        }
+        
+        .loan-title {
+            font-size: 1.8rem;
+        }
+        
+        .program-list {
+            gap: 6px;
+            margin: 12px 0;
+        }
+        
+        .program-item {
+            font-size: 1rem;
+            padding: 6px 14px;
+            min-width: 120px;
+            max-width: 250px;
+        }
+        
+        .clock-section {
+            grid-row: auto;
+            grid-column: auto;
+            margin: 0;
+        }
+        
+        .clock-container {
+            margin: 0;
+            padding: 20px;
+            max-width: 100%;
+        }
+        
+        .analog-clock {
+            width: 240px;
+            height: 240px;
+        }
+        
+        .clock-face {
+            width: 220px;
+            height: 220px;
+        }
+        
+        .clock-face::after {
+            width: 50%;
+            height: 50%;
+            background-size: 80% 80%;
+        }
+        
+        .hour-hand {
+            height: 50px;
+            top: 60px;
+        }
+
+        .minute-hand {
+            height: 70px;
+            top: 40px;
+        }
+
+        .second-hand {
+            height: 75px;
+            top: 35px;
+        }
+        
+        .right-sidebar {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .countdown-digits {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .digit-box {
+            padding: 12px 6px;
+        }
+
+        .side-card {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .education-loan-wrapper {
+            padding: 10px;
+            gap: 15px;
+        }
+        
+        .main-loan-card {
+            padding: 25px 20px;
+        }
+        
+        .loan-title {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+        }
+        
+        .program-list {
+            gap: 5px;
+            margin: 10px 0;
+        }
+        
+        .program-item {
+            font-size: 0.95rem;
+            padding: 5px 12px;
+            min-width: 100px;
+            max-width: 200px;
+        }
+        
+        .loan-description {
+            font-size: 0.95rem;
+        }
+        
+        .apply-btn {
+            padding: 12px 25px;
+            font-size: 1rem;
+        }
+        
+        .analog-clock {
+            width: 200px;
+            height: 200px;
+        }
+        
+        .clock-face {
+            width: 180px;
+            height: 180px;
+        }
+        
+        .clock-face::after {
+            width: 50%;
+            height: 50%;
+            background-size: 75% 75%;
+        }
+
+        .clock-number {
+            font-size: 1rem;
+            width: 25px;
+            height: 25px;
+        }
+
+        .clock-number:nth-child(1) { top: 12px; }
+        .clock-number:nth-child(2) { right: 12px; }
+        .clock-number:nth-child(3) { bottom: 12px; }
+        .clock-number:nth-child(4) { left: 12px; }
+
+        .hour-hand {
+            height: 40px;
+            top: 50px;
+            width: 3px;
+            margin-left: -1.5px;
+        }
+
+        .minute-hand {
+            height: 55px;
+            top: 35px;
+            width: 2px;
+            margin-left: -1px;
+        }
+
+        .second-hand {
+            height: 60px;
+            top: 30px;
+        }
+
+        .countdown-digits {
+            gap: 6px;
+        }
+
+        .digit-box {
+            padding: 10px 4px;
+        }
+
+        .digit-value {
+            font-size: 1.2rem;
+        }
+
+        .digit-text {
+            font-size: 0.7rem;
+        }
+
+        .clock-container {
+            padding: 15px;
+        }
+
+        .digital-countdown {
+            padding: 15px;
+        }
+        
+        .countdown-title {
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .education-loan-wrapper {
+            padding: 8px;
+            gap: 12px;
+        }
+        
+        .main-loan-card {
+            padding: 20px 15px;
+            border-radius: 20px;
+        }
+        
+        .loan-title {
+            font-size: 1.4rem;
+            line-height: 1.3;
+        }
+        
+        .program-list {
+            gap: 4px;
+            margin: 8px 0;
+        }
+        
+        .program-item {
+            font-size: 0.9rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            min-width: 90px;
+            max-width: 180px;
+        }
+        
+        .loan-description {
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        
+        .apply-btn {
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            border-radius: 40px;
+        }
+        
+        .clock-container {
+            padding: 12px;
+            border-radius: 20px;
+        }
+        
+        .analog-clock {
+            width: 160px;
+            height: 160px;
+            padding: 6px;
+        }
+        
+        .clock-face {
+            width: 145px;
+            height: 145px;
+        }
+        
+        .clock-face::after {
+            width: 50%;
+            height: 50%;
+            background-size: 70% 70%;
+        }
+
+        .clock-number {
+            font-size: 0.85rem;
+            width: 20px;
+            height: 20px;
+        }
+
+        .clock-number:nth-child(1) { top: 8px; }
+        .clock-number:nth-child(2) { right: 8px; }
+        .clock-number:nth-child(3) { bottom: 8px; }
+        .clock-number:nth-child(4) { left: 8px; }
+
+        .hour-hand {
+            height: 32px;
+            top: 40px;
+            width: 2px;
+            margin-left: -1px;
+        }
+
+        .minute-hand {
+            height: 42px;
+            top: 30px;
+            width: 1.5px;
+            margin-left: -0.75px;
+        }
+
+        .second-hand {
+            height: 47px;
+            top: 25px;
+            width: 0.5px;
+            margin-left: -0.25px;
+        }
+
+        .clock-center {
+            width: 8px;
+            height: 8px;
+        }
+
+        .countdown-digits {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .digit-box {
+            padding: 8px 4px;
+        }
+
+        .digit-value {
+            font-size: 1.1rem;
+        }
+
+        .digit-text {
+            font-size: 0.65rem;
+        }
+
+        .digital-countdown {
+            padding: 12px;
+            border-radius: 12px;
+        }
+        
+        .countdown-title {
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+        
+        .deadline-info {
+            font-size: 0.75rem;
+            margin-top: 8px;
+        }
+        
+        .card-content {
+            padding: 15px;
+        }
+        
+        .card-title {
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+        
+        .card-btn {
+            padding: 8px 15px;
+            font-size: 0.8rem;
+            border-radius: 20px;
+        }
+        
+        .card-image {
+            height: 100px;
+        }
+        
+        .right-sidebar {
+            gap: 15px;
+        }
+    }
+
+    @media (max-width: 360px) {
+        .education-loan-wrapper {
+            padding: 5px;
+        }
+        
+        .main-loan-card {
+            padding: 15px 12px;
+        }
+        
+        .loan-title {
+            font-size: 1.25rem;
+        }
+        
+        .program-list {
+            gap: 3px;
+            margin: 6px 0;
+        }
+        
+        .program-item {
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 15px;
+            min-width: 80px;
+            max-width: 160px;
+        }
+        
+        .analog-clock {
+            width: 140px;
+            height: 140px;
+        }
+        
+        .clock-face {
+            width: 125px;
+            height: 125px;
+        }
+        
+        .clock-face::after {
+            width: 50%;
+            height: 50%;
+            background-size: 65% 65%;
+        }
+        
+        .countdown-digits {
+            gap: 4px;
+        }
+        
+        .digit-box {
+            padding: 6px 2px;
+        }
+        
+        .digit-value {
+            font-size: 1rem;
+        }
+        
+        .digit-text {
+            font-size: 0.6rem;
+        }
+    }
+
+    /* Animation */
+    .education-loan-wrapper > * {
+        animation: slideIn 0.6s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    .education-loan-wrapper > *:nth-child(1) { animation-delay: 0.1s; }
+    .education-loan-wrapper > *:nth-child(2) { animation-delay: 0.2s; }
+    .education-loan-wrapper > *:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes slideIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Prevent layout overflow */
+    body {
+        overflow-x: hidden;
+    }
+    
+    .education-loan-wrapper {
+        overflow-x: hidden;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .program-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        justify-content: flex-start; /* align left */
+        margin-bottom: 14px;
+    }
+    
+    .program-item {
+        background: #f8f9fa; /* soft light background */
+        padding: 14px 28px;
+        border-radius: 14px;
+        font-size: 1.15rem;
+        font-weight: 500;
+        color: #2c3e50; /* dark gray text for high contrast */
+        white-space: normal;
+        display: inline-block;
+        text-align: left;
+        min-width: 240px;
+        max-width: 100%;
+        border: 1px solid #dee2e6; /* thin border for definition */
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08); /* soft shadow */
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    
+    .program-item:hover {
+        background: #e9ecef; /* subtle hover */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    

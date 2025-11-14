@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # Laravel PHP-FPM Application
+  app:
+    build: .
+    image: website:latest
+    container_name: heslb-app
+    restart: unless-stopped
+    env_file:
+      - ./local-config.txt
+    volumes:
+      # Storage directory for logs, cache, sessions, etc.
+      - ./storage:/var/www/html/storage
+      # Mount specific public subdirectories instead of the entire public folder
+      - ./public/images:/var/www/html/public/images
+      - ./public/uploads:/var/www/html/public/uploads
+      - ./public/photogallery:/var/www/html/public/photogallery
+      - ./public/css:/var/www/html/public/css
+      - ./public/js:/var/www/html/public/js
+      - ./public/ckeditor:/var/www/html/public/ckeditor
+
+      - shared-public:/var/www/html/public
+      # Keep the built Vite assets from the Docker image (don't mount over them)
+    ports:
+        - "8000:9000"
+    networks:
+      - heslb-network
+
+  # Nginx Web Server
+  nginx:
+    image: nginx:alpine
+    container_name: heslb-nginx
+    restart: unless-stopped
+    ports:
+      - "8001:80"
+      - "4430:443"
+    volumes:
+      # Nginx configuration
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      # Essential Laravel files for nginx
+      - shared-public:/var/www/html/public
+      # Mount specific public subdirectories for nginx
+      - ./public/images:/var/www/html/public/images
+      - ./public/uploads:/var/www/html/public/uploads
+      - ./public/photogallery:/var/www/html/public/photogallery
+      - ./storage/app/public:/var/www/html/public/storage
+      # Nginx logs
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - app
+    networks:
+      - heslb-network
+
+
+volumes:
+  nginx_logs:
+    driver: local
+  shared-public:
+    driver: local
+
+networks:
+  heslb-network:
+    driver: bridge

@@ -1,0 +1,1 @@
+<x-footer-component :show-publications="true" />
