@@ -163,8 +163,8 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'file' => [
+            'max' => 'File must be less than 100MB',
         ],
     ],
 
