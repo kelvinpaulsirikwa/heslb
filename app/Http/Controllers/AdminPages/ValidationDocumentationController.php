@@ -29,7 +29,7 @@ class ValidationDocumentationController extends Controller
                     'profile_image' => [
                         'nullable' => 'Optional field',
                         'image' => 'Must be an image file',
-                        'max:5120' => 'Maximum 5MB file size'
+                        'max:102400' => 'Maximum 100MB file size'
                     ],
                     'telephone' => [
                         'nullable' => 'Optional field',
@@ -85,7 +85,7 @@ class ValidationDocumentationController extends Controller
                     'images.*' => [
                         'image' => 'Each file must be an image',
                         'mimes:jpeg,png,jpg,gif' => 'Supported formats: JPEG, PNG, JPG, GIF',
-                        'max:5120' => 'Each image maximum 5MB'
+                        'max:102400' => 'Each image maximum 100MB'
                     ],
                     'videos' => [
                         'nullable' => 'Optional field',
@@ -120,7 +120,7 @@ class ValidationDocumentationController extends Controller
                         'nullable' => 'Optional field',
                         'image' => 'Must be an image file',
                         'mimes:jpeg,png,jpg,gif' => 'Supported formats: JPEG, PNG, JPG, GIF',
-                        'max:5120' => 'Maximum 5MB file size'
+                        'max:102400' => 'Maximum 100MB file size'
                     ]
                 ]
             ],
@@ -143,7 +143,7 @@ class ValidationDocumentationController extends Controller
                     'file' => [
                         'required' => 'Required when link_type is "file"',
                         'file' => 'Must be a valid file',
-                        'max:10240' => 'Maximum 10MB file size'
+                        'max:102400' => 'Maximum 100MB file size'
                     ]
                 ]
             ],
@@ -194,13 +194,13 @@ class ValidationDocumentationController extends Controller
                         'nullable' => 'Optional field',
                         'image' => 'Must be an image file',
                         'mimes:jpeg,png,jpg,gif' => 'Supported formats: JPEG, PNG, JPG, GIF',
-                        'max:5120' => 'Maximum 5MB file size'
+                        'max:102400' => 'Maximum 100MB file size'
                     ],
                     'file' => [
                         'nullable' => 'Optional field',
                         'file' => 'Must be a valid file',
                         'mimes:pdf,doc,docx' => 'Supported formats: PDF, DOC, DOCX',
-                        'max:10240' => 'Maximum 10MB file size'
+                        'max:102400' => 'Maximum 100MB file size'
                     ]
                 ]
             ],
@@ -240,7 +240,7 @@ class ValidationDocumentationController extends Controller
                         'nullable' => 'Optional field',
                         'image' => 'Must be an image file',
                         'mimes:jpeg,png,jpg,gif' => 'Supported formats: JPEG, PNG, JPG, GIF',
-                        'max:5120' => 'Maximum 5MB file size'
+                        'max:102400' => 'Maximum 100MB file size'
                     ]
                 ]
             ],
@@ -265,7 +265,7 @@ class ValidationDocumentationController extends Controller
                     'images.*' => [
                         'image' => 'Each file must be an image',
                         'mimes:jpeg,png,jpg,gif' => 'Supported formats: JPEG, PNG, JPG, GIF',
-                        'max:5120' => 'Each image maximum 5MB'
+                        'max:102400' => 'Each image maximum 100MB'
                     ]
                 ]
             ],
@@ -289,7 +289,7 @@ class ValidationDocumentationController extends Controller
                         'nullable' => 'Optional field',
                         'image' => 'Must be an image file',
                         'mimes:jpeg,png,jpg,gif' => 'Supported formats: JPEG, PNG, JPG, GIF',
-                        'max:5120' => 'Maximum 5MB file size'
+                        'max:102400' => 'Maximum 100MB file size'
                     ]
                 ]
             ],

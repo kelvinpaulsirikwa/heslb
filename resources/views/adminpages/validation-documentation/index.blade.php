@@ -154,7 +154,7 @@
                                             <strong>Formats:</strong> JPEG, PNG, JPG, GIF
                                         </li>
                                         <li class="mb-2">
-                                            <strong>Max Size:</strong> 5MB per image
+                                            <strong>Max Size:</strong> 100MB per image
                                         </li>
                                         <li class="mb-2">
                                             <strong>Max Count:</strong> 5 images per form
@@ -188,7 +188,7 @@
                                             <strong>Formats:</strong> PDF, DOC, DOCX
                                         </li>
                                         <li class="mb-2">
-                                            <strong>Max Size:</strong> 10MB per document
+                                            <strong>Max Size:</strong> 100MB per document
                                         </li>
                                         <li class="mb-2">
                                             <strong>Max Count:</strong> 5 documents per form
