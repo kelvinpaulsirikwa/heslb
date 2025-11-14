@@ -62,7 +62,7 @@
 <script src="{{ asset('js/newscenter.js') }}"></script>
 <script src="{{ asset('js/countdowntime.js') }}"></script>
 <script src="{{ asset('js/ourproduct.js') }}"></script>
-<script src="https://chatbot.heslb.go.tz/chatbot_general_obs.js"></script>
+<-- <script src="https://chatbot.heslb.go.tz/chatbot_general_obs.js"></script> -->
 
     <style>
         /* Global Font Family for Website (excluding admin pages) */
