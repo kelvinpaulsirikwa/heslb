@@ -80,7 +80,7 @@
                                        required>
                             </div>
                             <small class="form-text text-muted">
-                                <i class="fas fa-info-circle"></i> Allowed file types: PDF, DOC, DOCX, XLS, XLSX. Maximum size: 10MB
+                                <i class="fas fa-info-circle"></i> Allowed file types: PDF, DOC, DOCX, XLS, XLSX. Maximum size: 100MB
                             </small>
                             @error('file')
                                 <span class="invalid-feedback d-block">{{ $message }}</span>

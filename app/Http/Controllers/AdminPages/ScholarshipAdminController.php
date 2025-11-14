@@ -44,7 +44,7 @@ class ScholarshipAdminController extends Controller
             'benefits_summary' => 'nullable|string',
             'external_link' => 'nullable|url|max:500',
             'content_html' => 'nullable|string',
-            'cover_image' => 'nullable|image|max:5120',
+            'cover_image' => 'nullable|image|max:102400',
         ]);
 
         $data['slug'] = Scholarship::generateUniqueSlug($data['title']);
@@ -84,7 +84,7 @@ class ScholarshipAdminController extends Controller
             'benefits_summary' => 'nullable|string',
             'external_link' => 'nullable|url|max:500',
             'content_html' => 'nullable|string',
-            'cover_image' => 'nullable|image|max:5120',
+            'cover_image' => 'nullable|image|max:102400',
         ]);
 
         $data['slug'] = Scholarship::generateUniqueSlug($data['title'], $scholarship->id);

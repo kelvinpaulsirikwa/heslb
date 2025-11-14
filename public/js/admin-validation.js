@@ -407,8 +407,8 @@ const AdminValidationRules = {
             file: 'Each item must be a file',
             mimes: ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'],
             mimes_error: 'Images must be JPEG, PNG, JPG, or GIF format',
-            max_size: 5 * 1024 * 1024, // 5MB
-            max_size_error: 'Each image must be less than 5MB'
+            max_size: 100 * 1024 * 1024, // 100MB
+            max_size_error: 'Each image must be less than 100MB'
         }
     },
 
@@ -431,8 +431,8 @@ const AdminValidationRules = {
             file: 'File must be an image',
             mimes: ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'],
             mimes_error: 'Image must be JPEG, PNG, JPG, or GIF format',
-            max_size: 5 * 1024 * 1024, // 5MB
-            max_size_error: 'Image must be less than 5MB'
+            max_size: 100 * 1024 * 1024, // 100MB
+            max_size_error: 'Image must be less than 100MB'
         }
     },
 
@@ -457,8 +457,8 @@ const AdminValidationRules = {
             required_if: 'link_type,file',
             required_if_error: 'File is required when link type is "file"',
             file: 'Must be a valid file',
-            max_size: 10 * 1024 * 1024, // 10MB
-            max_size_error: 'File must be less than 10MB'
+            max_size: 100 * 1024 * 1024, // 100MB
+            max_size_error: 'File must be less than 100MB'
         }
     },
 
@@ -503,8 +503,8 @@ const AdminValidationRules = {
             file: 'Must be a valid file',
             mimes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
             mimes_error: 'File must be PDF, DOC, DOCX, XLS, or XLSX format',
-            max_size: 10 * 1024 * 1024, // 10MB
-            max_size_error: 'File must be less than 10MB'
+            max_size: 100 * 1024 * 1024, // 100MB
+            max_size_error: 'File must be less than 100MB'
         },
         description: {
             string: 'Description must be text',
@@ -591,8 +591,8 @@ const AdminValidationRules = {
             file: 'Each file must be an image',
             mimes: ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'],
             mimes_error: 'Images must be JPEG, PNG, JPG, or GIF format',
-            max_size: 5 * 1024 * 1024, // 5MB
-            max_size_error: 'Each image must be less than 5MB'
+            max_size: 100 * 1024 * 1024, // 100MB
+            max_size_error: 'Each image must be less than 100MB'
         },
         'descriptions.*': {
             string: 'Description must be text',
@@ -661,8 +661,8 @@ const AdminValidationRules = {
             file: 'File must be an image',
             mimes: ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'],
             mimes_error: 'Image must be JPEG, PNG, JPG, or GIF format',
-            max_size: 5 * 1024 * 1024, // 5MB
-            max_size_error: 'Image must be less than 5MB'
+            max_size: 100 * 1024 * 1024, // 100MB
+            max_size_error: 'Image must be less than 100MB'
         }
     },
 
@@ -763,8 +763,8 @@ const AdminValidationRules = {
                 file: 'File must be an image',
                 mimes: ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'],
                 mimes_error: 'Profile image must be JPEG, PNG, JPG, or GIF format',
-                max_size: 5 * 1024 * 1024, // 5MB
-                max_size_error: 'Profile image must not exceed 5MB'
+                max_size: 100 * 1024 * 1024, // 100MB
+                max_size_error: 'Profile image must not exceed 100MB'
             }
         },
         

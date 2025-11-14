@@ -114,7 +114,7 @@ return [
     // Media Upload
     'supporting_photos' => 'Picha za Uthibitisho (Hiari)',
     'upload_photos' => 'Pakia Picha',
-    'photo_help' => 'Picha za kuhitimu, picha za kazini, vyeti, n.k. (Juu zaidi ya 5MB kila moja)',
+    'photo_help' => 'Picha za kuhitimu, picha za kazini, vyeti, n.k. (Juu zaidi ya 100MB kila moja)',
     'file_too_large' => 'Faili la :field ":name" ni kubwa sana. Ukubwa wa juu zaidi ni :sizeMB.',
     
     // Permissions and Consent

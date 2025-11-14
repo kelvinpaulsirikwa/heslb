@@ -24,7 +24,7 @@ class ReusableNotepad extends Component
         $this->options = array_merge([
             'height' => '400px',
             'placeholder' => 'Start typing...',
-            'max_file_size' => '5MB',
+            'max_file_size' => '100MB',
             'allowed_types' => ['jpg', 'jpeg', 'png', 'gif', 'webp'],
             'spell_check' => true,
         ], $options);

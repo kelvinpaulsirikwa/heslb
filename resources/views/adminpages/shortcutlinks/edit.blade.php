@@ -175,7 +175,7 @@
                             </div>
                             <div class="form-text text-muted mt-2">
                                 <i class="fas fa-info-circle me-1"></i>
-                                Leave empty to keep existing file. Supported: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG (Max: 10MB)
+                                Leave empty to keep existing file. Supported: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG (Max: 100MB)
                             </div>
                             
                             @if($link->is_file && $link->link)
@@ -577,11 +577,11 @@ document.addEventListener('DOMContentLoaded', function() {
     fileInput.addEventListener('change', function() {
         const file = this.files[0];
         if (file) {
-            const maxSize = 10 * 1024 * 1024; // 10MB
+            const maxSize = 100 * 1024 * 1024; // 100MB
             const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'image/jpeg', 'image/png'];
             
             if (file.size > maxSize) {
-                alert('File size must be less than 10MB');
+                alert('File size must be less than 100MB');
                 this.value = '';
                 return;
             }

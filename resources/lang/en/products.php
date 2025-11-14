@@ -114,7 +114,7 @@ return [
     // Media Upload
     'supporting_photos' => 'Supporting Photos (Optional)',
     'upload_photos' => 'Upload Photos',
-    'photo_help' => 'Graduation photos, workplace images, certificates, etc. (Max 5MB each)',
+    'photo_help' => 'Graduation photos, workplace images, certificates, etc. (Max 100MB each)',
     'file_too_large' => ':field file ":name" is too large. Maximum size is :sizeMB.',
     
     // Permissions and Consent

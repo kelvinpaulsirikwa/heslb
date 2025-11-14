@@ -249,7 +249,7 @@ return [
     'file_uploaded' => 'Faili Limepakiwa kwa Mafanikio',
     'file_error' => 'Hitilafu ya Kupakia Faili',
     'upload_image' => 'Pakia Picha',
-    'image_help_text' => 'Pakia picha inayohusiana na swali lako (si lazima). Miundo inayotumika: JPEG, PNG, JPG, GIF. Ukubwa wa juu: 5MB',
+    'image_help_text' => 'Pakia picha inayohusiana na swali lako (si lazima). Miundo inayotumika: JPEG, PNG, JPG, GIF. Ukubwa wa juu: 100MB',
     
     // Additional Contact Methods
     'postal_mail' => 'Barua za Posta',

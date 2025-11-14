@@ -28,7 +28,7 @@ class BoardOfDirectorController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'image'       => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'image'       => 'required|image|mimes:jpeg,png,jpg,gif|max:102400',
             'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
@@ -75,7 +75,7 @@ class BoardOfDirectorController extends Controller
         $boardMember = BoardOfDirector::findOrFail($id);
 
         $request->validate([
-            'image'       => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'image'       => 'required|image|mimes:jpeg,png,jpg,gif|max:102400',
             'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);

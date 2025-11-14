@@ -165,7 +165,7 @@
                                             <div class="form-text text-muted">
                                                 <small>
                                                     <i class="fas fa-info-circle"></i> 
-                                                    Supported: JPG, PNG, GIF (Max: 5MB)
+                                                    Supported: JPG, PNG, GIF (Max: 100MB)
                                                 </small>
                                             </div>
                                         </div>

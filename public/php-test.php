@@ -6,7 +6,7 @@ echo "<p><strong>post_max_size:</strong> " . ini_get('post_max_size') . "</p>";
 echo "<p><strong>max_execution_time:</strong> " . ini_get('max_execution_time') . "</p>";
 echo "<p><strong>memory_limit:</strong> " . ini_get('memory_limit') . "</p>";
 
-echo "<h3>Recommended Settings for 5MB uploads:</h3>";
+echo "<h3>Recommended Settings for 100MB uploads:</h3>";
 echo "<p>upload_max_filesize = 5M (or higher)</p>";
 echo "<p>post_max_size = 10M (or higher)</p>";
 echo "<p>max_execution_time = 300</p>";

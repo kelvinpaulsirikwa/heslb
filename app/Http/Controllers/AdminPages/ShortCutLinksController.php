@@ -125,7 +125,7 @@ class ShortCutLinksController extends Controller
         } else {
             // File upload (optional, if a new file is uploaded)
             $request->validate([
-                'file' => 'nullable|file|max:10240',
+                'file' => 'nullable|file|max:102400',
             ]);
 
             if ($request->hasFile('file')) {

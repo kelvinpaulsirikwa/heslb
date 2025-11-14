@@ -97,7 +97,7 @@
                                 <label class="custom-file-label" for="file">Choose new file</label>
                             </div>
                             <small class="form-text text-muted">
-                                Leave empty to keep current file. Allowed types: PDF, DOC, DOCX, XLS, XLSX. Maximum size: 10MB
+                                Leave empty to keep current file. Allowed types: PDF, DOC, DOCX, XLS, XLSX. Maximum size: 100MB
                             </small>
                             @error('file')
                                 <span class="invalid-feedback d-block">{{ $message }}</span>
@@ -228,11 +228,11 @@ $(document).ready(function() {
         const file = fileInput.files[0];
         
         if (file) {
-            // Check file size (10MB = 10 * 1024 * 1024 bytes)
-            const maxSize = 10 * 1024 * 1024;
+            // Check file size (100MB = 100 * 1024 * 1024 bytes)
+            const maxSize = 100 * 1024 * 1024;
             if (file.size > maxSize) {
                 e.preventDefault();
-                alert('File size must be less than 10MB.');
+                alert('File size must be less than 100MB.');
                 return false;
             }
             

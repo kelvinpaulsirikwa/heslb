@@ -110,7 +110,7 @@ public function store(Request $request)
         'message'          => 'required|string|min:10',
         'date_of_incident' => 'nullable|date|before_or_equal:today',
         'location'         => 'nullable|string|max:255',
-        'image'            => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+        'image'            => 'nullable|image|mimes:jpeg,png,jpg,gif|max:102400',
         'consent'          => 'accepted',
         'image_captcha_selection' => 'required|string',
     ], [

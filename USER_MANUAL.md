@@ -1009,7 +1009,7 @@ The system uses role-based access control with different permission levels:
 #### Problem: Images not displaying
 **Solutions:**
 1. Verify image format (JPG, PNG recommended)
-2. Check file size (maximum 5MB recommended)
+2. Check file size (maximum 100MB recommended)
 3. Ensure image uploaded successfully
 4. Check file permissions
 
@@ -1017,7 +1017,7 @@ The system uses role-based access control with different permission levels:
 
 #### Problem: Cannot upload file
 **Solutions:**
-1. Check file size (usually max 10MB for PDFs)
+1. Check file size (usually max 100MB for PDFs)
 2. Verify file format is allowed
 3. Check internet connection
 4. Try compressing the file
@@ -1219,7 +1219,7 @@ To request new features:
 
 **Accepted Document Formats:**
 - PDF (.pdf) - Preferred for publications
-- Maximum file size: 10MB
+- Maximum file size: 100MB
 
 ### Appendix D: Common Error Messages
 

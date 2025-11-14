@@ -60,7 +60,7 @@ class UsersStoriesController extends Controller
                 'content'       => 'required|string|min:150',
                 'category'      => 'required|in:' . implode(',', array_keys(SuccessStory::CATEGORIES)),
                 'form_four_index_number' => 'required|string|regex:/^S\d{4}\/\d{4}\/\d{4}$/',
-                'images.*'     => 'nullable|image|max:5120', // 5MB limit
+                'images.*'     => 'nullable|image|max:102400', // 100MB limit
                 'agree_terms'  => 'required|accepted',
             ], [
                 'author.required' => 'Please provide your full name.',
@@ -81,7 +81,7 @@ class UsersStoriesController extends Controller
                 'form_four_index_number.required' => 'Please provide your Form Four Index Number.',
                 'form_four_index_number.regex' => 'Form Four Index Number must be in the format S0000/0000/year (e.g., S1234/0001/2020).',
                 'images.*.image' => 'Please upload only image files.',
-                'images.*.max' => 'Each image must be smaller than 5MB.',
+                'images.*.max' => 'Each image must be smaller than 100MB.',
                 'agree_terms.required' => 'You must agree to the terms and conditions.',
                 'agree_terms.accepted' => 'You must agree to the terms and conditions.',
             ]);
@@ -164,7 +164,7 @@ class UsersStoriesController extends Controller
 
             $errorMessage = 'The uploaded files are too large. Please ensure:';
             $errorMessage .= '<ul class="mb-0 mt-2">';
-            $errorMessage .= '<li>Images are under 5MB each</li>';
+            $errorMessage .= '<li>Images are under 100MB each</li>';
             $errorMessage .= '</ul>';
 
             if ($request->ajax() || $request->expectsJson()) {

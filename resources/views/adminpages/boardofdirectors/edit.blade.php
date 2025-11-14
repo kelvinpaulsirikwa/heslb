@@ -63,7 +63,7 @@
                                         <label class="custom-file-label" for="image">Choose new image...</label>
                                     </div>
                                     <small class="form-text text-muted">
-                                        Supported formats: JPEG, PNG, JPG, GIF. Max size: 5MB
+                                        Supported formats: JPEG, PNG, JPG, GIF. Max size: 100MB
                                     </small>
                                     @error('image')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>

@@ -4,7 +4,7 @@ echo PHP Configuration Update Script
 echo ========================================
 echo.
 echo This script will help you update your PHP configuration
-echo to support 10MB+ file uploads.
+echo to support 100MB+ file uploads.
 echo.
 echo Your PHP configuration file is located at:
 echo C:\php-8.4.10\php.ini

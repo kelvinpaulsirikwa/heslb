@@ -100,7 +100,7 @@
                                 label="Profile Image" 
                                 type="file" 
                                 accept="image/*"
-                                help="Optional: JPEG, PNG, JPG, or GIF format. Maximum 5MB"
+                                help="Optional: JPEG, PNG, JPG, or GIF format. Maximum 100MB"
                             />
                         </div>
                     </div>

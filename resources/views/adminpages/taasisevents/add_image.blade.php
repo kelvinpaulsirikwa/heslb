@@ -52,7 +52,7 @@
                                    required>
                         </div>
                         <small class="form-text text-muted">
-                            <i class="fas fa-info-circle"></i> You can select multiple images at once. Supported formats: JPG, JPEG, PNG, GIF. Maximum 5MB per image.
+                            <i class="fas fa-info-circle"></i> You can select multiple images at once. Supported formats: JPG, JPEG, PNG, GIF. Maximum 100MB per image.
                         </small>
                         @error('images')
                             <span class="invalid-feedback d-block">{{ $message }}</span>
@@ -147,9 +147,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 Array.from(files).forEach((file, index) => {
                     if (file.type.startsWith('image/')) {
-                        // Check file size (5MB limit)
+                        // Check file size (100MB limit)
                         if (file.size > 5 * 1024 * 1024) {
-                            alert(`Image "${file.name}" is larger than 5MB. Please choose a smaller image.`);
+                            alert(`Image "${file.name}" is larger than 100MB. Please choose a smaller image.`);
                             this.value = '';
                             previewSection.style.display = 'none';
                             return;

@@ -85,7 +85,7 @@
                                    id="image" 
                                    name="image" 
                                    accept="image/*">
-                            <div class="form-text">Supported formats: JPEG, PNG, JPG, GIF. Max size: 5MB</div>
+                            <div class="form-text">Supported formats: JPEG, PNG, JPG, GIF. Max size: 100MB</div>
                             @error('image')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

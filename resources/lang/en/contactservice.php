@@ -249,7 +249,7 @@ return [
     'file_uploaded' => 'File Uploaded Successfully',
     'file_error' => 'File Upload Error',
     'upload_image' => 'Upload Image',
-    'image_help_text' => 'Upload an image related to your inquiry (optional). Supported formats: JPEG, PNG, JPG, GIF. Max size: 5MB',
+    'image_help_text' => 'Upload an image related to your inquiry (optional). Supported formats: JPEG, PNG, JPG, GIF. Max size: 100MB',
     
     // Additional Contact Methods
     'postal_mail' => 'Postal Mail',

@@ -38,7 +38,7 @@ echo "\n========================================\n";
 
 if ($all_good) {
     echo "🎉 SUCCESS: All settings are configured correctly!\n";
-    echo "You can now upload files up to 10MB+ without issues.\n";
+    echo "You can now upload files up to 100MB+ without issues.\n";
 } else {
     echo "❌ ISSUE: Some settings need to be updated.\n";
     echo "\nTo fix this:\n";

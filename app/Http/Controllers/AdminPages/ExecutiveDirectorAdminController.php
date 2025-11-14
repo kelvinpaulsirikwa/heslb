@@ -35,7 +35,7 @@ class ExecutiveDirectorAdminController extends Controller
     {
         $request->validate([
             'full_name'         => 'required|string|max:255',
-            'imagepath'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'imagepath'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:102400',
             'start_year'        => 'required|integer|min:1900|max:' . (date('Y') + 10),
             'end_year'          => 'nullable|integer|min:1900|max:' . (date('Y') + 10) . '|gt:start_year',
             'term_description'  => 'nullable|string',
@@ -94,7 +94,7 @@ class ExecutiveDirectorAdminController extends Controller
 
         $request->validate([
             'full_name'         => 'required|string|max:255',
-            'imagepath'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'imagepath'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:102400',
             'start_year'        => 'required|integer|min:1900|max:' . (date('Y') + 10),
             'end_year'          => 'nullable|integer|min:1900|max:' . (date('Y') + 10) . '|gt:start_year',
             'term_description'  => 'nullable|string',

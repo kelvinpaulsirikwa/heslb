@@ -639,7 +639,7 @@
                         <div class="drop-zone-content">
                             <div class="drop-icon">📤</div>
                             <div class="drop-text">Click to select images or drag and drop</div>
-                            <div class="drop-subtext">JPG, PNG, GIF up to 5MB each</div>
+                            <div class="drop-subtext">JPG, PNG, GIF up to 100MB each</div>
                         </div>
                     </div>
                     

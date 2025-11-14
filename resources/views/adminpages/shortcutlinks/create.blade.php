@@ -154,7 +154,7 @@
                             </div>
                             <div class="form-text text-muted mt-2">
                                 <i class="fas fa-info-circle me-1"></i>
-                                Supported formats: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG (Maximum size: 10MB)
+                                Supported formats: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG (Maximum size: 100MB)
                             </div>
                             
                             <!-- File Preview Area -->
@@ -579,10 +579,10 @@ document.addEventListener('DOMContentLoaded', function() {
     fileInput.addEventListener('change', function() {
         const file = this.files[0];
         if (file) {
-            // Validate file size (10MB)
-            const maxSize = 10 * 1024 * 1024;
+            // Validate file size (100MB)
+            const maxSize = 100 * 1024 * 1024;
             if (file.size > maxSize) {
-                alert('File size must be less than 10MB');
+                alert('File size must be less than 100MB');
                 this.value = '';
                 filePreview.classList.add('d-none');
                 return;

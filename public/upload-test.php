@@ -33,7 +33,7 @@ echo "</table>";
 
 echo "<h3>Upload Test Form:</h3>";
 echo "<form method='post' enctype='multipart/form-data'>";
-echo "<p>Select a file to test upload (up to 10MB):</p>";
+echo "<p>Select a file to test upload (up to 100MB):</p>";
 echo "<input type='file' name='test_file' accept='.pdf,.doc,.docx' required>";
 echo "<br><br>";
 echo "<input type='submit' name='test_upload' value='Test Upload'>";
@@ -74,7 +74,7 @@ if (isset($_POST['test_upload']) && isset($_FILES['test_file'])) {
 echo "<h3>Instructions:</h3>";
 echo "<ol>";
 echo "<li>Check if all settings show '✅ OK'</li>";
-echo "<li>Try uploading a PDF file up to 10MB</li>";
+echo "<li>Try uploading a PDF file up to 100MB</li>";
 echo "<li>If upload fails, check your server's php.ini file</li>";
 echo "<li>Delete this file after testing for security</li>";
 echo "</ol>";

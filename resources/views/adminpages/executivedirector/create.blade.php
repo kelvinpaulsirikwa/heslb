@@ -98,7 +98,7 @@
                                 <label class="custom-file-label" for="imagepath">Choose image...</label>
                             </div>
                             <small class="form-text text-muted">
-                                Supported formats: JPEG, PNG, JPG, GIF. Max size: 5MB
+                                Supported formats: JPEG, PNG, JPG, GIF. Max size: 100MB
                             </small>
                             @error('imagepath')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
