@@ -6,31 +6,21 @@
     // Create session for captcha validation
     session(['captcha_category' => $selectedCategory]);
     
-    // Get all images for the selected category (support both PNG and SVG)
+    // Get all images for the selected category (always SVG)
     $categoryImages = [];
     $imageSuffixes = ['one', 'two', 'three'];
     foreach ($imageSuffixes as $suffix) {
         $imageBase = $selectedCategory . $suffix;
-        // Check if SVG exists, otherwise default to PNG
-        if (file_exists(public_path('images/storage/captureimages/' . $imageBase . '.svg'))) {
-            $categoryImages[] = $imageBase . '.svg';
-        } else {
-            $categoryImages[] = $imageBase . '.png';
-        }
+        $categoryImages[] = $imageBase . '.svg';
     }
     
-    // Get other category images to fill the grid
+    // Get other category images to fill the grid (always SVG)
     $otherImages = [];
     foreach ($categories as $cat) {
         if ($cat !== $selectedCategory) {
             foreach ($imageSuffixes as $suffix) {
                 $imageBase = $cat . $suffix;
-                // Check if SVG exists, otherwise default to PNG
-                if (file_exists(public_path('images/storage/captureimages/' . $imageBase . '.svg'))) {
-                    $otherImages[] = $imageBase . '.svg';
-                } else {
-                    $otherImages[] = $imageBase . '.png';
-                }
+                $otherImages[] = $imageBase . '.svg';
             }
         }
     }
@@ -46,7 +36,7 @@
     // Store the correct answers in session for validation
     session(['captcha_correct_answers' => $categoryImages]);
     
-    // Also store image indices for the controller validation
+    // Store image indices for controller validation
     $correctIndices = [];
     foreach ($allImages as $index => $image) {
         if (in_array($image, $categoryImages)) {
