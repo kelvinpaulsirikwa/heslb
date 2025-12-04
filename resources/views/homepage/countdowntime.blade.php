@@ -77,10 +77,10 @@
     <div class="main-loan-card">
         @if($applicationStatus === 'open')
             <div class="main-content">
-            <h1 class="loan-title">
+                <h1 class="loan-title">
                     {{ $academicyear }} <br> Loan Application Window
                     {{ __('loan.now_open') }}<br>
-                    <div class="progrxam-list">
+                    <div class="program-list">
                         @if(in_array('all', $programs))
                            
                             

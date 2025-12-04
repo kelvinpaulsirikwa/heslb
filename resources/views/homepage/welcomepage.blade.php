@@ -77,9 +77,7 @@
         font-weight: bold;
         color: white;
         margin-bottom: 20px;
-        opacity: 0;
-        transform: translateY(50px);
-        animation: dynamicFadeInUp 1s ease forwards;
+        opacity: 1; /* Changed from 0 to 1 - always visible */
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         min-height: auto;
     }
@@ -88,8 +86,7 @@
         font-size: 1.2rem;
         color: rgba(255, 255, 255, 0.95);
         line-height: 1.6;
-        opacity: 0;
-        animation: dynamicFadeInUp 1s ease 0.5s forwards;
+        opacity: 1; /* Changed from 0 to 1 - always visible */
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         min-height: auto;
     }
@@ -440,7 +437,8 @@
                 </div>
             </div>
             
-           
+            <!-- Dots Navigation -->
+            <div class="dots-indicator" id="dots-indicator"></div>
         </div>
     </div>
 
@@ -568,7 +566,7 @@
 
                 backspaceText: function(element, text, callback) {
                     let charIndex = text.length;
-                    const backspaceSpeed = 30;
+                    const backspaceSpeed = 15;
                     
                     const backspace = () => {
                         if (charIndex > 0) {
@@ -580,13 +578,13 @@
                         }
                     };
                     
-                    setTimeout(backspace, 200);
+                    setTimeout(backspace, 50);
                 },
 
                 typeText: function(element, text, callback) {
                     let charIndex = 0;
-                    const typingSpeed = 50;
-                    const variations = [40, 50, 60, 70, 45, 55]; // Variable typing speeds
+                    const typingSpeed = 30;
+                    const variations = [20, 25, 30, 35, 28, 32];
                     
                     const type = () => {
                         if (charIndex < text.length) {
@@ -600,7 +598,7 @@
                         }
                     };
                     
-                    setTimeout(type, 300);
+                    setTimeout(type, 100);
                 },
 
                 nextSlide: function() {

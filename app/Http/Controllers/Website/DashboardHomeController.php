@@ -33,21 +33,54 @@ class DashboardHomeController extends Controller
     // This method only returns the visitor stats array
   public function getVisitorStats()
 {
-    $allVisits = Visit::all();
-    logger('All Visits:', $allVisits->toArray()); // Check Laravel logs for records
-
-    $todayCount = Visit::whereDate('visited_at', Carbon::today())->count();
-    $yesterdayCount = Visit::whereDate('visited_at', Carbon::yesterday())->count();
-    $thisWeekCount = Visit::whereBetween('visited_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
-    $thisMonthCount = Visit::whereBetween('visited_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])->count();
+    // Today: from start of today to now
+    $todayStart = Carbon::today()->startOfDay();
+    $todayEnd = Carbon::now();
+    
+    // Yesterday: full 24 hours of yesterday
+    $yesterdayStart = Carbon::yesterday()->startOfDay();
+    $yesterdayEnd = Carbon::yesterday()->endOfDay();
+    
+    // This week: from start of week to now
+    $weekStart = Carbon::now()->startOfWeek();
+    $weekEnd = Carbon::now();
+    
+    // This month: from start of month to now
+    $monthStart = Carbon::now()->startOfMonth();
+    $monthEnd = Carbon::now();
+    
+    // Count visits using proper date ranges with full day coverage
+    $todayCount = Visit::whereBetween('visited_at', [$todayStart, $todayEnd])->count();
+    $yesterdayCount = Visit::whereBetween('visited_at', [$yesterdayStart, $yesterdayEnd])->count();
+    $thisWeekCount = Visit::whereBetween('visited_at', [$weekStart, $weekEnd])->count();
+    $thisMonthCount = Visit::whereBetween('visited_at', [$monthStart, $monthEnd])->count();
     $allTimeCount = Visit::count();
 
  
     return [
-        ['label' => 'Today', 'value' => $todayCount, 'icon' => 'bi-calendar-day'],
-        ['label' => 'Yesterday', 'value' => $yesterdayCount, 'icon' => 'bi-calendar-minus'],
-        ['label' => 'This Week', 'value' => $thisWeekCount, 'icon' => 'bi-calendar-week'],
-        ['label' => 'This Month', 'value' => $thisMonthCount, 'icon' => 'bi-calendar-month'],
+        [
+            'label' => 'Today', 
+            'value' => $todayCount, 
+            'icon' => 'bi-calendar-day',
+            'day' => Carbon::now()->format('D'), // Current day abbreviation (Mon, Tue, etc.)
+        ],
+        [
+            'label' => 'Yesterday', 
+            'value' => $yesterdayCount, 
+            'icon' => 'bi-calendar-minus',
+            'day' => Carbon::yesterday()->format('D'), // Yesterday's day abbreviation
+        ],
+        [
+            'label' => 'This Week', 
+            'value' => $thisWeekCount, 
+            'icon' => 'bi-calendar-week',
+        ],
+        [
+            'label' => 'This Month', 
+            'value' => $thisMonthCount, 
+            'icon' => 'bi-calendar-month',
+            'month' => Carbon::now()->format('M'), // Current month abbreviation (Jan, Feb, etc.)
+        ],
      ];
 }
 

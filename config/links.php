@@ -34,15 +34,15 @@ return [
     ],
 
     'cdn' => [
-        'bootstrap_css' => '/bootstrap-5.3.8-dist/css/bootstrap.min.css',
-        'bootstrap_js' => '/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js',
+        'bootstrap_css' => '/bootstrap/css/bootstrap.min.css',
+        'bootstrap_js' => '/bootstrap/js/bootstrap.bundle.min.js',
 
         'fontawesome_css' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css',
         'fontawesome_v6_css' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css',
         'bootstrap_icons' => 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css',
         'boxicons' => 'https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css',
-        'leaflet_css' => '/bootstrap-5.3.8-dist/css/leaflet.css',
-        'leaflet_js' => '/bootstrap-5.3.8-dist/js/leaflet.js',
+        'leaflet_css' => '/bootstrap/css/leaflet.css',
+        'leaflet_js' => '/bootstrap/js/leaflet.js',
     ],
 
     'maps' => [

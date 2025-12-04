@@ -32,6 +32,8 @@
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             animation: mainPulse 3s ease-in-out infinite;
+            user-select: none; /* Prevent text selection */
+            pointer-events: auto; /* But allow hover */
         }
 
         @keyframes mainPulse {
@@ -57,77 +59,109 @@
         .floating-menu-container.expanded .main-toggle-btn i {
             transform: scale(1.1);
         }
+        
+        /* Visual indicator when menu is locked (closed) */
+        .floating-menu-container.menu-locked .main-toggle-btn {
+            background: #003d66; /* Darker when locked */
+            opacity: 0.7;
+        }
+        
+        .floating-menu-container.menu-locked .main-toggle-btn:hover {
+            background: #005b94; /* Return to normal on hover */
+            opacity: 1;
+        }
 
         /* Menu Items Container */
         .menu-items {
             position: absolute;
-            bottom: 60px;
+            bottom: 70px;
             left: 0;
             display: flex;
             flex-direction: column;
             gap: 15px;
             padding-bottom: 25px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(20px);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: none;
-        }
-
-        .floating-menu-container:hover .menu-items,
-        .menu-items:hover {
             opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-            pointer-events: all;
+            visibility: hidden;
+            pointer-events: none;
+            transition: visibility 0s;
         }
 
-        /* Individual Menu Item */
+        /* Show menu on hover (only if not locked) */
+        .floating-menu-container:hover .menu-items {
+            visibility: visible !important;
+            pointer-events: all !important;
+        }
+        
+        /* Hide menu when locked (clicked to close) */
+        .floating-menu-container.menu-locked .menu-items {
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+        
+        .floating-menu-container.menu-locked:hover .menu-items {
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
+        /* Individual Menu Item - LADDER ANIMATION */
         .menu-item {
             position: relative;
             display: flex;
             align-items: center;
             gap: 10px;
-            transform: scale(0) translateX(-50px);
             opacity: 0;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateY(20px) scale(0.8);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* FALLBACK: Ensure menu items are visible on hover even without animation */
+        .floating-menu-container:hover .menu-item {
+            opacity: 1 !important;
+            transform: translateY(0) scale(1) !important;
+        }
+        
+        /* Hide menu items when locked */
+        .floating-menu-container.menu-locked .menu-item {
+            opacity: 0 !important;
+            transform: translateY(20px) scale(0.8) !important;
+            animation: none !important;
+        }
+        
+        .floating-menu-container.menu-locked:hover .menu-item {
+            opacity: 0 !important;
+            animation: none !important;
+        }
+
+        /* LADDER EFFECT - Each item pops up one by one with bounce! */
+        .floating-menu-container:hover .menu-item:nth-child(1) {
+            animation: ladderPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.05s forwards;
+        }
+
+        .floating-menu-container:hover .menu-item:nth-child(2) {
+            animation: ladderPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.1s forwards;
+        }
+
+        .floating-menu-container:hover .menu-item:nth-child(3) {
+            animation: ladderPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.15s forwards;
+        }
+
+        @keyframes ladderPop {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.5);
+            }
+            70% {
+                transform: translateY(-5px) scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         /* Extended hover area for submenu */
         .menu-item.has-submenu {
             padding-right: 250px; /* Extend hover area to cover social icons */
-        }
-
-        .floating-menu-container:hover .menu-item:nth-child(1) {
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.1s forwards;
-        }
-
-        .floating-menu-container:hover .menu-item:nth-child(2) {
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards;
-        }
-
-        .floating-menu-container:hover .menu-item:nth-child(3) {
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s forwards;
-        }
-
-        .menu-items:hover .menu-item {
-            transform: scale(1) translateX(0);
-            opacity: 1;
-        }
-
-        @keyframes popIn {
-            0% {
-                transform: scale(0) translateX(-50px);
-                opacity: 0;
-            }
-            60% {
-                transform: scale(1.15) translateX(5px);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1) translateX(0);
-                opacity: 1;
-            }
         }
 
         /* Menu Button */
@@ -140,9 +174,15 @@
             justify-content: center;
             color: white;
             border: none;
-            cursor: pointer;
+            cursor: default; /* Changed from pointer to default for non-clickable items */
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-decoration: none;
+            user-select: none;
+        }
+        
+        /* Links should show pointer cursor */
+        a.menu-btn {
+            cursor: pointer;
         }
 
         .menu-btn i,
@@ -221,34 +261,33 @@
          /* Social Icons Container */
          .social-icons-container {
              position: absolute;
-             left: 65px;
+             left: 70px;
              top: 0;
              display: flex;
              gap: 10px;
              align-items: center;
-             opacity: 0;
+             opacity: 1;
              visibility: hidden;
              pointer-events: none;
-             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-             padding-left: 15px; /* Bridge gap between button and icons */
+             transition: visibility 0s;
+             padding-left: 10px; /* Bridge gap between button and icons */
              padding-right: 10px;
              height: 60px; /* Match button height */
          }
 
-         .menu-item.has-submenu:hover .social-icons-container,
-         .social-icons-container:hover {
-             opacity: 1;
-             visibility: visible;
-             pointer-events: all;
+         /* Show social icons on hover */
+         .menu-item.has-submenu:hover .social-icons-container {
+             visibility: visible !important;
+             pointer-events: all !important;
          }
 
-         /* Ensure the social media button keeps hover state */
+        /* Ensure the social media button keeps hover state */
          .menu-item.has-submenu:hover .menu-btn.social-media-btn,
          .social-icons-container:hover ~ .menu-btn.social-media-btn {
              transform: translateX(-5px) scale(1.15);
          }
 
-        /* Social Button */
+        /* Social Button - LADDER POP ANIMATION */
         .social-btn {
             width: 45px;
             height: 45px;
@@ -258,43 +297,45 @@
             justify-content: center;
             color: white;
             text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform: scale(0);
             opacity: 0;
+            transform: translateX(-20px) scale(0.7);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .menu-item.has-submenu:hover .social-btn:nth-child(1),
-        .social-icons-container:hover .social-btn:nth-child(1) {
-            animation: socialPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.05s forwards;
+        /* FALLBACK: Ensure social icons are visible on hover */
+        .menu-item.has-submenu:hover .social-btn {
+            opacity: 1 !important;
+            transform: translateX(0) scale(1) !important;
         }
 
-        .menu-item.has-submenu:hover .social-btn:nth-child(2),
-        .social-icons-container:hover .social-btn:nth-child(2) {
-            animation: socialPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.1s forwards;
+        /* LADDER EFFECT for social icons - Pop one by one from left! */
+        .menu-item.has-submenu:hover .social-btn:nth-child(1) {
+            animation: socialPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.05s forwards;
         }
 
-        .menu-item.has-submenu:hover .social-btn:nth-child(3),
-        .social-icons-container:hover .social-btn:nth-child(3) {
-            animation: socialPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.15s forwards;
+        .menu-item.has-submenu:hover .social-btn:nth-child(2) {
+            animation: socialPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.1s forwards;
         }
 
-        .menu-item.has-submenu:hover .social-btn:nth-child(4),
-        .social-icons-container:hover .social-btn:nth-child(4) {
-            animation: socialPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards;
+        .menu-item.has-submenu:hover .social-btn:nth-child(3) {
+            animation: socialPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.15s forwards;
         }
 
-        @keyframes socialPopIn {
+        .menu-item.has-submenu:hover .social-btn:nth-child(4) {
+            animation: socialPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.2s forwards;
+        }
+
+        @keyframes socialPop {
             0% {
-                transform: translateX(-30px) scale(0);
                 opacity: 0;
+                transform: translateX(-30px) scale(0.3);
             }
-            60% {
-                transform: translateX(5px) scale(1.15);
-                opacity: 1;
+            70% {
+                transform: translateX(5px) scale(1.1);
             }
             100% {
-                transform: translateX(0) scale(1);
                 opacity: 1;
+                transform: translateX(0) scale(1);
             }
         }
 
@@ -391,9 +432,9 @@
 
             <!-- Social Media with Submenu -->
             <div class="menu-item has-submenu">
-                <button class="menu-btn social-media-btn" aria-label="Social Media">
+                <div class="menu-btn social-media-btn" aria-label="Social Media" role="button" tabindex="0">
                     <i class="fas fa-share-alt"></i>
-                </button>
+                </div>
                 
                 <div class="social-icons-container">
                     <a href="{{ config('links.social_media.youtube') }}" target="_blank" class="social-btn youtube-btn" aria-label="YouTube">
@@ -417,15 +458,18 @@
             </div>
         </div>
 
-        <!-- Main Toggle Button -->
-        <button class="main-toggle-btn" aria-label="Toggle Menu">
+        <!-- Main Toggle Button (No click action - hover only) -->
+        <div class="main-toggle-btn" aria-label="Quick Links Menu" role="button" tabindex="0">
             <i class="fas fa-user-graduate"></i>
-        </button>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const floatingMenu = document.getElementById('floatingMenu');
+            
+            if (!floatingMenu) return;
+            
             let isVisible = false;
             let ticking = false;
 
@@ -451,5 +495,29 @@
 
             window.addEventListener('scroll', handleScroll, { passive: true });
             handleScroll();
+
+            // Click to close menu functionality
+            const mainBtn = document.querySelector('.main-toggle-btn');
+            let isMenuLocked = false; // Track if menu is locked closed
+            
+            if (mainBtn) {
+                mainBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Toggle locked state
+                    isMenuLocked = !isMenuLocked;
+                    
+                    if (isMenuLocked) {
+                        // Close and lock menu
+                        floatingMenu.classList.add('menu-locked');
+                    } else {
+                        // Unlock menu (can be opened by hover)
+                        floatingMenu.classList.remove('menu-locked');
+                    }
+                    
+                    return false;
+                });
+            }
         });
     </script>
