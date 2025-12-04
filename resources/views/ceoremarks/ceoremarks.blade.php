@@ -2,7 +2,7 @@
     // Using Laravel's localization
     $name = __('managewords.name');
     $rank = __('managewords.rank'); 
-    $imageUrl = asset('images/static_files/Mkurugenzi_Bill.jpg');
+    $imageUrl = asset('images/static_files/Mkurugenzi_Bills.jpg');
     
     // Get preview and full text from language files
     $welcomePreview = __('managewords.preview_text');
