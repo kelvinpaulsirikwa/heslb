@@ -1,0 +1,18 @@
+How to Clear HSTS and Browser Cache for localhost:
+
+Chrome/Edge:
+1. Open chrome://net-internals/#hsts
+2. In "Delete domain security policies", enter: 127.0.0.1
+3. Click "Delete"
+4. Clear browser cache: Ctrl+Shift+Delete
+5. Close all browser windows completely
+6. Reopen browser and go to http://127.0.0.1:8000
+
+Firefox:
+1. Clear browser cache: Ctrl+Shift+Delete
+2. Close all Firefox windows
+3. Delete HSTS entries by going to about:preferences#privacy
+4. Scroll to "Cookies and Site Data" > Clear Data
+5. Reopen and go to http://127.0.0.1:8000
+
+

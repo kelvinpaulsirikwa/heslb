@@ -9,15 +9,13 @@ class TrustProxies extends Middleware
 {
     /**
      * The trusted proxies for this application.
-     * Set to '*' to trust all proxies (Nginx, Apache, Cloudflare, Load Balancers)
      *
      * @var array<int, string>|string|null
      */
-    protected $proxies = '*';
+    protected $proxies;
 
     /**
      * The headers that should be used to detect proxies.
-     * Includes all forwarded headers for proper HTTPS detection behind proxies
      *
      * @var int
      */

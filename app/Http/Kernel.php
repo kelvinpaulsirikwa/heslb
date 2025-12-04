@@ -15,8 +15,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         // \App\Http\Middleware\TrustHosts::class,
-        \App\Http\Middleware\TrustProxies::class, // Trust reverse proxies
-        \App\Http\Middleware\ForceHttps::class, // Force HTTPS redirect in production
+        \App\Http\Middleware\TrustProxies::class, // Trust reverse proxies 
         \Illuminate\Http\Middleware\HandleCors::class,
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,

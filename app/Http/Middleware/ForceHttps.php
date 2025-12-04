@@ -9,7 +9,6 @@ class ForceHttps
 {
     /**
      * Handle an incoming request.
-     * Redirects HTTP to HTTPS in production environment.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
@@ -17,11 +16,6 @@ class ForceHttps
      */
     public function handle(Request $request, Closure $next)
     {
-        // Only force HTTPS in production
-        if (config('app.env') === 'production' && !$request->isSecure()) {
-            return redirect()->secure($request->getRequestUri(), 301);
-        }
-
         return $next($request);
     }
 }

@@ -1,0 +1,35 @@
+====================================================================
+LOCAL DEVELOPMENT SETTINGS - Add these to your .env file
+====================================================================
+
+Add or update these lines in your .env file to disable HTTPS forcing:
+
+SESSION_SECURE_COOKIE=false
+SESSION_DOMAIN=127.0.0.1
+
+====================================================================
+INSTRUCTIONS:
+====================================================================
+
+1. Open your .env file (located in the root of your project)
+2. Search for SESSION_SECURE_COOKIE
+3. If it exists, change it to: SESSION_SECURE_COOKIE=false
+4. If it doesn't exist, add this line: SESSION_SECURE_COOKIE=false
+5. Also add: SESSION_DOMAIN=127.0.0.1
+6. Save the file
+7. Run: php artisan config:clear
+8. Restart your server: php artisan serve
+
+====================================================================
+WHY THIS IS NEEDED:
+====================================================================
+
+Your Laravel session configuration (config/session.php) has:
+'secure' => env('SESSION_SECURE_COOKIE', true)
+
+This means by default it's set to TRUE, forcing cookies to only work
+with HTTPS connections. For local development on HTTP, we need to 
+set this to FALSE.
+
+====================================================================
+

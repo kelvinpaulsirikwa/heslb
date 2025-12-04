@@ -1131,7 +1131,7 @@ img[src*="heslblogo"]:hover, img[src*="coatofarms"]:hover {
 
 /* Center area background image with soft white overlay */
 .full-header .col-md-8.text-center {
-    background: linear-gradient(rgba(255,255,255,0.92), rgba(255,255,255,0.92)), url('/images/static_files/ADAPT_IT.jpg') center/cover no-repeat !important;
+    background: linear-gradient(rgba(255,255,255,0.92), rgba(255,255,255,0.92)), url('/images/heslbimage/ADAPT_IT.jpg') center/cover no-repeat !important;
     border-radius: 14px;
     padding: 14px 18px;
 }
