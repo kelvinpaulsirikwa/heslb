@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Pagination\Paginator;
 use App\Services\LinkService;
 
@@ -29,6 +31,12 @@ class AppServiceProvider extends ServiceProvider
 
 public function boot(): void
 {
+    // Force HTTPS for all generated URLs (routes, assets, etc.)
+    // This ensures forms and links always use HTTPS in non-local environments
+    // This fixes the security issue where forms submit to HTTP instead of HTTPS
+    if (!app()->environment('local')) {
+        URL::forceScheme('https');
+    }
     
     App::setLocale(Session::get('locale', config('app.locale')));
     
