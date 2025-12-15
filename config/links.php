@@ -34,16 +34,16 @@ return [
     ],
 
     'cdn' => [
-        'bootstrap_css' => '/bootstrap/css/bootstrap.min.css',
-        'bootstrap_js' => '/bootstrap/js/bootstrap.bundle.min.js',
+    'bootstrap_css' => '/bootstrap/css/bootstrap.min.css',
+    'bootstrap_js' => '/bootstrap/js/bootstrap.bundle.min.js',
+    'fontawesome_css' => '/css/cdnfontawesome.css',
+    'fontawesome_v6_css' => '/css/cdnfontawesomev6.css',
+    'bootstrap_icons' => '/css/cdnbootstrap_icons.css',
+    'boxicons' => '/css/cdnboxicons.css',
+    'leaflet_css' => '/bootstrap/css/leaflet.css',
+    'leaflet_js' => '/bootstrap/js/leaflet.js',
+],
 
-        'fontawesome_css' => '/css/cdnfontawesome.css',
-        'fontawesome_v6_css' => '/css/cdnfontawesomev6.css',
-        'bootstrap_icons' => '/css/cdnbootstrapicons.css',
-        'boxicons' => '/css/cdnboxicons.css',
-        'leaflet_css' => '/bootstrap/css/leaflet.css',
-        'leaflet_js' => '/bootstrap/js/leaflet.js',
-    ],
 
     'maps' => [
         'openstreetmap_tiles' => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
