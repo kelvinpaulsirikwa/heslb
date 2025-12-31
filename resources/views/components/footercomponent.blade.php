@@ -31,6 +31,14 @@
                         <i class="fas fa-bullhorn info-icon ms-2"></i>
                     </div>
                 </div>
+                <div class="footer-col">
+                    <div class="info-item d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">
+                            <a href="{{ config('links.heslb_systems.call_center') }}" target="_blank" style="color: inherit; text-decoration: none;">Callcenter</a>
+                        </h4>
+                        <i class="fas fa-phone-alt info-icon ms-2"></i>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

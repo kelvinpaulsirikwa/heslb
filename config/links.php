@@ -23,6 +23,7 @@ return [
         'olams_login' => 'https://olas.heslb.go.tz/olams/account/login',
         'olams_employer_login' => 'https://olas.heslb.go.tz/olams/account/employer-login',
         'olams_pre_applicant' => 'https://olas.heslb.go.tz/olams/pre-applicant',
+        'call_center' => 'https://callcenter.heslb.go.tz/omni-client/?client_id=1&client_token=MTc1OTMxMDY2MVVjMTFRQ0FrQlVWM3hrOTp1OTFKYkpyWG40UlhDWlA%3D&channel=website',
     ],
 
     'contact' => [
