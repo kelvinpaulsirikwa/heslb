@@ -12,9 +12,16 @@ use Illuminate\Support\Facades\Storage;
 class PhotoGalleryController extends Controller
 {
    
-    public function index()
+    public function index(Request $request)
     {
-        $events = Taasisevent::with('user', 'images')->latest()->get();
+        $query = Taasisevent::with('user', 'images');
+        
+        // Filter by user if provided
+        if ($request->filled('user_id')) {
+            $query->where('posted_by', $request->user_id);
+        }
+        
+        $events = $query->latest()->get();
         return view('adminpages.taasisevents.index', compact('events'));
     }
 

@@ -10,9 +10,16 @@ use Illuminate\Support\Facades\Storage;
 
 class ShortCutLinksController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $links = Link::with('user')->latest()->get();
+        $query = Link::with('user');
+        
+        // Filter by user if provided
+        if ($request->filled('user_id')) {
+            $query->where('posted_by', $request->user_id);
+        }
+        
+        $links = $query->latest()->get();
         return view('adminpages.shortcutlinks.shortcutlink', compact('links'));
     }
 

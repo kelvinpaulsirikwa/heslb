@@ -126,58 +126,70 @@
                     </h6>
                     <div class="row g-3">
                         <div class="col-6 col-md-3">
-                            <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50">
-                                <div class="text-primary mb-2">
-                                    <i class="fas fa-newspaper fa-2x"></i>
+                            <a href="{{ route('admin.news.index', ['user_id' => $user->id]) }}" class="text-decoration-none">
+                                <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50 hover-card">
+                                    <div class="text-primary mb-2">
+                                        <i class="fas fa-newspaper fa-2x"></i>
+                                    </div>
+                                    <div class="fw-bold text-dark fs-4">{{ $stats['news'] ?? 0 }}</div>
+                                    <div class="text-muted small">News Posts</div>
                                 </div>
-                                <div class="fw-bold text-dark fs-4">{{ $stats['news'] ?? 0 }}</div>
-                                <div class="text-muted small">News Posts</div>
-                            </div>
+                            </a>
                         </div>
                         <div class="col-6 col-md-3">
-                            <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50">
-                                <div class="text-success mb-2">
-                                    <i class="fas fa-file-alt fa-2x"></i>
+                            <a href="{{ route('admin.publications.index', ['user_id' => $user->id]) }}" class="text-decoration-none">
+                                <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50 hover-card">
+                                    <div class="text-success mb-2">
+                                        <i class="fas fa-file-alt fa-2x"></i>
+                                    </div>
+                                    <div class="fw-bold text-dark fs-4">{{ $stats['publications'] ?? 0 }}</div>
+                                    <div class="text-muted small">Publications</div>
                                 </div>
-                                <div class="fw-bold text-dark fs-4">{{ $stats['publications'] ?? 0 }}</div>
-                                <div class="text-muted small">Publications</div>
-                            </div>
+                            </a>
                         </div>
                         <div class="col-6 col-md-3">
-                            <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50">
-                                <div class="text-warning mb-2">
-                                    <i class="fas fa-link fa-2x"></i>
+                            <a href="{{ route('shortcut-links.index', ['user_id' => $user->id]) }}" class="text-decoration-none">
+                                <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50 hover-card">
+                                    <div class="text-warning mb-2">
+                                        <i class="fas fa-link fa-2x"></i>
+                                    </div>
+                                    <div class="fw-bold text-dark fs-4">{{ $stats['links'] ?? 0 }}</div>
+                                    <div class="text-muted small">Shortcut Links</div>
                                 </div>
-                                <div class="fw-bold text-dark fs-4">{{ $stats['links'] ?? 0 }}</div>
-                                <div class="text-muted small">Shortcut Links</div>
-                            </div>
+                            </a>
                         </div>
                         <div class="col-6 col-md-3">
-                            <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50">
-                                <div class="text-danger mb-2">
-                                    <i class="fas fa-video fa-2x"></i>
+                            <a href="{{ route('videopodcasts.index', ['user_id' => $user->id]) }}" class="text-decoration-none">
+                                <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50 hover-card">
+                                    <div class="text-danger mb-2">
+                                        <i class="fas fa-video fa-2x"></i>
+                                    </div>
+                                    <div class="fw-bold text-dark fs-4">{{ $stats['video_podcasts'] ?? 0 }}</div>
+                                    <div class="text-muted small">Video Podcasts</div>
                                 </div>
-                                <div class="fw-bold text-dark fs-4">{{ $stats['video_podcasts'] ?? 0 }}</div>
-                                <div class="text-muted small">Video Podcasts</div>
-                            </div>
+                            </a>
                         </div>
                         <div class="col-6 col-md-3">
-                            <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50">
-                                <div class="text-info mb-2">
-                                    <i class="fas fa-clipboard-list fa-2x"></i>
+                            <a href="{{ route('admin.window_applications.index', ['user_id' => $user->id]) }}" class="text-decoration-none">
+                                <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50 hover-card">
+                                    <div class="text-info mb-2">
+                                        <i class="fas fa-clipboard-list fa-2x"></i>
+                                    </div>
+                                    <div class="fw-bold text-dark fs-4">{{ $stats['applications'] ?? 0 }}</div>
+                                    <div class="text-muted small">Applications</div>
                                 </div>
-                                <div class="fw-bold text-dark fs-4">{{ $stats['applications'] ?? 0 }}</div>
-                                <div class="text-muted small">Applications</div>
-                            </div>
+                            </a>
                         </div>
                         <div class="col-6 col-md-3">
-                            <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50">
-                                <div class="text-secondary mb-2">
-                                    <i class="fas fa-photo-video fa-2x"></i>
+                            <a href="{{ route('admin.taasisevents.index', ['user_id' => $user->id]) }}" class="text-decoration-none">
+                                <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50 hover-card">
+                                    <div class="text-secondary mb-2">
+                                        <i class="fas fa-photo-video fa-2x"></i>
+                                    </div>
+                                    <div class="fw-bold text-dark fs-4">{{ $stats['photo_galleries'] ?? 0 }}</div>
+                                    <div class="text-muted small">Photo Galleries</div>
                                 </div>
-                                <div class="fw-bold text-dark fs-4">{{ $stats['photo_galleries'] ?? 0 }}</div>
-                                <div class="text-muted small">Photo Galleries</div>
-                            </div>
+                            </a>
                         </div>
                         <div class="col-6 col-md-3">
                             <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50">
@@ -371,6 +383,29 @@ label.small {
 /* Status and role badges */
 .badge i {
     font-size: 0.8em;
+}
+
+/* Hover effect for clickable statistics cards */
+.hover-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    background-color: #f8f9fa !important;
+    border-color: #0d6efd !important;
+}
+
+.hover-card:hover .text-primary,
+.hover-card:hover .text-success,
+.hover-card:hover .text-warning,
+.hover-card:hover .text-danger,
+.hover-card:hover .text-info,
+.hover-card:hover .text-secondary {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
 }
 </style>
 @endsection

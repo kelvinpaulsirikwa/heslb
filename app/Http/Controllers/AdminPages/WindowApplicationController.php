@@ -20,6 +20,11 @@ class WindowApplicationController extends Controller
         if ($extensionType) {
             $query->where('extension_type', $extensionType);
         }
+        
+        // Filter by user if provided
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
 
         $applications = $query->latest()->get();
 

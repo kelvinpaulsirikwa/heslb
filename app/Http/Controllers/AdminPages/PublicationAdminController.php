@@ -18,11 +18,18 @@ class PublicationAdminController extends Controller
     /**
      * Display publications index
      */
-    public function index()
+    public function index(Request $request)
     {
-        $publications = Publication::with('category')
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
+        $query = Publication::with('category');
+        
+        // Filter by user if provided
+        if ($request->filled('user_id')) {
+            $query->where('posted_by', $request->user_id);
+        }
+        
+        $publications = $query->orderBy('created_at', 'desc')
+            ->paginate(15)
+            ->appends($request->all());
             
         $categories = Category::where('is_active', true)
             ->orderBy('display_order')

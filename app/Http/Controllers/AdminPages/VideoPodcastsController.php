@@ -12,9 +12,16 @@ class VideoPodcastsController extends Controller
     /**
      * Display a listing of the videopodcasts.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $videos = Videopodcast::with('user')->latest()->get();
+        $query = Videopodcast::with('user');
+        
+        // Filter by user if provided
+        if ($request->filled('user_id')) {
+            $query->where('posted_by', $request->user_id);
+        }
+        
+        $videos = $query->latest()->get();
         return view('adminpages.videopodcast.index', compact('videos'));
     }
 

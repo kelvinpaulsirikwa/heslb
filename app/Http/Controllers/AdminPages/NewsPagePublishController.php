@@ -13,9 +13,16 @@ class NewsPagePublishController extends Controller
     /**
      * Display a listing of the news.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $news = News::latest()->paginate(10);
+        $query = News::query();
+        
+        // Filter by user if provided
+        if ($request->filled('user_id')) {
+            $query->where('posted_by', $request->user_id);
+        }
+        
+        $news = $query->latest()->paginate(10)->appends($request->all());
         return view('adminpages.newsandevent.allnews', compact('news'));
     }
 
