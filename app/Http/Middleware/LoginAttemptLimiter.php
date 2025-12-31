@@ -27,15 +27,18 @@ class LoginAttemptLimiter
             if (LoginAttempt::hasExceededMaxAttempts($email, $ipAddress)) {
                 $remainingTime = LoginAttempt::getRemainingLockoutTime($email, $ipAddress);
                 
-                Log::warning('Login attempt blocked by middleware', [
-                    'email' => $email,
-                    'ip' => $ipAddress,
-                    'remaining_minutes' => $remainingTime
-                ]);
-                
-                return redirect()->back()
-                    ->with('error', "Too many failed login attempts. Please try again in {$remainingTime} minutes.")
-                    ->withInput($request->only('email'));
+                // Only block if there's remaining lockout time (lockout hasn't expired)
+                if ($remainingTime > 0) {
+                    Log::warning('Login attempt blocked by middleware', [
+                        'email' => $email,
+                        'ip' => $ipAddress,
+                        'remaining_minutes' => $remainingTime
+                    ]);
+                    
+                    return redirect()->back()
+                        ->with('error', "Too many failed login attempts. Please try again in {$remainingTime} minutes.")
+                        ->withInput($request->only('email'));
+                }
             }
         }
 

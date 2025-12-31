@@ -102,4 +102,83 @@ class LoginAttemptsController extends Controller
         
         return redirect()->back()->with('success', "Cleared {$deletedCount} old login attempts.");
     }
+
+    /**
+     * Display blocked emails
+     */
+    public function blockedEmails()
+    {
+        $blockedEmails = $this->getBlockedEmails();
+        
+        return view('adminpages.login-attempts.blocked-emails', compact('blockedEmails'));
+    }
+
+    /**
+     * Get currently blocked emails
+     */
+    private function getBlockedEmails()
+    {
+        $blockedEmails = [];
+        $cutoffTime = Carbon::now()->subMinutes(15);
+        
+        // Get distinct emails with failed attempts in the last 15 minutes
+        $failedAttempts = LoginAttempt::where('attempted_at', '>=', $cutoffTime)
+            ->where('successful', false)
+            ->whereNotNull('email')
+            ->where('email', '!=', '')
+            ->selectRaw('email, COUNT(*) as attempt_count, MAX(attempted_at) as last_attempt')
+            ->groupBy('email')
+            ->having('attempt_count', '>=', 5)
+            ->get();
+
+        foreach ($failedAttempts as $attempt) {
+            // Get IP addresses associated with this email
+            $ipAddresses = LoginAttempt::where('email', $attempt->email)
+                ->where('attempted_at', '>=', $cutoffTime)
+                ->where('successful', false)
+                ->distinct()
+                ->pluck('ip_address')
+                ->toArray();
+
+            // Check remaining lockout time (using first IP or empty string)
+            $ipAddress = !empty($ipAddresses) ? $ipAddresses[0] : '';
+            $remainingTime = LoginAttempt::getRemainingLockoutTime($attempt->email, $ipAddress);
+            
+            // Only include if there's remaining lockout time
+            if ($remainingTime > 0) {
+                $blockedEmails[] = [
+                    'email' => $attempt->email,
+                    'attempt_count' => $attempt->attempt_count,
+                    'last_attempt' => $attempt->last_attempt,
+                    'remaining_minutes' => $remainingTime,
+                    'ip_addresses' => $ipAddresses,
+                ];
+            }
+        }
+
+        return $blockedEmails;
+    }
+
+    /**
+     * Unblock an email by clearing its failed login attempts
+     */
+    public function unblockEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $email = $request->email;
+        
+        // Clear all failed attempts for this email
+        $deletedCount = LoginAttempt::where('email', $email)
+            ->where('successful', false)
+            ->delete();
+
+        if ($deletedCount > 0) {
+            return redirect()->back()->with('success', "Email '{$email}' has been unblocked. {$deletedCount} failed attempt(s) cleared.");
+        } else {
+            return redirect()->back()->with('info', "Email '{$email}' was not blocked or has no failed attempts to clear.");
+        }
+    }
 }

@@ -23,16 +23,18 @@ class AuthController extends Controller
         $remainingTime = 0;
         
         // Check lockout status by IP address first
-        $isLockedOut = LoginAttempt::hasExceededMaxAttempts('', $ipAddress);
-        if ($isLockedOut) {
+        if (LoginAttempt::hasExceededMaxAttempts('', $ipAddress)) {
             $remainingTime = LoginAttempt::getRemainingLockoutTime('', $ipAddress);
+            // Only consider locked out if there's remaining time (lockout hasn't expired)
+            $isLockedOut = $remainingTime > 0;
         }
         
         // If we have an email and it's not locked out by IP, check by email/IP combination
         if (!$isLockedOut && $email) {
-            $isLockedOut = LoginAttempt::hasExceededMaxAttempts($email, $ipAddress);
-            if ($isLockedOut) {
+            if (LoginAttempt::hasExceededMaxAttempts($email, $ipAddress)) {
                 $remainingTime = LoginAttempt::getRemainingLockoutTime($email, $ipAddress);
+                // Only consider locked out if there's remaining time (lockout hasn't expired)
+                $isLockedOut = $remainingTime > 0;
             }
         }
         
@@ -63,13 +65,16 @@ class AuthController extends Controller
         if (LoginAttempt::hasExceededMaxAttempts($email, $ipAddress)) {
             $remainingTime = LoginAttempt::getRemainingLockoutTime($email, $ipAddress);
             
-            Log::warning('Login blocked: too many attempts', [
-                'email' => $email, 
-                'ip' => $ipAddress,
-                'remaining_minutes' => $remainingTime
-            ]);
-            
-            return back()->with('error', "Too many failed login attempts. Please try again in {$remainingTime} minutes.");
+            // Only block if there's remaining lockout time (lockout hasn't expired)
+            if ($remainingTime > 0) {
+                Log::warning('Login blocked: too many attempts', [
+                    'email' => $email, 
+                    'ip' => $ipAddress,
+                    'remaining_minutes' => $remainingTime
+                ]);
+                
+                return back()->with('error', "Too many failed login attempts. Please try again in {$remainingTime} minutes.");
+            }
         }
 
         $user = Userstable::where('email', $email)->first();
@@ -103,7 +108,10 @@ class AuthController extends Controller
             
             if ($remainingAttempts <= 0) {
                 $remainingTime = LoginAttempt::getRemainingLockoutTime($email, $ipAddress);
-                return back()->with('error', "Too many failed login attempts. Please try again in {$remainingTime} minutes.");
+                // Only show lockout message if there's remaining time (lockout hasn't expired)
+                if ($remainingTime > 0) {
+                    return back()->with('error', "Too many failed login attempts. Please try again in {$remainingTime} minutes.");
+                }
             }
             
             return back()->with('error', $errorMessage . " ({$remainingAttempts} attempts remaining)");

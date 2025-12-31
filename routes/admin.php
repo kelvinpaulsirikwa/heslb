@@ -47,6 +47,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.user.status']
     Route::get('login-attempts', [LoginAttemptsController::class, 'index'])->name('login-attempts.index');
     Route::post('login-attempts/clear-all', [LoginAttemptsController::class, 'clearAll'])->name('login-attempts.clear-all');
     Route::post('login-attempts/clear-old', [LoginAttemptsController::class, 'clearOld'])->name('login-attempts.clear-old');
+    Route::get('blocked-emails', [LoginAttemptsController::class, 'blockedEmails'])->name('blocked-emails.index');
+    Route::post('blocked-emails/unblock', [LoginAttemptsController::class, 'unblockEmail'])->name('blocked-emails.unblock');
 });
 
 //Admin pages
