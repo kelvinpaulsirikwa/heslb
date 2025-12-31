@@ -60,5 +60,9 @@
 
     </div>
 </div>
+<script>
+    // Pass remaining time to JavaScript
+    window.loginRemainingTime = {{ $remainingTime ?? 0 }};
+</script>
 <script src="{{ asset('js/login.js') }}"></script>
 @endsection

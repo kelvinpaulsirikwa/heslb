@@ -104,7 +104,7 @@ class AuthController extends Controller
 
         if (!$loginSuccessful) {
             $failedAttempts = LoginAttempt::getFailedAttemptsCount($email, $ipAddress);
-            $remainingAttempts = 5 - $failedAttempts;
+            $remainingAttempts = max(0, 5 - $failedAttempts); // Ensure it never goes negative
             
             if ($remainingAttempts <= 0) {
                 $remainingTime = LoginAttempt::getRemainingLockoutTime($email, $ipAddress);

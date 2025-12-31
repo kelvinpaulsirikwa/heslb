@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let minutes = Math.floor(seconds / 60);
             let secs = seconds % 60;
             loginButton.textContent = `LOCKED OUT (${minutes}m ${secs}s)`;
-            seconds--;
+            seconds--; // Decrement the countdown
             setTimeout(updateCountdown, 1000);
         }
 
