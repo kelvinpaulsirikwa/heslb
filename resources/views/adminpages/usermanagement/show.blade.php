@@ -119,26 +119,107 @@
                     </div>
                 </div>
 
+                <!-- User Statistics Card -->
+                <div class="bg-white shadow-sm border rounded-3 p-4 mt-4">
+                    <h6 class="mb-3 text-dark fw-semibold">
+                        <i class="fas fa-chart-bar text-info me-2"></i>User Activity Summary
+                    </h6>
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3">
+                            <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50">
+                                <div class="text-primary mb-2">
+                                    <i class="fas fa-newspaper fa-2x"></i>
+                                </div>
+                                <div class="fw-bold text-dark fs-4">{{ $stats['news'] ?? 0 }}</div>
+                                <div class="text-muted small">News Posts</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50">
+                                <div class="text-success mb-2">
+                                    <i class="fas fa-file-alt fa-2x"></i>
+                                </div>
+                                <div class="fw-bold text-dark fs-4">{{ $stats['publications'] ?? 0 }}</div>
+                                <div class="text-muted small">Publications</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50">
+                                <div class="text-warning mb-2">
+                                    <i class="fas fa-link fa-2x"></i>
+                                </div>
+                                <div class="fw-bold text-dark fs-4">{{ $stats['links'] ?? 0 }}</div>
+                                <div class="text-muted small">Shortcut Links</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50">
+                                <div class="text-danger mb-2">
+                                    <i class="fas fa-video fa-2x"></i>
+                                </div>
+                                <div class="fw-bold text-dark fs-4">{{ $stats['video_podcasts'] ?? 0 }}</div>
+                                <div class="text-muted small">Video Podcasts</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50">
+                                <div class="text-info mb-2">
+                                    <i class="fas fa-clipboard-list fa-2x"></i>
+                                </div>
+                                <div class="fw-bold text-dark fs-4">{{ $stats['applications'] ?? 0 }}</div>
+                                <div class="text-muted small">Applications</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50">
+                                <div class="text-secondary mb-2">
+                                    <i class="fas fa-photo-video fa-2x"></i>
+                                </div>
+                                <div class="fw-bold text-dark fs-4">{{ $stats['photo_galleries'] ?? 0 }}</div>
+                                <div class="text-muted small">Photo Galleries</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50">
+                                <div class="text-primary mb-2">
+                                    <i class="fas fa-images fa-2x"></i>
+                                </div>
+                                <div class="fw-bold text-dark fs-4">{{ $stats['photo_gallery_images'] ?? 0 }}</div>
+                                <div class="text-muted small">Gallery Images</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50">
+                                <div class="text-dark mb-2">
+                                    <i class="fas fa-layer-group fa-2x"></i>
+                                </div>
+                                <div class="fw-bold text-dark fs-4">{{ ($stats['news'] ?? 0) + ($stats['publications'] ?? 0) + ($stats['links'] ?? 0) + ($stats['video_podcasts'] ?? 0) + ($stats['applications'] ?? 0) + ($stats['photo_galleries'] ?? 0) }}</div>
+                                <div class="text-muted small">Total Items</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Quick Actions Card -->
                 <div class="bg-white shadow-sm border rounded-3 p-4 mt-4">
                     <h6 class="mb-3 text-dark fw-semibold">
                         <i class="fas fa-tools text-primary me-2"></i>Quick Actions
                     </h6>
-                    <div class="d-flex flex-column flex-md-row gap-3">
-                        <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-primary btn-lg px-4">
+                    <div class="d-flex flex-column flex-md-row flex-wrap gap-2">
+                        <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-primary">
                             <i class="fas fa-edit me-2"></i>Edit User Profile
                         </a>
                         @if(auth()->user()->id != $user->id)
-                        <a href="{{ route('admin.users.reset-password.form', $user) }}" class="btn btn-warning btn-lg px-4">
+                        <a href="{{ route('admin.users.reset-password.form', $user) }}" class="btn btn-warning">
                             <i class="fas fa-key me-2"></i>Reset Password
                         </a>
                         @endif
-                        <button class="btn btn-outline-{{ $user->status === 'active' ? 'danger' : 'success' }} btn-lg px-4" 
+                        <button class="btn btn-outline-{{ $user->status === 'active' ? 'danger' : 'success' }}" 
                                 data-bs-toggle="modal" data-bs-target="#statusModal">
                             <i class="fas fa-{{ $user->status === 'active' ? 'ban' : 'check' }} me-2"></i>
                             {{ $user->status === 'active' ? 'Block User' : 'Unblock User' }}
                         </button>
-                        <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary btn-lg px-4">
+                        <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary">
                             <i class="fas fa-list me-2"></i>View All Users
                         </a>
                     </div>

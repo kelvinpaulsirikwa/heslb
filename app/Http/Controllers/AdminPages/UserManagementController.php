@@ -92,7 +92,18 @@ class UserManagementController extends Controller
             session()->flash('warning', 'This user is currently blocked and cannot make any changes to the system.');
         }
         
-        return view('adminpages.usermanagement.show', compact('user'));
+        // Get user statistics
+        $stats = [
+            'news' => \App\Models\News::where('posted_by', $user->id)->count(),
+            'publications' => \App\Models\Publication::where('posted_by', $user->id)->count(),
+            'links' => \App\Models\Link::where('posted_by', $user->id)->count(),
+            'video_podcasts' => \App\Models\Videopodcast::where('posted_by', $user->id)->count(),
+            'applications' => \App\Models\WindowApplication::where('user_id', $user->id)->count(),
+            'photo_galleries' => \App\Models\Taasisevent::where('posted_by', $user->id)->count(),
+            'photo_gallery_images' => \App\Models\TaasiseventImage::where('posted_by', $user->id)->count(),
+        ];
+        
+        return view('adminpages.usermanagement.show', compact('user', 'stats'));
     }
 
     /**
