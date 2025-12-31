@@ -20,6 +20,7 @@ class Userstable extends Authenticatable
         'telephone',
         'nida',
         'status',
+        'role',
         'must_change_password',
     ];
 
