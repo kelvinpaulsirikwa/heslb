@@ -167,12 +167,6 @@
                     User Management
                 </a>
             </li>
-            <li>
-                <a href="{{ route('admin.blocked-emails.index') }}">
-                    <i class="bx bxs-ban icon"></i>
-                    Blocked Emails
-                </a>
-            </li>
           
         @else
             <li class="divider" data-text="Account"></li>

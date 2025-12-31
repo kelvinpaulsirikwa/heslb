@@ -23,7 +23,6 @@ use App\Http\Controllers\AdminPages\BoardOfDirectorController;
 use App\Http\Controllers\AdminPages\ExecutiveDirectorAdminController;
 use App\Http\Controllers\AdminPages\PublicationAdminController;
 use App\Http\Controllers\AdminPages\ScholarshipAdminController;
-use App\Http\Controllers\AdminPages\LoginAttemptsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -41,15 +40,6 @@ Route::middleware('auth')->group(function () {
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.form')->middleware(['guest', 'cache.headers:private,no-store,must-revalidate', 'prevent.back.button']);
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit')->middleware(['guest', 'cache.headers:private,no-store,must-revalidate', 'prevent.back.button', 'login.attempt.limiter']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// Login Attempts
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.user.status'])->group(function () {
-    Route::get('login-attempts', [LoginAttemptsController::class, 'index'])->name('login-attempts.index');
-    Route::post('login-attempts/clear-all', [LoginAttemptsController::class, 'clearAll'])->name('login-attempts.clear-all');
-    Route::post('login-attempts/clear-old', [LoginAttemptsController::class, 'clearOld'])->name('login-attempts.clear-old');
-    Route::get('blocked-emails', [LoginAttemptsController::class, 'blockedEmails'])->name('blocked-emails.index');
-    Route::post('blocked-emails/unblock', [LoginAttemptsController::class, 'unblockEmail'])->name('blocked-emails.unblock');
-});
 
 //Admin pages
 Route::middleware(['auth','prevent.blocked.actions', 'check.user.status'])->group(function () {
