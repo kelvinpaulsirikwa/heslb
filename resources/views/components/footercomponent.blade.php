@@ -34,7 +34,8 @@
                 <div class="footer-col">
                     <div class="info-item d-flex justify-content-between align-items-center">
                         <h4 class="mb-0">
-                            <a href="{{ config('links.heslb_systems.call_center') }}" target="_blank" style="color: inherit; text-decoration: none;">Callcenter</a>
+                            <a href="{{ config('links.heslb_systems.call_center') }}" target="_blank" style="color: inherit; text-decoration: none;">Call Center</a>
+                            <span>{{ __('footer.callcenter_note') }}</span>
                         </h4>
                         <i class="fas fa-phone-alt info-icon ms-2"></i>
                     </div>

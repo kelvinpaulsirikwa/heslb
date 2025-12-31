@@ -145,6 +145,10 @@
             animation: ladderPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.15s forwards;
         }
 
+        .floating-menu-container:hover .menu-item:nth-child(4) {
+            animation: ladderPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.2s forwards;
+        }
+
         @keyframes ladderPop {
             0% {
                 opacity: 0;
@@ -227,6 +231,14 @@
 
         .loan-repayment-btn:hover {
             background: linear-gradient(135deg, #0077b6 0%, #005b94 100%);
+        }
+
+        .call-center-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        .call-center-btn:hover {
+            background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
         }
 
         .social-media-btn {
@@ -428,6 +440,14 @@
                     <img src="{{ asset('images/static_files/loanrepayment.png') }}" alt="Loan Repayment" style="width: 35px; height: 35px; object-fit: contain;">
                 </a>
                 <span class="menu-label">Loan Repayment</span>
+            </div>
+
+            <!-- Call Center -->
+            <div class="menu-item">
+                <a href="{{ config('links.heslb_systems.call_center') }}" target="_blank" class="menu-btn call-center-btn" aria-label="Call Center">
+                    <i class="fas fa-phone-alt"></i>
+                </a>
+                <span class="menu-label">Call Center</span>
             </div>
 
             <!-- Social Media with Submenu -->

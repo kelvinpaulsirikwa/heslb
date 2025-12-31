@@ -3,6 +3,7 @@ return [
     'phone_info' => 'Monday-Friday, 8am-4pm',
     'email_note' => 'Email to contact us',
     'slogan' => 'Investing in future',
+    'callcenter_note' => 'Contact support',
     'profile' => 'Our Profile',
     'background' => 'Background',
     'functions' => 'Functions',

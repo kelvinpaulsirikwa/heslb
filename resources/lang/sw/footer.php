@@ -3,6 +3,7 @@ return [
     'phone_info' => 'Jumatatu-Ijumaa, saa 2 asubuhi hadi 10 jioni',
     'email_note' => 'Tutumie barua pepe',
     'slogan' => 'Kuwekeza kwa ajili ya baadaye',
+    'callcenter_note' => 'Wasiliana na msaada',
     'profile' => 'Wasifu Wetu',
     'background' => 'Historia',
     'functions' => 'Majukumu',
