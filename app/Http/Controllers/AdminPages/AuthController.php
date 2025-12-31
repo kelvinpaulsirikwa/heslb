@@ -103,9 +103,12 @@ class AuthController extends Controller
         LoginAttempt::recordAttempt($email, $ipAddress, $userAgent, $loginSuccessful);
 
         if (!$loginSuccessful) {
+            // Get failed attempts count (includes the one we just recorded)
             $failedAttempts = LoginAttempt::getFailedAttemptsCount($email, $ipAddress);
-            $remainingAttempts = max(0, 5 - $failedAttempts); // Ensure it never goes negative
+            // Calculate remaining attempts (5 max - current failed attempts)
+            $remainingAttempts = max(0, 5 - $failedAttempts);
             
+            // If they've exceeded the limit, show lockout message
             if ($remainingAttempts <= 0) {
                 $remainingTime = LoginAttempt::getRemainingLockoutTime($email, $ipAddress);
                 // Only show lockout message if there's remaining time (lockout hasn't expired)

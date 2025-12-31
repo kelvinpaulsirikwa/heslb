@@ -19,9 +19,9 @@ class UserSeeder extends Seeder
         Userstable::create([
             'username' => 'Helsb Admin',
             'email' => 'heslb@admin.com',
-            'password' => Hash::make('password'), // Laravel automatically encrypts this
+            'password' => Hash::make('P@ssw0rd'), // Laravel automatically encrypts this
             'profile_image' => 'images/static_files/nodp.png',
-            'telephone' => '0754776980',
+            'telephone' => '+255717006784',
             'role' => 'admin',
         ]);
 
