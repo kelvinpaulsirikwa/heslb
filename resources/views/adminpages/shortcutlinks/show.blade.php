@@ -129,12 +129,14 @@
                                                     <div class="d-flex gap-2 justify-content-end">
                                                         <a href="{{ asset('images/storage/' . $link->link) }}" 
                                                            target="_blank" 
+                                                           rel="noopener noreferrer"
                                                            class="btn btn-success px-4">
                                                             <i class="fas fa-download me-2"></i>
                                                             Download
                                                         </a>
                                                         <a href="{{ asset('images/storage/' . $link->link) }}" 
                                                            target="_blank" 
+                                                           rel="noopener noreferrer"
                                                            class="btn btn-outline-secondary px-4">
                                                             <i class="fas fa-eye me-2"></i>
                                                             Preview
@@ -160,6 +162,7 @@
                                                 <div class="col-md-4 text-end">
                                                     <a href="{{ $link->link }}" 
                                                        target="_blank" 
+                                                       rel="noopener noreferrer"
                                                        class="btn btn-primary px-4">
                                                         <i class="fas fa-external-link-alt me-2"></i>
                                                         Visit Website
@@ -340,12 +343,12 @@
                     </div>
                     <div class="col-md-4 mb-2">
                         @if($link->is_file)
-                            <a href="{{ asset('images/storage/' . $link->link) }}" target="_blank" class="btn btn-outline-success w-100 text-start">
+                            <a href="{{ asset('images/storage/' . $link->link) }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-success w-100 text-start">
                                 <i class="fas fa-download me-2"></i>
                                 Access Resource
                             </a>
                         @else
-                            <a href="{{ $link->link }}" target="_blank" class="btn btn-outline-primary w-100 text-start">
+                            <a href="{{ $link->link }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary w-100 text-start">
                                 <i class="fas fa-external-link-alt me-2"></i>
                                 Access Resource
                             </a>

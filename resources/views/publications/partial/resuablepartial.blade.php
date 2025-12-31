@@ -112,8 +112,8 @@
                 <p class="download-title">{{ $item['title'] }}</p>
             </div>
             <div class="button-group">
-                <a href="#" class="download-button" target="_blank">{{ __('publications.download') }}</a>
-                <a href="#" class="read-button" target="_blank">{{ __('publications.read') }}</a>
+                <a href="#" class="download-button" target="_blank" rel="noopener noreferrer">{{ __('publications.download') }}</a>
+                <a href="#" class="read-button" target="_blank" rel="noopener noreferrer">{{ __('publications.read') }}</a>
             </div>
         </div>
     @endforeach

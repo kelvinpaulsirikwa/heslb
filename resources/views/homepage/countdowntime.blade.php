@@ -105,7 +105,7 @@
                 </p>
             </div>
             
-            <a href="{{ config('links.heslb_systems.olams_pre_applicant') }}" class="apply-btn" target="_blank">
+            <a href="{{ config('links.heslb_systems.olams_pre_applicant') }}" class="apply-btn" target="_blank" rel="noopener noreferrer">
                 {{ __('loan.click_apply') }}
             </a>
         @else
@@ -219,7 +219,7 @@
             </div>
         </a>
 
-        <a href="{{ config('links.heslb_systems.olams_pre_applicant') }}" class="side-card repay-card" target="_blank">
+        <a href="{{ config('links.heslb_systems.olams_pre_applicant') }}" class="side-card repay-card" target="_blank" rel="noopener noreferrer">
             <div class="card-image repay-image"></div>
             <div class="card-content">
                 <h3 class="card-title">{{ __('loan.olams_title') }}</h3>

@@ -261,6 +261,7 @@
                 @forelse ($allLinks as $link)
                     <a href="{{ $link->is_file ? asset('images/storage/' . $link->link) : $link->link }}" 
                        target="_blank"
+                       rel="noopener noreferrer"
                        class="shortcut-link">
                         <div class="shortcut-link-icon"></div>
                         <div class="shortcut-link-content">

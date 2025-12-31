@@ -112,16 +112,16 @@
             <a href="{{ route('home') }}" class="icon-box" title="Home">
                 <i class="fas fa-home"></i>
             </a>
-            <a href="{{ config('links.social_media.twitter') }}" target="_blank" class="icon-box" title="X">
+            <a href="{{ config('links.social_media.twitter') }}" target="_blank" rel="noopener noreferrer" class="icon-box" title="X">
                 <i class="fab fa-x-twitter"></i>
             </a>
-            <a href="{{ config('links.social_media.facebook') }}" target="_blank" class="icon-box" title="Facebook">
+            <a href="{{ config('links.social_media.facebook') }}" target="_blank" rel="noopener noreferrer" class="icon-box" title="Facebook">
                 <i class="fab fa-facebook-f"></i>
             </a>
-            <a href="{{ config('links.social_media.instagram') }}" target="_blank" class="icon-box" title="Instagram">
+            <a href="{{ config('links.social_media.instagram') }}" target="_blank" rel="noopener noreferrer" class="icon-box" title="Instagram">
                 <i class="fab fa-instagram"></i>
             </a>
-            <a href="{{ config('links.social_media.youtube') }}" target="_blank" class="icon-box" title="YouTube">
+            <a href="{{ config('links.social_media.youtube') }}" target="_blank" rel="noopener noreferrer" class="icon-box" title="YouTube">
                 <i class="fab fa-youtube"></i>
             </a>
         </div>

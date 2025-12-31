@@ -6,7 +6,7 @@
         <div class="row justify-content-center mt-4">
             @foreach ($strategicPartners as $partner)
                 <div class="col-4 col-md-2 mb-3">
-                    <a href="{{ $partner['url'] }}" target="_blank" style="text-decoration: none;">
+                    <a href="{{ $partner['url'] }}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
                         <div class="partner-card" style="background: rgba(255, 255, 255, 0.7); padding: 5px 2px; border-radius: 5px; box-shadow: 0 0 6px rgba(0,0,0,0.05); transition: all 0.3s ease; position: relative; overflow: hidden;">
                             @if($partner['logo'])
                                 <img src="{{ $partner['logo'] }}" 

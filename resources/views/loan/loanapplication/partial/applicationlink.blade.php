@@ -39,7 +39,7 @@
 
             <!-- Circle Button on Top Right -->
             <div class="olams-btn-container position-absolute top-0 end-0 p-4">
-                <a href="{{ config('links.heslb_systems.olams_pre_applicant') }}" target="_blank" class="text-decoration-none">
+                <a href="{{ config('links.heslb_systems.olams_pre_applicant') }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none">
                     <div class="olams-circular-button btn btn-light shadow-lg border-0">
                         <div class="olams-pulse-ring"></div>
                         <div class="olams-btn-content">

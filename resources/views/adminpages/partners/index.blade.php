@@ -71,7 +71,7 @@
                                         <td>{{ $partner->acronym_name ?? 'N/A' }}</td>
                                         <td>
                                             @if($partner->link)
-                                                <a href="{{ $partner->link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                <a href="{{ $partner->link }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
                                                     <i class="fas fa-external-link-alt"></i>
                                                 </a>
                                             @else

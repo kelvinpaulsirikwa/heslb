@@ -17,7 +17,7 @@
                         <a href="{{ route('admin.publications.edit', $publication) }}" class="btn btn-warning">
                             <i class="fas fa-edit"></i> Edit
                         </a>
-                        <a href="{{ $publication->download_url }}" target="_blank" class="btn btn-success">
+                        <a href="{{ $publication->download_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-success">
                             <i class="fas fa-download"></i> Download
                         </a>
                     </div>
@@ -147,6 +147,7 @@
                                         <div class="text-center">
                                             <a href="{{ $publication->download_url }}" 
                                                target="_blank" 
+                                               rel="noopener noreferrer"
                                                class="btn btn-success btn-block">
                                                 <i class="fas fa-download"></i> Download File
                                             </a>

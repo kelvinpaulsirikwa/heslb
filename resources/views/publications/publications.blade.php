@@ -87,7 +87,7 @@
                                         <a href="{{ $item['link'] }}" class="btn-download" download>
                                             <i class="fas fa-download"></i> {{ __('publications.download') }}
                                         </a>
-                                        <a href="{{ $item['link'] }}" class="btn-read" target="_blank">
+                                        <a href="{{ $item['link'] }}" class="btn-read" target="_blank" rel="noopener noreferrer">
                                             <i class="fas fa-eye"></i> {{ __('publications.read') }}
                                         </a>
                                     </div>

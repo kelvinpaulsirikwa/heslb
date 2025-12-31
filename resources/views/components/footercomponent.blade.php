@@ -34,7 +34,7 @@
                 <div class="footer-col">
                     <div class="info-item d-flex justify-content-between align-items-center">
                         <h4 class="mb-0">
-                            <a href="{{ config('links.heslb_systems.call_center') }}" target="_blank" style="color: inherit; text-decoration: none;">Call Center</a>
+                            <a href="{{ config('links.heslb_systems.call_center') }}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">Call Center</a>
                             <span>{{ __('footer.callcenter_note') }}</span>
                         </h4>
                         <i class="fas fa-phone-alt info-icon ms-2"></i>
@@ -195,18 +195,18 @@
 
             <!-- Social Media Row -->
             <div class="d-flex justify-content-end align-items-center mt-3" style="gap: 0.75rem;">
-                <a href="{{ config('links.social_media.twitter') }}" target="_blank" class="icon-box">
+                <a href="{{ config('links.social_media.twitter') }}" target="_blank" rel="noopener noreferrer" class="icon-box">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                     </svg>
                 </a>
-                <a href="{{ config('links.social_media.facebook') }}" target="_blank" class="icon-box">
+                <a href="{{ config('links.social_media.facebook') }}" target="_blank" rel="noopener noreferrer" class="icon-box">
                     <i class="fab fa-facebook-f"></i>
                 </a>
-                <a href="{{ config('links.social_media.instagram') }}" target="_blank" class="icon-box">
+                <a href="{{ config('links.social_media.instagram') }}" target="_blank" rel="noopener noreferrer" class="icon-box">
                     <i class="fab fa-instagram"></i>
                 </a>
-                <a href="{{ config('links.social_media.youtube') }}" target="_blank" class="icon-box">
+                <a href="{{ config('links.social_media.youtube') }}" target="_blank" rel="noopener noreferrer" class="icon-box">
                     <i class="fab fa-youtube"></i>
                 </a>
             </div>

@@ -279,18 +279,18 @@ $navLinks = [
                 <div class="social-media-section">
                     <h6 class="footer-title">Follow Us</h6>
                     <div class="social-icons">
-                        <a href="{{ config('links.social_media.twitter') }}" target="_blank" class="social-icon" aria-label="X">
+                        <a href="{{ config('links.social_media.twitter') }}" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="X">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                             </svg>
                         </a>
-                        <a href="{{ config('links.social_media.facebook') }}" target="_blank" class="social-icon" aria-label="Facebook">
+                        <a href="{{ config('links.social_media.facebook') }}" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Facebook">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="{{ config('links.social_media.instagram') }}" target="_blank" class="social-icon" aria-label="Instagram">
+                        <a href="{{ config('links.social_media.instagram') }}" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="{{ config('links.social_media.youtube') }}" target="_blank" class="social-icon" aria-label="YouTube">
+                        <a href="{{ config('links.social_media.youtube') }}" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="YouTube">
                             <i class="fab fa-youtube"></i>
                         </a>
                     </div>

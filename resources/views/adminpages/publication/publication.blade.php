@@ -128,6 +128,7 @@
                                                 <a href="{{ $publication->download_url }}" 
                                                    class="btn btn-outline-info" 
                                                    target="_blank" 
+                                                   rel="noopener noreferrer"
                                                    title="Download">
                                                     <i class="fas fa-download"></i>
                                                 </a>

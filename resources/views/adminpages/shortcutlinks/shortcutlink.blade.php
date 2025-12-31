@@ -114,7 +114,7 @@
                                         </td>
                                         <td class="px-4 py-4 border-end align-middle">
                                             @if($link->is_file)
-                                                <a href="{{ asset('images/storage/' . $link->link) }}" target="_blank" class="text-decoration-none text-dark d-flex align-items-center">
+                                                <a href="{{ asset('images/storage/' . $link->link) }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none text-dark d-flex align-items-center">
                                                     <i class="fas fa-download me-2 text-success"></i>
                                                     <div>
                                                         <span class="fw-medium">Download File</span>
@@ -122,7 +122,7 @@
                                                     </div>
                                                 </a>
                                             @else
-                                                <a href="{{ $link->link }}" target="_blank" class="text-decoration-none text-dark d-flex align-items-center">
+                                                <a href="{{ $link->link }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none text-dark d-flex align-items-center">
                                                     <i class="fas fa-external-link-alt me-2 text-primary"></i>
                                                     <div>
                                                         <span class="fw-medium">{{ Str::limit($link->link, 30) }}</span>

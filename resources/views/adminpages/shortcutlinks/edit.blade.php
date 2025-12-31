@@ -190,12 +190,14 @@
                                             <div class="d-flex gap-3 mt-2">
                                                 <a href="{{ asset('images/storage/' . $link->link) }}" 
                                                    target="_blank" 
+                                                   rel="noopener noreferrer"
                                                    class="btn btn-sm btn-outline-secondary">
                                                     <i class="fas fa-download me-1"></i>
                                                     Download
                                                 </a>
                                                 <a href="{{ asset('images/storage/' . $link->link) }}" 
                                                    target="_blank" 
+                                                   rel="noopener noreferrer"
                                                    class="btn btn-sm btn-outline-primary">
                                                     <i class="fas fa-eye me-1"></i>
                                                     Preview

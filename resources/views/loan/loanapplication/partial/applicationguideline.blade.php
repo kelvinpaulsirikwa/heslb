@@ -114,10 +114,10 @@
 
                         <!-- Buttons -->
                         <div class="button-group">
-                            <a href="{{ asset($guideline->file_path) }}" target="_blank" class="download-button">
+                            <a href="{{ asset($guideline->file_path) }}" target="_blank" rel="noopener noreferrer" class="download-button">
                                 <i class="fas fa-download"></i> {{ __('publications.download') }}
                             </a>
-                            <a href="{{ asset($guideline->file_path) }}" target="_blank" class="read-button">
+                            <a href="{{ asset($guideline->file_path) }}" target="_blank" rel="noopener noreferrer" class="read-button">
                                 <i class="fas fa-eye"></i> {{ __('publications.read') }}
                             </a>
                         </div>

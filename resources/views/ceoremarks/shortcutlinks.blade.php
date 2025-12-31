@@ -157,7 +157,7 @@
 
     <div class="ceo-shortcut-links-container">
         @forelse ($shortcutlinks as $link)
-            <a href="{{ $link->is_file ? asset('images/storage/' . $link->link) : $link->link }}" target="_blank" class="ceo-shortcut-link">
+            <a href="{{ $link->is_file ? asset('images/storage/' . $link->link) : $link->link }}" target="_blank" rel="noopener noreferrer" class="ceo-shortcut-link">
                 <div class="ceo-shortcut-link-icon"></div>
                 <div class="ceo-shortcut-link-name">{{ $link->link_name }}</div>
             </a>

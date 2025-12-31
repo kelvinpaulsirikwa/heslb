@@ -116,7 +116,7 @@
                                 </div>
                                 <div class="contact-detail-content">
                                     <strong>{{ __('contactservice.website') }}:</strong>
-                                    <a href="{{ $headquarters[1]['website'] }}" target="_blank">{{ $headquarters[1]['website'] }}</a>
+                                    <a href="{{ $headquarters[1]['website'] }}" target="_blank" rel="noopener noreferrer">{{ $headquarters[1]['website'] }}</a>
                                 </div>
                             </div>
                         @endif
@@ -195,7 +195,7 @@
 }
 
                                     @endphp
-                                    <a href="{{ $websiteUrl }}" target="_blank">{{ $contact['website'] }}</a>
+                                    <a href="{{ $websiteUrl }}" target="_blank" rel="noopener noreferrer">{{ $contact['website'] }}</a>
                                 </div>
                             </div>
                         @endif

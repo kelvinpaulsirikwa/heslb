@@ -698,6 +698,7 @@
                                 <div class="image-actions">
                                     <a href="{{ $image['url'] }}" 
                                        target="_blank" 
+                                       rel="noopener noreferrer"
                                        class="btn-secondary">
                                        View
                                     </a>

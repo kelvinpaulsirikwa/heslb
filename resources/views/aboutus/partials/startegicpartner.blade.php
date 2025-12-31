@@ -100,7 +100,7 @@
       <div class="partner-card">
         <img src="{{ asset($partner['logo']) }}" alt="{{ $partner['acronym_name'] }}" class="partner-logo" />
         <div class="partner-name">{{ $partner['acronym_name'] }}</div>
-        <a href="{{ $partner['url'] }}" target="_blank" class="partner-link">{{ __('gallery.visit_site') }}</a>
+        <a href="{{ $partner['url'] }}" target="_blank" rel="noopener noreferrer" class="partner-link">{{ __('gallery.visit_site') }}</a>
       </div>
     @endforeach
   </div>

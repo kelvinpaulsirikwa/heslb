@@ -205,7 +205,8 @@
                             
                             <a href="{{ route('adminpages.feedback.print', $contact->id) }}" 
                                class="btn btn-outline-info px-4"
-                               target="_blank">
+                               target="_blank"
+                               rel="noopener noreferrer">
                                 <i class="fas fa-file-pdf me-2"></i>
                                 Print View
                             </a>

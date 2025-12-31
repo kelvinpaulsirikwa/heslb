@@ -79,7 +79,7 @@
                                     Size: {{ $publication->formatted_file_size }} | 
                                     Downloads: {{ $publication->download_count ?? 0 }}
                                 </small><br>
-                                <a href="{{ $publication->download_url }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                                <a href="{{ $publication->download_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary mt-2">
                                     <i class="fas fa-download"></i> Download Current File
                                 </a>
                             </div>
