@@ -201,11 +201,44 @@
                             </div>
                         </div>
                         <div class="col-6 col-md-3">
+                            <a href="{{ route('admin.partners.index', ['user_id' => $user->id]) }}" class="text-decoration-none">
+                                <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50 hover-card">
+                                    <div class="text-info mb-2">
+                                        <i class="fas fa-handshake fa-2x"></i>
+                                    </div>
+                                    <div class="fw-bold text-dark fs-4">{{ $stats['partners'] ?? 0 }}</div>
+                                    <div class="text-muted small">Partners</div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="{{ route('faq.index', ['user_id' => $user->id]) }}" class="text-decoration-none">
+                                <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50 hover-card">
+                                    <div class="text-success mb-2">
+                                        <i class="fas fa-question-circle fa-2x"></i>
+                                    </div>
+                                    <div class="fw-bold text-dark fs-4">{{ $stats['faqs'] ?? 0 }}</div>
+                                    <div class="text-muted small">FAQs</div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="{{ route('admin.scholarships.index', ['user_id' => $user->id]) }}" class="text-decoration-none">
+                                <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50 hover-card">
+                                    <div class="text-warning mb-2">
+                                        <i class="fas fa-graduation-cap fa-2x"></i>
+                                    </div>
+                                    <div class="fw-bold text-dark fs-4">{{ $stats['scholarships'] ?? 0 }}</div>
+                                    <div class="text-muted small">Scholarships</div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
                             <div class="border rounded-3 p-3 text-center h-100 bg-light bg-opacity-50">
                                 <div class="text-dark mb-2">
                                     <i class="fas fa-layer-group fa-2x"></i>
                                 </div>
-                                <div class="fw-bold text-dark fs-4">{{ ($stats['news'] ?? 0) + ($stats['publications'] ?? 0) + ($stats['links'] ?? 0) + ($stats['video_podcasts'] ?? 0) + ($stats['applications'] ?? 0) + ($stats['photo_galleries'] ?? 0) }}</div>
+                                <div class="fw-bold text-dark fs-4">{{ ($stats['news'] ?? 0) + ($stats['publications'] ?? 0) + ($stats['links'] ?? 0) + ($stats['video_podcasts'] ?? 0) + ($stats['applications'] ?? 0) + ($stats['photo_galleries'] ?? 0) + ($stats['partners'] ?? 0) + ($stats['faqs'] ?? 0) + ($stats['scholarships'] ?? 0) }}</div>
                                 <div class="text-muted small">Total Items</div>
                             </div>
                         </div>

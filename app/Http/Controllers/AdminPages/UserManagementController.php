@@ -101,6 +101,11 @@ class UserManagementController extends Controller
             'applications' => \App\Models\WindowApplication::where('user_id', $user->id)->count(),
             'photo_galleries' => \App\Models\Taasisevent::where('posted_by', $user->id)->count(),
             'photo_gallery_images' => \App\Models\TaasiseventImage::where('posted_by', $user->id)->count(),
+            'partners' => \App\Models\Partner::where('posted_by', $user->id)->count(),
+            'faqs' => \App\Models\FAQ::where('posted_by', $user->id)->count(),
+            'board_of_directors' => \App\Models\BoardOfDirector::where('posted_by', $user->id)->count(),
+            'executive_directors' => \App\Models\ExecutiveDirector::where('posted_by', $user->id)->count(),
+            'scholarships' => \App\Models\Scholarship::where('posted_by', $user->id)->count(),
         ];
         
         return view('adminpages.usermanagement.show', compact('user', 'stats'));

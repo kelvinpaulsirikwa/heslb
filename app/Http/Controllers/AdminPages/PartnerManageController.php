@@ -14,9 +14,16 @@ class PartnerManageController extends Controller
     /**
      * Display a listing of the partners.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $partners = Partner::with('user')->latest()->paginate(10);
+        $query = Partner::with('user');
+        
+        // Filter by user if provided
+        if ($request->filled('user_id')) {
+            $query->where('posted_by', $request->user_id);
+        }
+        
+        $partners = $query->latest()->paginate(10)->appends($request->all());
         return view('adminpages.partners.index', compact('partners'));
     }
 

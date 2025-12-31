@@ -11,9 +11,16 @@ use Illuminate\Support\Facades\Auth;
 class FAQController extends Controller
 {
     // Display all FAQs
-    public function index()
+    public function index(Request $request)
     {
-        $faqs = FAQ::with('user')->get();
+        $query = FAQ::with('user');
+        
+        // Filter by user if provided
+        if ($request->filled('user_id')) {
+            $query->where('posted_by', $request->user_id);
+        }
+        
+        $faqs = $query->get();
         return view('adminpages.faq.index', compact('faqs'));
     }
 

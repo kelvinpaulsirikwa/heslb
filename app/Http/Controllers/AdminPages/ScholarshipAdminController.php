@@ -9,9 +9,16 @@ use Illuminate\Support\Str;
 
 class ScholarshipAdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $scholarships = Scholarship::orderByDesc('published_at')->orderBy('title')->paginate(15);
+        $query = Scholarship::query();
+        
+        // Filter by user if provided
+        if ($request->filled('user_id')) {
+            $query->where('posted_by', $request->user_id);
+        }
+        
+        $scholarships = $query->orderByDesc('published_at')->orderBy('title')->paginate(15)->appends($request->all());
         return view('adminpages.scholarships.index', compact('scholarships'));
     }
 
