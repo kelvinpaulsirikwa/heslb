@@ -408,9 +408,25 @@ class AdminValidationService
             $id = $request->route('user') ?? $request->route('partner') ?? $request->route('category') ?? $request->route('publication') ?? $request->route('event') ?? $request->route('taasisevent') ?? $request->route('calenderevent');
             
             if ($id) {
+                // Get the actual ID if it's a model instance
+                $idValue = is_object($id) && (method_exists($id, 'getKey') || property_exists($id, 'id')) 
+                    ? ($id->id ?? $id->getKey()) 
+                    : $id;
+                
                 foreach ($rules as $field => $rule) {
-                    if (strpos($rule, 'unique:') === 0) {
-                        $rules[$field] = str_replace('unique:' . $table, 'unique:' . $table . ',' . $field . ',' . $id, $rule);
+                    if (is_string($rule) && strpos($rule, 'unique:') !== false) {
+                        // Parse the existing unique rule: unique:table,column
+                        if (preg_match('/unique:([^,|]+),([^,|]+)/', $rule, $matches)) {
+                            $existingTable = trim($matches[1]);
+                            $existingColumn = trim($matches[2]);
+                            
+                            // Build the new unique rule with ID exclusion
+                            // Format: unique:table,column,except,idColumn
+                            $newRule = "unique:{$existingTable},{$existingColumn},{$idValue},id";
+                            
+                            // Replace the unique part in the rule string (match from unique: to end or next pipe)
+                            $rules[$field] = preg_replace('/unique:[^|]+/', $newRule, $rule);
+                        }
                     }
                 }
             }
