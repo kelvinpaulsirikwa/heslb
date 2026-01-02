@@ -44,17 +44,12 @@
                                      class="card-img-top" 
                                      alt="{{ $item['title'] }}"
                                      style="height: 200px; object-fit: cover;"
-                                     onerror="console.error('❌ Search result image failed to load'); console.error('Image URL:', this.src); console.error('Database value:', '{{ $item['image'] }}'); console.error('Item ID:', {{ $item['id'] }}); console.error('Full path:', '{{ public_path('images/storage/' . $item['image']) }}'); this.onerror=null; this.src='{{ asset('images/static_files/noimagenews.png') }}';"
-                                     onload="console.log('✅ Search result image loaded:', this.src);">
+                                     onerror="this.onerror=null; this.src='{{ asset('images/static_files/noimagenews.png') }}';">
                                 @else
                                 <img src="{{ asset('images/static_files/noimagenews.png') }}" 
                                      class="card-img-top" 
                                      alt="{{ $item['title'] }}"
                                      style="height: 200px; object-fit: cover;">
-                                <script>
-                                    console.warn('⚠️ No image value in database for search result');
-                                    console.warn('Item ID:', {{ $item['id'] }});
-                                </script>
                                 @endif
                                 <div class="card-body">
                                     <div class="mb-2">

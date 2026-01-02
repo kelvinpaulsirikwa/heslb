@@ -36,16 +36,11 @@
                     <img src="{{ asset('images/storage/' . $story['image']) }}" 
                          alt="{{ $story['title'] }}" 
                          class="news-image"
-                         onerror="console.error('❌ Success story image failed to load'); console.error('Image URL:', this.src); console.error('Database value:', '{{ $story['image'] }}'); console.error('Story ID:', {{ $story['id'] }}); console.error('Full path:', '{{ public_path('images/storage/' . $story['image']) }}'); this.onerror=null; this.src='{{ asset('images/static_files/noimagenews.png') }}';"
-                         onload="console.log('✅ Success story image loaded:', this.src);">
+                         onerror="this.onerror=null; this.src='{{ asset('images/static_files/noimagenews.png') }}';">
                 @else
                     <img src="{{ asset('images/static_files/noimagenews.png') }}" 
                          alt="{{ $story['title'] }}" 
                          class="news-image">
-                    <script>
-                        console.warn('⚠️ No image value in database for success story');
-                        console.warn('Story ID:', {{ $story['id'] }});
-                    </script>
                 @endif
                 <div class="news-category-badge">
                     @if($story['type'] === 'admin_news')

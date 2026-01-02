@@ -40,16 +40,11 @@
                 <img src="{{ asset('images/storage/' . $article->front_image) }}" 
                      alt="{{ $article->title }}" 
                      class="news-image"
-                     onerror="console.error('❌ Category page image failed to load'); console.error('Image URL:', this.src); console.error('Database value:', '{{ $article->front_image }}'); console.error('Article ID:', {{ $article->id }}); console.error('Full path:', '{{ public_path('images/storage/' . $article->front_image) }}'); this.onerror=null; this.src='{{ asset('images/static_files/noimagenews.png') }}';"
-                     onload="console.log('✅ Category page image loaded:', this.src);">
+                     onerror="this.onerror=null; this.src='{{ asset('images/static_files/noimagenews.png') }}';">
                 @else
                 <img src="{{ asset('images/static_files/noimagenews.png') }}" 
                      alt="{{ $article->title }}" 
                      class="news-image">
-                <script>
-                    console.warn('⚠️ No image value in database for category article');
-                    console.warn('Article ID:', {{ $article->id }});
-                </script>
                 @endif
                 <div class="news-category">
                     {{ strtoupper($article->category) }}

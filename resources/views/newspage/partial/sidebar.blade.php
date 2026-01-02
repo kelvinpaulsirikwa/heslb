@@ -151,15 +151,10 @@
                         @if($latest['image'])
                         <img src="{{ asset('images/storage/' . $latest['image']) }}" 
                              alt="{{ $latest['title'] }}"
-                             onerror="console.error('❌ Sidebar image failed to load'); console.error('Image URL:', this.src); console.error('Database value:', '{{ $latest['image'] }}'); console.error('Item ID:', {{ $latest['id'] }}); console.error('Full path:', '{{ public_path('images/storage/' . $latest['image']) }}'); this.onerror=null; this.src='{{ asset('images/static_files/noimagenews.png') }}';"
-                             onload="console.log('✅ Sidebar image loaded:', this.src);">
+                             onerror="this.onerror=null; this.src='{{ asset('images/static_files/noimagenews.png') }}';">
                         @else
                         <img src="{{ asset('images/static_files/noimagenews.png') }}" 
                              alt="{{ $latest['title'] }}">
-                        <script>
-                            console.warn('⚠️ No image value in database for sidebar item');
-                            console.warn('Item ID:', {{ $latest['id'] }});
-                        </script>
                         @endif
                     </div>
                     <div class="latest-content">

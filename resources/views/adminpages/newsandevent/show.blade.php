@@ -48,7 +48,7 @@
                     </div>
 
                     <!-- Article Image -->
-                    @if($news->front_image && file_exists(public_path('images/storage/'.$news->front_image)))
+                    @if($news->front_image)
                         <div class="mb-4">
                             <div class="text-center">
                                 <img src="{{ asset('images/storage/'.$news->front_image) }}" 

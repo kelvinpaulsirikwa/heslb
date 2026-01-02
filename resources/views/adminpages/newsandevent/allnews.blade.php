@@ -58,7 +58,7 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        @if($item->front_image && file_exists(public_path('images/storage/'.$item->front_image)))
+                                        @if($item->front_image)
                                             <img src="{{ asset('images/storage/'.$item->front_image) }}" 
                                                  alt="News Image" 
                                                  class="img-thumbnail" 

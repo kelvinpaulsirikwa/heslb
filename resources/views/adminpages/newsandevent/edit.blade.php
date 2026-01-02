@@ -127,7 +127,7 @@
                                     </div>
                                     <div class="card-body">
                                         <!-- Current Image Preview -->
-                                        @if($news->front_image && file_exists(public_path('images/storage/'.$news->front_image)))
+                                        @if($news->front_image)
                                             <div class="mb-3">
                                                 <label class="form-label"><strong>Current Image:</strong></label>
                                                 <div class="text-center">
@@ -139,16 +139,6 @@
                                                     <div class="no-image-edit" style="display: none; background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px; padding: 2rem; text-align: center; color: #6c757d;">
                                                         <i class="fas fa-image fa-2x mb-2"></i>
                                                         <p class="mb-0">Current image could not be loaded</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @elseif($news->front_image)
-                                            <div class="mb-3">
-                                                <label class="form-label"><strong>Current Image:</strong></label>
-                                                <div class="text-center">
-                                                    <div class="no-image-edit" style="background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px; padding: 2rem; text-align: center; color: #6c757d;">
-                                                        <i class="fas fa-image fa-2x mb-2"></i>
-                                                        <p class="mb-0">Image file not found in storage</p>
                                                     </div>
                                                 </div>
                                             </div>
