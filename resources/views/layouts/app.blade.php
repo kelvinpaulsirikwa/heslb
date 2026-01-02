@@ -100,8 +100,11 @@
 <link rel="stylesheet" href="{{ asset('css/applicationlink.css') }}">
 @endif
 
-@if($currentRoute === 'home')
+@if($currentRoute === 'home' || str_starts_with($currentRoute, 'aboutus.'))
 <link rel="stylesheet" href="{{ asset('css/ourproduct.css') }}">
+@endif
+
+@if($currentRoute === 'home')
 <link rel="stylesheet" href="{{ asset('css/ourproductheader.css') }}">
 <link rel="stylesheet" href="{{ asset('css/countdowntime.css') }}">
 @endif
