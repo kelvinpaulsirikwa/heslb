@@ -19,15 +19,14 @@ class ForceHttps
         // Force HTTPS redirect for production/staging environments only
         // Allow HTTP in local development for easier testing
         // In production, this ensures credentials are NEVER transmitted over HTTP
-        // COMMENTED OUT: Disabled due to SSL certificate issues
-        // if (!$request->secure() && !app()->environment('local')) {
-        //     // Get the full URL with query string
-        //     $url = $request->getRequestUri();
-        //     
-        //     // Redirect to HTTPS version with 301 permanent redirect
-        //     // This prevents credentials from being sent over HTTP in production
-        //     return redirect()->secure($url, 301);
-        // }
+        if (!$request->secure() && !app()->environment('local')) {
+            // Get the full URL with query string
+            $url = $request->getRequestUri();
+            
+            // Redirect to HTTPS version with 301 permanent redirect
+            // This prevents credentials from being sent over HTTP in production
+            return redirect()->secure($url, 301);
+        }
 
         return $next($request);
     }
