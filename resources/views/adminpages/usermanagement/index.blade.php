@@ -47,22 +47,16 @@
                                 <tr class="border-bottom">
                                     <td class="py-3 px-4 align-middle">
                                         <div class="d-flex align-items-center">
-                                            @if($user->profile_image)
-                                                <img src="{{ asset('images/storage/' . $user->profile_image) }}" 
-                                                     alt="{{ $user->username }}" 
-                                                     class="rounded-circle me-2 border user-profile-img" 
-                                                     style="width: 40px; height: 40px; object-fit: cover;"
-                                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-2 border user-profile-placeholder" 
-                                                     style="width: 40px; height: 40px; display: none; color: #000; font-weight: bold; font-size: 1rem;">
-                                                    {{ strtoupper(substr($user->email, 0, 1)) }}
-                                                </div>
-                                            @else
-                                                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-2 border" 
-                                                     style="width: 40px; height: 40px; color: #000; font-weight: bold; font-size: 1rem;">
-                                                    {{ strtoupper(substr($user->email, 0, 1)) }}
-                                                </div>
-                                            @endif
+                                            @php
+                                                $profileImageSrc = $user->profile_image 
+                                                    ? asset('images/storage/' . $user->profile_image) 
+                                                    : asset('images/static_files/nodp.png');
+                                            @endphp
+                                            <img src="{{ $profileImageSrc }}" 
+                                                 alt="{{ $user->username }}" 
+                                                 class="rounded-circle me-2 border" 
+                                                 style="width: 40px; height: 40px; object-fit: cover; display: block;"
+                                                 onerror="this.onerror=null; this.src='{{ asset('images/static_files/nodp.png') }}';">
                                             <span class="fw-medium text-dark">{{ $user->username }}</span>
                                         </div>
                                     </td>
@@ -227,30 +221,11 @@
     flex-shrink: 0;
 }
 
-/* Ensure only one profile element shows at a time */
-.user-profile-img,
-.user-profile-placeholder {
-    display: none;
-}
-
-.user-profile-img:not([style*="display: none"]) {
+/* Ensure only one profile image displays */
+td .rounded-circle {
     display: block !important;
+    flex-shrink: 0;
 }
-
-.user-profile-placeholder:not([style*="display: none"]) {
-    display: flex !important;
-}
-
-/* Show image by default if it exists */
-@if($user->profile_image ?? false)
-.user-profile-img {
-    display: block !important;
-}
-@else
-.user-profile-placeholder {
-    display: flex !important;
-}
-@endif
 
 /* Responsive design */
 @media (max-width: 768px) {
