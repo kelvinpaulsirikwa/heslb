@@ -426,16 +426,18 @@
 
             <!-- Featured Image Section -->
             <div class="featured-image-container">
-                @if($news->front_image && file_exists(public_path('images/storage/' . $news->front_image)))
+                @if($news->front_image)
                     <img src="{{ asset('images/storage/' . $news->front_image) }}" 
                          alt="{{ $news->title }}" 
-                         class="featured-image" loading="lazy">
+                         class="featured-image" 
+                         loading="lazy"
+                         onerror="console.error('❌ Image failed to load on news detail page'); console.error('Image URL:', this.src); console.error('Database value:', '{{ $news->front_image }}'); console.error('News ID:', {{ $news->id }}); console.error('Full path:', '{{ public_path('images/storage/' . $news->front_image) }}');"
+                         onload="console.log('✅ Image loaded successfully on news detail page:', this.src);">
                 @else
-                    <div class="no-image-placeholder">
-                    <img src="{{ asset('images/static_files/noimagenews.png') }}" 
-                         alt="{{ $news->title }}" 
-                         class="featured-image" loading="lazy">
-                    </div>
+                    <script>
+                        console.warn('⚠️ No image value in database for news detail');
+                        console.warn('News ID:', {{ $news->id }});
+                    </script>
                 @endif
             </div>
 
