@@ -76,5 +76,6 @@ class Kernel extends HttpKernel
         'captcha.validation' => \App\Http\Middleware\CaptchaValidation::class,
         'prevent.back.button' => \App\Http\Middleware\PreventBackButton::class,
         'login.attempt.limiter' => \App\Http\Middleware\LoginAttemptLimiter::class,
+        'ensure.admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
     ];
 }

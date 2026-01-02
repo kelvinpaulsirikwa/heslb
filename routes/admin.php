@@ -173,15 +173,8 @@ Route::middleware(['auth','prevent.blocked.actions', 'check.user.status'])->grou
         Route::delete('/images/{id}', [PhotoGalleryController::class, 'destroyImage'])->name('images.destroy');
     });
 
-    //Reset password
-    Route::get('admin/users/{user}/reset-password', [UserManagementController::class, 'showResetPasswordForm'])->name('admin.users.reset-password.form');
-    Route::post('admin/users/{user}/reset-password', [UserManagementController::class, 'resetPassword'])->name('admin.users.reset-password');
-
-    // Delete user (only if no data uploaded)
-    Route::delete('admin/users/{user}/delete', [UserManagementController::class, 'deleteUser'])->name('admin.users.delete');
-
-    // User Management - resource + custom routes
-    Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.user.status', 'prevent.blocked.actions'])->group(function () {
+    // User Management - resource + custom routes (Admin only)
+    Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.user.status', 'prevent.blocked.actions', 'ensure.admin'])->group(function () {
         Route::resource('users', UserManagementController::class)->names([
            'index' => 'users.index',
            'create' => 'users.create',
@@ -192,6 +185,12 @@ Route::middleware(['auth','prevent.blocked.actions', 'check.user.status'])->grou
            'destroy' => 'users.destroy',
         ]);
 
+        //Reset password
+        Route::get('users/{user}/reset-password', [UserManagementController::class, 'showResetPasswordForm'])->name('users.reset-password.form');
+        Route::post('users/{user}/reset-password', [UserManagementController::class, 'resetPassword'])->name('users.reset-password');
+
+        // Delete user (only if no data uploaded)
+        Route::delete('users/{user}/delete', [UserManagementController::class, 'deleteUser'])->name('users.delete');
     });
 
 });

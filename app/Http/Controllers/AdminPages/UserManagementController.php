@@ -6,10 +6,30 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Userstable;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class UserManagementController extends Controller
 {
+    /**
+     * Constructor to ensure only admins can access user management.
+     */
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!Auth::check() || strtolower(Auth::user()->role) !== 'admin') {
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'error' => 'Access denied. Admin privileges required.',
+                        'status' => 'forbidden'
+                    ], 403);
+                }
+                return redirect()->route('dashboard')->with('error', 'Access denied. You do not have permission to access this page.');
+            }
+            return $next($request);
+        });
+    }
+
     /**
      * Display a listing of admin.users.
      */
