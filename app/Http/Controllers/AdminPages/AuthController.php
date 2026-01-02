@@ -197,14 +197,16 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // Audit log for logout
+        // Audit log for logout - pass user_id explicitly since user is already logged out
         if ($userId) {
             AuditLogService::log(
                 'logout',
                 'System',
                 $userId,
                 null,
-                ['email' => $userEmail, 'ip_address' => $request->ip()]
+                ['email' => $userEmail, 'ip_address' => $request->ip()],
+                null,
+                $userId
             );
         }
 

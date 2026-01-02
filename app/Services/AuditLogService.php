@@ -16,6 +16,7 @@ class AuditLogService
      * @param array|null $oldValues The old values before change
      * @param array|null $newValues The new values after change
      * @param string|null $description Custom description
+     * @param int|null $userId Optional user ID (useful when user is logged out)
      * @return AuditLog
      */
     public static function log(
@@ -24,14 +25,18 @@ class AuditLogService
         ?int $resourceId = null,
         ?array $oldValues = null,
         ?array $newValues = null,
-        ?string $description = null
+        ?string $description = null,
+        ?int $userId = null
     ): AuditLog {
         $request = request();
         
-        $logDescription = $description ?? self::generateDescription($action, $resourceType, $resourceId, $oldValues, $newValues);
+        // Use provided user_id or fall back to Auth::id()
+        $logUserId = $userId ?? Auth::id();
+        
+        $logDescription = $description ?? self::generateDescription($action, $resourceType, $resourceId, $oldValues, $newValues, $logUserId);
 
         return AuditLog::create([
-            'user_id' => Auth::id(),
+            'user_id' => $logUserId,
             'action' => $action,
             'resource_type' => $resourceType,
             'resource_id' => $resourceId,
@@ -53,9 +58,17 @@ class AuditLogService
         string $resourceType,
         ?int $resourceId,
         ?array $oldValues,
-        ?array $newValues
+        ?array $newValues,
+        ?int $userId = null
     ): string {
-        $user = Auth::user();
+        // Try to get user by provided ID first, then fall back to Auth::user()
+        $user = null;
+        if ($userId) {
+            $user = \App\Models\Userstable::find($userId);
+        }
+        if (!$user) {
+            $user = Auth::user();
+        }
         $username = $user ? $user->username : 'System';
         
         $actionMap = [
