@@ -12,9 +12,6 @@
                 @if($article['image'] && file_exists(public_path('images/storage/' . $article['image'])))
                     <img src="{{ asset('images/storage/' . $article['image']) }}" 
                          alt="{{ $article['title'] }}" class="news-image" loading="lazy">
-                @else
-                    <img src="{{ asset('images/static_files/noimagenews.png') }}" 
-                         alt="{{ $article['title'] }}" class="news-image" loading="lazy">
                 @endif
                 <div class="news-category {{ $article['type'] === 'story' ? 'category-success' : '' }}">
                     {{ strtoupper($article['category']) }}
