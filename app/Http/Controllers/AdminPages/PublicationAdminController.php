@@ -5,8 +5,10 @@ namespace App\Http\Controllers\AdminPages;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Publication;
+use App\Models\Userstable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -20,6 +22,13 @@ class PublicationAdminController extends Controller
      */
     public function index(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         $query = Publication::with('category');
         
         // Filter by user if provided
@@ -43,6 +52,13 @@ class PublicationAdminController extends Controller
      */
     public function create()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         $categories = Category::where('is_active', true)
             ->orderBy('display_order')
             ->get();
@@ -55,6 +71,13 @@ class PublicationAdminController extends Controller
      */
     public function store(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         try {
             $validatedData = \App\Services\AdminValidationService::validate($request, 'publications');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -109,6 +132,13 @@ class PublicationAdminController extends Controller
      */
     public function show(Publication $publication)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         $publication->load('category');
         return view('adminpages.publication.show', compact('publication'));
     }
@@ -118,6 +148,13 @@ class PublicationAdminController extends Controller
      */
     public function edit(Publication $publication)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         $categories = Category::where('is_active', true)
             ->orderBy('display_order')
             ->get();
@@ -130,6 +167,13 @@ class PublicationAdminController extends Controller
      */
     public function update(Request $request, Publication $publication)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         try {
             $validatedData = \App\Services\AdminValidationService::validate($request, 'publications_update');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -141,7 +185,12 @@ class PublicationAdminController extends Controller
         try {
             // Get category to check if it's guidelines
             $category = Category::find($validatedData['category_id']);
-            $isGuidelineCategory = $category && $category->slug === 'guidelines';
+            if (!$category) {
+                return redirect()->back()
+                    ->withErrors(['category_id' => 'Selected category does not exist.'])
+                    ->withInput();
+            }
+            $isGuidelineCategory = $category->slug === 'guidelines';
 
             $updateData = [
                 'title' => $validatedData['title'],
@@ -194,6 +243,13 @@ class PublicationAdminController extends Controller
      */
     public function destroy(Publication $publication)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         try {
             // Delete associated file
             if ($publication->file_path && Storage::disk('public')->exists(str_replace('/storage/', '', $publication->file_path))) {
@@ -218,6 +274,13 @@ class PublicationAdminController extends Controller
      */
     public function categoriesIndex()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         $categories = Category::withCount('publications')
             ->orderBy('display_order')
             ->paginate(10);
@@ -230,6 +293,13 @@ class PublicationAdminController extends Controller
      */
     public function categoriesCreate()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         return view('adminpages.publication.createcategory');
     }
 
@@ -238,6 +308,13 @@ class PublicationAdminController extends Controller
      */
     public function categoriesStore(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         try {
             $validatedData = \App\Services\AdminValidationService::validate($request, 'categories');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -271,6 +348,13 @@ class PublicationAdminController extends Controller
      */
     public function categoriesEdit(Category $category)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         return view('adminpages.publication.editcategory', compact('category'));
     }
 
@@ -279,6 +363,13 @@ class PublicationAdminController extends Controller
      */
     public function categoriesUpdate(Request $request, Category $category)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         try {
             $validatedData = \App\Services\AdminValidationService::validate($request, 'categories_update');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -312,6 +403,13 @@ class PublicationAdminController extends Controller
      */
     public function categoriesDestroy(Category $category)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         try {
             // Check if category has publications
             $publicationCount = $category->publications()->count();
@@ -339,6 +437,13 @@ class PublicationAdminController extends Controller
      */
     public function toggleStatus(Publication $publication)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         try {
             $publication->update(['is_active' => !$publication->is_active]);
             
@@ -363,6 +468,13 @@ class PublicationAdminController extends Controller
      */
     public function toggleDirectGuideline(Publication $publication)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         try {
             // Only allow for guidelines category
             if (!$publication->isGuidelineCategory()) {
@@ -403,6 +515,13 @@ class PublicationAdminController extends Controller
      */
     public function toggleCategoryStatus(Category $category)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         try {
             $category->update(['is_active' => !$category->is_active]);
             
@@ -427,22 +546,32 @@ class PublicationAdminController extends Controller
      */
     public function bulkDelete(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         $request->validate([
             'ids' => 'required|array',
             'ids.*' => 'exists:publications,id'
         ]);
 
         try {
-            $publications = Publication::whereIn('id', $request->ids)->get();
-            
-            foreach ($publications as $publication) {
-                // Delete associated file
-                if ($publication->file_path && Storage::disk('public')->exists(str_replace('/storage/', '', $publication->file_path))) {
-                    Storage::disk('public')->delete(str_replace('/storage/', '', $publication->file_path));
-                }
+            // Use database transaction to ensure data consistency
+            DB::transaction(function () use ($request) {
+                $publications = Publication::whereIn('id', $request->ids)->get();
                 
-                $publication->delete();
-            }
+                foreach ($publications as $publication) {
+                    // Delete associated file
+                    if ($publication->file_path && Storage::disk('public')->exists(str_replace('/storage/', '', $publication->file_path))) {
+                        Storage::disk('public')->delete(str_replace('/storage/', '', $publication->file_path));
+                    }
+                    
+                    $publication->delete();
+                }
+            });
 
             return response()->json([
                 'success' => true,
@@ -462,6 +591,13 @@ class PublicationAdminController extends Controller
      */
     public function updateCategoryOrder(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         $request->validate([
             'categories' => 'required|array',
             'categories.*.id' => 'required|exists:categories,id',
@@ -495,6 +631,13 @@ class PublicationAdminController extends Controller
      */
     public function search(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_publications')) {
+            abort(403, 'You do not have permission to manage publications.');
+        }
+        
         $query = $request->get('q');
         $categoryId = $request->get('category_id');
         

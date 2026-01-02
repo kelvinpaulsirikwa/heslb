@@ -72,6 +72,8 @@ public function store(Request $request)
             ->withInput();
     }
 
+    // Security: Always use authenticated user's ID, ignore any user_id from request
+    unset($validatedData['user_id']); // Remove if present in validated data
     $validatedData['user_id'] = auth()->id();
     $validatedData['submitted_at'] = now();
 
@@ -162,6 +164,8 @@ public function store(Request $request)
                 ->withInput();
         }
 
+        // Security: Always use authenticated user's ID, ignore any user_id from request
+        unset($validatedData['user_id']); // Remove if present in validated data
         $validatedData['user_id'] = auth()->id();
         
         // Convert array to string for program_type

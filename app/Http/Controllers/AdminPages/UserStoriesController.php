@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\SuccessStory;
 use App\Models\StoryActionHistory;
 use App\Models\Contact;
+use App\Models\Userstable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class UserStoriesController extends Controller
@@ -16,6 +18,13 @@ class UserStoriesController extends Controller
      */
     public function index(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_user_stories')) {
+            abort(403, 'You do not have permission to manage user stories.');
+        }
+        
         // Show all success stories from contacts table
         $query = Contact::where('contact_type', 'success_stories');
 
@@ -24,14 +33,14 @@ class UserStoriesController extends Controller
             $query->where('status', $request->status);
         }
 
-        // Search
+        // Search - using parameter binding to prevent SQL injection
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
-                $q->where('first_name', 'like', "%$search%")
-                  ->orWhere('last_name', 'like', "%$search%")
-                  ->orWhere('email', 'like', "%$search%")
-                  ->orWhere('message', 'like', "%$search%");
+                $q->where('first_name', 'like', '%' . $search . '%')
+                  ->orWhere('last_name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%')
+                  ->orWhere('message', 'like', '%' . $search . '%');
             });
         }
 
@@ -47,6 +56,13 @@ class UserStoriesController extends Controller
      */
     public function show($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_user_stories')) {
+            abort(403, 'You do not have permission to manage user stories.');
+        }
+        
         $story = Contact::findOrFail($id);
         return view('adminpages.stories.show', compact('story'));
     }
@@ -56,6 +72,13 @@ class UserStoriesController extends Controller
      */
     public function approve(Request $request, $id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_user_stories')) {
+            abort(403, 'You do not have permission to manage user stories.');
+        }
+        
         $request->validate([
             'admin_notes' => 'nullable|string|max:1000'
         ]);
@@ -96,6 +119,13 @@ class UserStoriesController extends Controller
      */
     public function reject(Request $request, $id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_user_stories')) {
+            abort(403, 'You do not have permission to manage user stories.');
+        }
+        
         $request->validate([
             'admin_notes' => 'required|string|max:1000'
         ]);
@@ -129,6 +159,13 @@ class UserStoriesController extends Controller
      */
     public function post($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_user_stories')) {
+            abort(403, 'You do not have permission to manage user stories.');
+        }
+        
         $story = Contact::findOrFail($id);
         
         // Check if author name is empty
@@ -163,6 +200,13 @@ class UserStoriesController extends Controller
      */
     public function unpost($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_user_stories')) {
+            abort(403, 'You do not have permission to manage user stories.');
+        }
+        
         $story = Contact::findOrFail($id);
         
         try {
@@ -190,6 +234,13 @@ class UserStoriesController extends Controller
      */
     public function destroy($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_user_stories')) {
+            abort(403, 'You do not have permission to manage user stories.');
+        }
+        
         $story = Contact::findOrFail($id);
         
         try {
@@ -215,6 +266,13 @@ class UserStoriesController extends Controller
      */
     public function pending()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_user_stories')) {
+            abort(403, 'You do not have permission to manage user stories.');
+        }
+        
         $stories = SuccessStory::where('publication_status', 'pending')
             ->orderBy('created_at', 'desc')
             ->paginate(20);
@@ -227,6 +285,13 @@ class UserStoriesController extends Controller
      */
     public function approved()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_user_stories')) {
+            abort(403, 'You do not have permission to manage user stories.');
+        }
+        
         $stories = SuccessStory::where('publication_status', 'approved')
             ->orderBy('published_at', 'desc')
             ->paginate(20);
@@ -239,6 +304,13 @@ class UserStoriesController extends Controller
      */
     public function rejected()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_user_stories')) {
+            abort(403, 'You do not have permission to manage user stories.');
+        }
+        
         $stories = SuccessStory::where('publication_status', 'rejected')
             ->orderBy('updated_at', 'desc')
             ->paginate(20);
@@ -254,6 +326,13 @@ class UserStoriesController extends Controller
      */
     public function edit($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_user_stories')) {
+            abort(403, 'You do not have permission to manage user stories.');
+        }
+        
         $story = SuccessStory::findOrFail($id);
         $categories = SuccessStory::CATEGORIES;
         $statuses = SuccessStory::PUBLICATION_STATUSES;
@@ -266,6 +345,13 @@ class UserStoriesController extends Controller
      */
     public function update(Request $request, $id)
 {
+    // Server-side permission check
+    /** @var Userstable $user */
+    $user = Auth::user();
+    if (!$user || !$user->hasPermission('manage_user_stories')) {
+        abort(403, 'You do not have permission to manage user stories.');
+    }
+    
     // Debug: Log the incoming request
     Log::info('Story update attempt', [
         'story_id' => $id,

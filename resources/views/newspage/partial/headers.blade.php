@@ -11,7 +11,7 @@
                     <div class="heslb-v2-img-col">
                         <div class="heslb-v2-img-wrapper">
                             <img src="{{ ($latestNews->front_image && file_exists(public_path('images/storage/' . $latestNews->front_image))) ? asset('images/storage/' . $latestNews->front_image) : asset('images/static_files/noimagenews.png') }}"
-                                 alt="{{ $latestNews->title }}" class="heslb-v2-featured-img">
+                                 alt="{{ $latestNews->title }}" class="heslb-v2-featured-img" loading="lazy">
                             <div class="heslb-v2-img-badge">
                                 <span class="heslb-v2-category-tag">HABARI MPYA</span>
                             </div>

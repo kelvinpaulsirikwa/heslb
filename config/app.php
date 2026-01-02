@@ -145,6 +145,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Cache Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Laravel caching is enabled by default. To optimize performance, run:
+    | php artisan config:cache
+    | php artisan route:cache
+    | php artisan view:cache
+    |
+    | Cache driver is configured in config/cache.php (default: 'file')
+    | For production, consider using 'redis' or 'memcached' for better performance.
+    |
+    */
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |

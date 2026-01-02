@@ -67,7 +67,7 @@ class ShortCutLinksController extends Controller
             $link = $validatedData['link'];
 
             // Custom validation for unique combination of link_name and link
-            $existingLink = Link::where('link_name', $request->link_name)
+            $existingLink = Link::where('link_name', $validatedData['link_name'])
                                ->where('link', $link)
                                ->where('is_file', false)
                                ->first();
@@ -194,8 +194,8 @@ class ShortCutLinksController extends Controller
             }
 
             $link->update([
-                'link_name' => $request->link_name,
-                'link' => $request->link,
+                'link_name' => $validatedData['link_name'],
+                'link' => $validatedData['link'],
                 'is_file' => false,
             ]);
         } else {
@@ -214,14 +214,14 @@ class ShortCutLinksController extends Controller
                 $path = $file->store('files', 'public');
 
                 $link->update([
-                    'link_name' => $request->link_name,
+                    'link_name' => $validatedData['link_name'],
                     'link' => $path,
                     'is_file' => true,
                 ]);
             } else {
                 // No new file uploaded, keep old file link and just update name
                 $link->update([
-                    'link_name' => $request->link_name,
+                    'link_name' => $validatedData['link_name'],
                 ]);
             }
         }

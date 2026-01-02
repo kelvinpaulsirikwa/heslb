@@ -24,10 +24,30 @@ class SecurityHeaders
         // 'SAMEORIGIN' allows framing by same origin only, 'DENY' blocks all framing
         $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
         
-        // Modern CSP approach (more flexible than X-Frame-Options)
-        // 'self' allows framing by same origin, 'none' blocks all framing
-        // This is the recommended modern way to prevent clickjacking
-        $response->headers->set('Content-Security-Policy', "frame-ancestors 'self'");
+        // Content Security Policy (CSP)
+        // Comprehensive CSP to prevent XSS attacks while allowing necessary functionality
+        // 
+        // SECURITY NOTE: 'unsafe-eval' is included because CKEditor requires it for some features.
+        // This allows eval() and similar functions. While this reduces security, it's necessary
+        // for CKEditor to function properly. Consider migrating to a newer version of CKEditor
+        // that doesn't require unsafe-eval, or use nonces/hashes for inline scripts in the future.
+        $cspDirectives = [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.bootstrapcdn.com", // unsafe-eval required for CKEditor
+            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.bootstrapcdn.com https://fonts.googleapis.com",
+            "font-src 'self' data: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.bootstrapcdn.com https://fonts.gstatic.com",
+            "img-src 'self' data: blob: https: http:",
+            "connect-src 'self' https:",
+            "frame-src 'self'",
+            "frame-ancestors 'self'", // Prevent clickjacking
+            "object-src 'none'", // Block plugins
+            "base-uri 'self'",
+            "form-action 'self'",
+            "upgrade-insecure-requests" // Upgrade HTTP to HTTPS
+        ];
+        
+        $cspHeader = implode('; ', $cspDirectives);
+        $response->headers->set('Content-Security-Policy', $cspHeader);
         
         // Additional security headers for defense in depth
         $response->headers->set('X-Content-Type-Options', 'nosniff');

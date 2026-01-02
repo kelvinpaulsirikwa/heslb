@@ -23,7 +23,8 @@
                 <div class="col-lg-4 col-md-6 d-flex">
                     <div class="product-card-v2 w-100">
                         <div class="product-image-v2"
-                             style="background-image: url('{{ asset($images[$index]) }}');">
+                             style="background-image: url('{{ asset($images[$index]) }}');"
+                             loading="lazy">
                         </div>
 
                         <div class="product-content-v2">
@@ -34,8 +35,26 @@
                                     <p class="description">{{ $product['description'] }}</p>
                                 </div>
 
-                                <a href="{{ route('aboutus.visionmission') }}" class="learn-more-btn-v2">
-                                    {{ __('products.learn_more') }}
+                                <a href="{{ route('aboutus.visionmission') }}" 
+                                   class="learn-more-btn-v2"
+                                   @if($product['title'] === 'BACKGROUND')
+                                       aria-label="Learn more about HESLB background and history"
+                                   @elseif($product['title'] === 'OUR VISION')
+                                       aria-label="Learn more about HESLB vision"
+                                   @elseif($product['title'] === 'OUR MISSION')
+                                       aria-label="Learn more about HESLB mission"
+                                   @else
+                                       aria-label="Learn more about {{ $product['title'] }}"
+                                   @endif>
+                                    @if($product['title'] === 'BACKGROUND')
+                                        More on Background
+                                    @elseif($product['title'] === 'OUR VISION')
+                                        More on Vision
+                                    @elseif($product['title'] === 'OUR MISSION')
+                                        More on Mission
+                                    @else
+                                        {{ __('products.learn_more') }}
+                                    @endif
                                     <svg class="arrow-icon-v2" width="18" height="18" viewBox="0 0 24 24" fill="none"
                                          stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                          stroke-linejoin="round">

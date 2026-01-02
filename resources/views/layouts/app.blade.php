@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   	<title>HESLB | Higher Education Students' Loans Board</title>
 
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="HESLB | Higher Education Students' Loans Board">
+    <meta name="description" content="Higher Education Students' Loans Board (HESLB) - Providing financial assistance to Tanzanian students pursuing higher education. Apply for loans, manage repayments, and access educational resources.">
+    <meta name="keywords" content="HESLB, Higher Education Students Loans Board, student loans, Tanzania, education loans, loan application, loan repayment, scholarships, higher education, Tanzania education">
+    <meta name="author" content="Higher Education Students' Loans Board">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    <meta name="theme-color" content="#0066cc">
+    <meta name="msapplication-TileColor" content="#0066cc">
+    <meta name="application-name" content="HESLB">
+
 
 
 <!-- Favicon -->
@@ -19,17 +31,18 @@
 <!-- Font Awesome 6 (Primary CDN) -->
 <link rel="stylesheet" href="{{ config('links.cdn.fontawesome_css') }}" crossorigin="anonymous" referrerpolicy="no-referrer">
 
-<!-- Font Awesome 6 (Fallback CDN) -->
-<link rel="stylesheet" href="{{ config('links.cdn.fontawesome_v6_css') }}" crossorigin="anonymous" referrerpolicy="no-referrer">
-
-<!-- Leaflet CSS -->
+<!-- Leaflet CSS (only on contact us pages) -->
+@if(in_array(Route::currentRouteName(), ['contactus.formandregion', 'contactus.getusintouch', 'contact.store']))
 <link rel="stylesheet" href="{{ config('links.cdn.leaflet_css') }}" />
-
-<!-- Leaflet JavaScript -->
-<script src="{{ config('links.cdn.leaflet_js') }}"></script>
+@endif
 
 <!-- Bootstrap JavaScript -->
 <script src="{{ config('links.cdn.bootstrap_js') }}"></script>
+
+<!-- Leaflet JavaScript (only on contact us pages) -->
+@if(in_array(Route::currentRouteName(), ['contactus.formandregion', 'contactus.getusintouch', 'contact.store']))
+<script src="{{ config('links.cdn.leaflet_js') }}"></script>
+@endif
 
  
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -56,12 +69,12 @@
 <link rel="stylesheet" href="{{ asset('css/searching.css') }}">
 
 <!-- JS Files -->
-<script src="{{ asset('js/app.js') }}"></script>
-<script src="{{ asset('js/organization.js') }}"></script>
-<script src="{{ asset('js/contactus.js') }}"></script>
-<script src="{{ asset('js/newscenter.js') }}"></script>
-<script src="{{ asset('js/countdowntime.js') }}"></script>
-<script src="{{ asset('js/ourproduct.js') }}"></script>
+<script src="{{ asset('js/app.js') }}" defer></script>
+<script src="{{ asset('js/organization.js') }}" defer></script>
+<script src="{{ asset('js/contactus.js') }}" defer></script>
+<script src="{{ asset('js/newscenter.js') }}" defer></script>
+<script src="{{ asset('js/countdowntime.js') }}" defer></script>
+<script src="{{ asset('js/ourproduct.js') }}" defer></script>
 <!-- <script src="https://chatbot.heslb.go.tz/chatbot_general_obs.js"></script> -->
 
 

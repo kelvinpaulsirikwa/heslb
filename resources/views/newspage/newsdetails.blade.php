@@ -429,12 +429,12 @@
                 @if($news->front_image && file_exists(public_path('images/storage/' . $news->front_image)))
                     <img src="{{ asset('images/storage/' . $news->front_image) }}" 
                          alt="{{ $news->title }}" 
-                         class="featured-image">
+                         class="featured-image" loading="lazy">
                 @else
                     <div class="no-image-placeholder">
                     <img src="{{ asset('images/static_files/noimagenews.png') }}" 
                          alt="{{ $news->title }}" 
-                         class="featured-image">
+                         class="featured-image" loading="lazy">
                     </div>
                 @endif
             </div>

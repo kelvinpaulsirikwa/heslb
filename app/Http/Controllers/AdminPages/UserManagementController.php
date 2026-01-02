@@ -10,6 +10,7 @@ use App\Models\UserPermission;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Services\AuditLogService;
 
@@ -111,48 +112,52 @@ class UserManagementController extends Controller
         $temporaryPassword = Str::random(10);
 
         try {
-            $user = Userstable::create([
-                'username'  => $validatedData['username'],
-                'email'     => $validatedData['email'],
-                'profile_image' => $imagePath,
-                'password'  => $temporaryPassword,
-                'telephone' => $validatedData['telephone'],
-                'role'      => $validatedData['role'],
-                'status'    => 'active',
-                'must_change_password' => true,
-            ]);
+            // Use database transaction to ensure data consistency
+            $user = DB::transaction(function () use ($validatedData, $imagePath, $temporaryPassword, $request) {
+                $user = Userstable::create([
+                    'username'  => $validatedData['username'],
+                    'email'     => $validatedData['email'],
+                    'profile_image' => $imagePath,
+                    'password'  => $temporaryPassword,
+                    'telephone' => $validatedData['telephone'],
+                    'role'      => $validatedData['role'],
+                    'status'    => 'active',
+                    'must_change_password' => true,
+                ]);
 
-            // If role is "user", assign individual permissions
-            if (strtolower($validatedData['role']) === 'user' && $request->has('permissions')) {
-                $permissionIds = $request->input('permissions', []);
-                
-                // Validate that no admin-level permissions are being assigned to standard users
-                $adminPermissionIds = Permission::whereIn('name', $this->getAdminLevelPermissions())
-                    ->where('guard_name', 'web')
-                    ->pluck('id')
-                    ->toArray();
-                
-                $attemptedAdminPermissions = array_intersect($permissionIds, $adminPermissionIds);
-                
-                if (!empty($attemptedAdminPermissions)) {
-                    $adminPermissionNames = Permission::whereIn('id', $attemptedAdminPermissions)
-                        ->pluck('display_name')
+                // If role is "user", assign individual permissions
+                if (strtolower($validatedData['role']) === 'user' && $request->has('permissions')) {
+                    $permissionIds = $request->input('permissions', []);
+                    
+                    // Validate that no admin-level permissions are being assigned to standard users
+                    $adminPermissionIds = Permission::whereIn('name', $this->getAdminLevelPermissions())
+                        ->where('guard_name', 'web')
+                        ->pluck('id')
                         ->toArray();
                     
-                    return redirect()->back()
-                        ->withErrors(['permissions' => 'Cannot assign admin-level permissions (' . implode(', ', $adminPermissionNames) . ') to standard users.'])
-                        ->withInput();
+                    $attemptedAdminPermissions = array_intersect($permissionIds, $adminPermissionIds);
+                    
+                    if (!empty($attemptedAdminPermissions)) {
+                        $adminPermissionNames = Permission::whereIn('id', $attemptedAdminPermissions)
+                            ->pluck('display_name')
+                            ->toArray();
+                        
+                        // Rollback transaction and return error
+                        throw new \Exception('Cannot assign admin-level permissions (' . implode(', ', $adminPermissionNames) . ') to standard users.');
+                    }
+                    
+                    foreach ($permissionIds as $permissionId) {
+                        UserPermission::create([
+                            'user_id' => $user->id,
+                            'permission_id' => $permissionId
+                        ]);
+                    }
                 }
-                
-                foreach ($permissionIds as $permissionId) {
-                    UserPermission::create([
-                        'user_id' => $user->id,
-                        'permission_id' => $permissionId
-                    ]);
-                }
-            }
 
-            // Audit log
+                return $user;
+            });
+
+            // Audit log (outside transaction to avoid transaction issues)
             $newValues = ['username' => $user->username, 'email' => $user->email, 'role' => $user->role];
             if (strtolower($validatedData['role']) === 'user' && $request->has('permissions')) {
                 $newValues['permissions'] = $request->input('permissions', []);
@@ -167,24 +172,37 @@ class UserManagementController extends Controller
             );
 
             return redirect()->route('admin.users.index')->with('success', 'User created successfully. Temporary password: ' . $temporaryPassword);
-        } catch (\Illuminate\Database\QueryException $e) {
-            // Handle database constraint violations
-            if ($e->getCode() == 23000) {
-                $errorMessage = 'A user with this username or email already exists. Please choose different values.';
-                
-                // More specific error messages based on the constraint
-                if (strpos($e->getMessage(), 'username') !== false) {
-                    $errorMessage = 'This username is already taken. Please choose a different one.';
-                } elseif (strpos($e->getMessage(), 'email') !== false) {
-                    $errorMessage = 'This email address is already taken. Please use a different email.';
-                }
-                
+        } catch (\Exception $e) {
+            // Handle permission validation errors
+            if (strpos($e->getMessage(), 'Cannot assign admin-level permissions') !== false) {
                 return redirect()->back()
-                    ->withErrors(['database' => $errorMessage])
+                    ->withErrors(['permissions' => $e->getMessage()])
                     ->withInput();
             }
             
-            // Re-throw if it's not a constraint violation
+            // Re-throw if it's a database query exception
+            if ($e instanceof \Illuminate\Database\QueryException) {
+                // Handle database constraint violations
+                if ($e->getCode() == 23000) {
+                    $errorMessage = 'A user with this username or email already exists. Please choose different values.';
+                    
+                    // More specific error messages based on the constraint
+                    if (strpos($e->getMessage(), 'username') !== false) {
+                        $errorMessage = 'This username is already taken. Please choose a different one.';
+                    } elseif (strpos($e->getMessage(), 'email') !== false) {
+                        $errorMessage = 'This email address is already taken. Please use a different email.';
+                    }
+                    
+                    return redirect()->back()
+                        ->withErrors(['database' => $errorMessage])
+                        ->withInput();
+                }
+                
+                // Re-throw if it's not a constraint violation
+                throw $e;
+            }
+            
+            // Re-throw other exceptions
             throw $e;
         }
     }
@@ -340,62 +358,64 @@ class UserManagementController extends Controller
         ];
 
         try {
-            $user->update($data);
+            // Use database transaction to ensure data consistency
+            DB::transaction(function () use ($user, $data, $request) {
+                $user->update($data);
 
-            if ($request->filled('password')) {
-                $user->update(['password' => $request->password]); // hashed by mutator
-            }
+                if ($request->filled('password')) {
+                    $user->update(['password' => $request->password]); // hashed by mutator
+                }
 
-            // Handle user permissions if role is "user"
-            if (strtolower($data['role']) === 'user') {
-                // Get selected permission IDs
-                $selectedPermissions = $request->input('permissions', []);
-                
-                // Validate that no admin-level permissions are being assigned to standard users
-                $adminPermissionIds = Permission::whereIn('name', $this->getAdminLevelPermissions())
-                    ->where('guard_name', 'web')
-                    ->pluck('id')
-                    ->toArray();
-                
-                $attemptedAdminPermissions = array_intersect($selectedPermissions, $adminPermissionIds);
-                
-                if (!empty($attemptedAdminPermissions)) {
-                    $adminPermissionNames = Permission::whereIn('id', $attemptedAdminPermissions)
-                        ->pluck('display_name')
+                // Handle user permissions if role is "user"
+                if (strtolower($data['role']) === 'user') {
+                    // Get selected permission IDs
+                    $selectedPermissions = $request->input('permissions', []);
+                    
+                    // Validate that no admin-level permissions are being assigned to standard users
+                    $adminPermissionIds = Permission::whereIn('name', $this->getAdminLevelPermissions())
+                        ->where('guard_name', 'web')
+                        ->pluck('id')
                         ->toArray();
                     
-                    return redirect()->back()
-                        ->withErrors(['permissions' => 'Cannot assign admin-level permissions (' . implode(', ', $adminPermissionNames) . ') to standard users.'])
-                        ->withInput();
+                    $attemptedAdminPermissions = array_intersect($selectedPermissions, $adminPermissionIds);
+                    
+                    if (!empty($attemptedAdminPermissions)) {
+                        $adminPermissionNames = Permission::whereIn('id', $attemptedAdminPermissions)
+                            ->pluck('display_name')
+                            ->toArray();
+                        
+                        // Rollback transaction and throw exception
+                        throw new \Exception('Cannot assign admin-level permissions (' . implode(', ', $adminPermissionNames) . ') to standard users.');
+                    }
+                    
+                    // Get current user permissions
+                    $currentPermissionIds = UserPermission::where('user_id', $user->id)
+                        ->pluck('permission_id')
+                        ->toArray();
+                    
+                    // Find permissions to add
+                    $permissionsToAdd = array_diff($selectedPermissions, $currentPermissionIds);
+                    
+                    // Find permissions to remove
+                    $permissionsToRemove = array_diff($currentPermissionIds, $selectedPermissions);
+                    
+                    // Add new permissions
+                    foreach ($permissionsToAdd as $permissionId) {
+                        UserPermission::create([
+                            'user_id' => $user->id,
+                            'permission_id' => $permissionId
+                        ]);
+                    }
+                    
+                    // Remove permissions
+                    UserPermission::where('user_id', $user->id)
+                        ->whereIn('permission_id', $permissionsToRemove)
+                        ->delete();
+                } else {
+                    // If role changed from "user" to something else, remove all user-specific permissions
+                    UserPermission::where('user_id', $user->id)->delete();
                 }
-                
-                // Get current user permissions
-                $currentPermissionIds = UserPermission::where('user_id', $user->id)
-                    ->pluck('permission_id')
-                    ->toArray();
-                
-                // Find permissions to add
-                $permissionsToAdd = array_diff($selectedPermissions, $currentPermissionIds);
-                
-                // Find permissions to remove
-                $permissionsToRemove = array_diff($currentPermissionIds, $selectedPermissions);
-                
-                // Add new permissions
-                foreach ($permissionsToAdd as $permissionId) {
-                    UserPermission::create([
-                        'user_id' => $user->id,
-                        'permission_id' => $permissionId
-                    ]);
-                }
-                
-                // Remove permissions
-                UserPermission::where('user_id', $user->id)
-                    ->whereIn('permission_id', $permissionsToRemove)
-                    ->delete();
-            } else {
-                // If role changed from "user" to something else, remove all user-specific permissions
-                UserPermission::where('user_id', $user->id)->delete();
-            }
+            });
 
             // Regenerate session if role or permissions changed (prevents session fixation)
             if ($oldValues['role'] !== $data['role'] || 
@@ -406,7 +426,7 @@ class UserManagementController extends Controller
                 }
             }
 
-            // Audit log
+            // Audit log (outside transaction to avoid transaction issues)
             $newValues = array_merge($oldValues, $data);
             if (strtolower($data['role']) === 'user' && $request->has('permissions')) {
                 $newValues['permissions'] = $request->input('permissions', []);
@@ -421,24 +441,37 @@ class UserManagementController extends Controller
             );
 
             return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
-        } catch (\Illuminate\Database\QueryException $e) {
-            // Handle database constraint violations
-            if ($e->getCode() == 23000) {
-                $errorMessage = 'A user with this username or email already exists. Please choose different values.';
-                
-                // More specific error messages based on the constraint
-                if (strpos($e->getMessage(), 'username') !== false) {
-                    $errorMessage = 'This username is already taken. Please choose a different one.';
-                } elseif (strpos($e->getMessage(), 'email') !== false) {
-                    $errorMessage = 'This email address is already taken. Please use a different email.';
-                }
-                
+        } catch (\Exception $e) {
+            // Handle permission validation errors
+            if (strpos($e->getMessage(), 'Cannot assign admin-level permissions') !== false) {
                 return redirect()->back()
-                    ->withErrors(['database' => $errorMessage])
+                    ->withErrors(['permissions' => $e->getMessage()])
                     ->withInput();
             }
             
-            // Re-throw if it's not a constraint violation
+            // Re-throw if it's a database query exception
+            if ($e instanceof \Illuminate\Database\QueryException) {
+                // Handle database constraint violations
+                if ($e->getCode() == 23000) {
+                    $errorMessage = 'A user with this username or email already exists. Please choose different values.';
+                    
+                    // More specific error messages based on the constraint
+                    if (strpos($e->getMessage(), 'username') !== false) {
+                        $errorMessage = 'This username is already taken. Please choose a different one.';
+                    } elseif (strpos($e->getMessage(), 'email') !== false) {
+                        $errorMessage = 'This email address is already taken. Please use a different email.';
+                    }
+                    
+                    return redirect()->back()
+                        ->withErrors(['database' => $errorMessage])
+                        ->withInput();
+                }
+                
+                // Re-throw if it's not a constraint violation
+                throw $e;
+            }
+            
+            // Re-throw other exceptions
             throw $e;
         }
     }

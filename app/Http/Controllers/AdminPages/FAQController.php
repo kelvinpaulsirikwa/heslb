@@ -13,6 +13,13 @@ class FAQController extends Controller
     // Display all FAQs
     public function index(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_faqs')) {
+            abort(403, 'You do not have permission to manage FAQs.');
+        }
+        
         $query = FAQ::with('user');
         
         // Filter by user if provided
@@ -27,6 +34,13 @@ class FAQController extends Controller
     // Show form to create
     public function create()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_faqs')) {
+            abort(403, 'You do not have permission to manage FAQs.');
+        }
+        
         $users = Userstable::all();
         return view('adminpages.faq.create', compact('users'));
     }
@@ -34,6 +48,13 @@ class FAQController extends Controller
     // Store new FAQ
    public function store(Request $request)
 {
+    // Server-side permission check
+    /** @var Userstable $user */
+    $user = Auth::user();
+    if (!$user || !$user->hasPermission('manage_faqs')) {
+        abort(403, 'You do not have permission to manage FAQs.');
+    }
+    
     try {
         $validatedData = \App\Services\AdminValidationService::validate($request, 'faqs');
     } catch (\Illuminate\Validation\ValidationException $e) {
@@ -56,6 +77,13 @@ class FAQController extends Controller
     // Show single FAQ
     public function show($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_faqs')) {
+            abort(403, 'You do not have permission to manage FAQs.');
+        }
+        
         $faq = FAQ::with('user')->findOrFail($id);
         return view('adminpages.faq.show', compact('faq'));
     }
@@ -63,6 +91,13 @@ class FAQController extends Controller
     // Edit FAQ form
     public function edit($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_faqs')) {
+            abort(403, 'You do not have permission to manage FAQs.');
+        }
+        
         $faq = FAQ::findOrFail($id);
         $users = Userstable::all();
         return view('adminpages.faq.edit', compact('faq', 'users'));
@@ -71,6 +106,13 @@ class FAQController extends Controller
     // Update FAQ
     public function update(Request $request, $id)
 {
+    // Server-side permission check
+    /** @var Userstable $user */
+    $user = Auth::user();
+    if (!$user || !$user->hasPermission('manage_faqs')) {
+        abort(403, 'You do not have permission to manage FAQs.');
+    }
+    
     $faq = FAQ::findOrFail($id);
 
     try {
@@ -95,6 +137,13 @@ class FAQController extends Controller
     // Delete FAQ
     public function destroy($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_faqs')) {
+            abort(403, 'You do not have permission to manage FAQs.');
+        }
+        
         $faq = FAQ::findOrFail($id);
         $faq->delete();
 

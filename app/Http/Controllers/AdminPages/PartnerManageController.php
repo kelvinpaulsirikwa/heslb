@@ -72,9 +72,9 @@ class PartnerManageController extends Controller
         }
 
         // Custom validation for unique combination
-        $existingPartner = Partner::where('name', $request->name)
-            ->where('acronym_name', $request->acronym_name)
-            ->where('link', $request->link)
+        $existingPartner = Partner::where('name', $validatedData['name'])
+            ->where('acronym_name', $validatedData['acronym_name'])
+            ->where('link', $validatedData['link'])
             ->first();
 
         if ($existingPartner) {
@@ -93,7 +93,7 @@ class PartnerManageController extends Controller
         // Handle image upload
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = time() . '_' . Str::slug($request->name) . '.' . $image->getClientOriginalExtension();
+            $imageName = time() . '_' . Str::slug($validatedData['name']) . '.' . $image->getClientOriginalExtension();
             
             // Store in partner_image folder
             $image->storeAs('partner_image', $imageName, 'public');
@@ -175,9 +175,9 @@ class PartnerManageController extends Controller
         }
 
         // Custom validation for unique combination (excluding current partner)
-        $existingPartner = Partner::where('name', $request->name)
-            ->where('acronym_name', $request->acronym_name)
-            ->where('link', $request->link)
+        $existingPartner = Partner::where('name', $validatedData['name'])
+            ->where('acronym_name', $validatedData['acronym_name'])
+            ->where('link', $validatedData['link'])
             ->where('id', '!=', $partner->id)
             ->first();
 
@@ -208,7 +208,7 @@ class PartnerManageController extends Controller
             }
 
             $image = $request->file('image');
-            $imageName = time() . '_' . Str::slug($request->name) . '.' . $image->getClientOriginalExtension();
+            $imageName = time() . '_' . Str::slug($validatedData['name']) . '.' . $image->getClientOriginalExtension();
             
             // Store in partner_image folder
             $image->storeAs('partner_image', $imageName, 'public');
