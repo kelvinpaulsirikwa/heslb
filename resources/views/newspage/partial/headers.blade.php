@@ -15,9 +15,13 @@
                                  alt="{{ $latestNews->title }}" 
                                  class="heslb-v2-featured-img" 
                                  loading="lazy"
-                                 onerror="console.error('❌ Image failed to load'); console.error('Image URL:', this.src); console.error('Database value:', '{{ $latestNews->front_image }}'); console.error('News ID:', {{ $latestNews->id }}); console.error('Full path:', '{{ public_path('images/storage/' . $latestNews->front_image) }}');"
+                                 onerror="console.error('❌ Image failed to load'); console.error('Image URL:', this.src); console.error('Database value:', '{{ $latestNews->front_image }}'); console.error('News ID:', {{ $latestNews->id }}); console.error('Full path:', '{{ public_path('images/storage/' . $latestNews->front_image) }}'); this.onerror=null; this.src='{{ asset('images/static_files/noimagenews.png') }}';"
                                  onload="console.log('✅ Image loaded successfully:', this.src);">
                             @else
+                            <img src="{{ asset('images/static_files/noimagenews.png') }}"
+                                 alt="{{ $latestNews->title }}" 
+                                 class="heslb-v2-featured-img" 
+                                 loading="lazy">
                             <script>
                                 console.warn('⚠️ No image value in database for latest news');
                                 console.warn('News ID:', {{ $latestNews->id }});

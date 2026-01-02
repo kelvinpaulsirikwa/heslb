@@ -431,9 +431,15 @@
                          alt="{{ $news->title }}" 
                          class="featured-image" 
                          loading="lazy"
-                         onerror="console.error('❌ Image failed to load on news detail page'); console.error('Image URL:', this.src); console.error('Database value:', '{{ $news->front_image }}'); console.error('News ID:', {{ $news->id }}); console.error('Full path:', '{{ public_path('images/storage/' . $news->front_image) }}');"
+                         onerror="console.error('❌ Image failed to load on news detail page'); console.error('Image URL:', this.src); console.error('Database value:', '{{ $news->front_image }}'); console.error('News ID:', {{ $news->id }}); console.error('Full path:', '{{ public_path('images/storage/' . $news->front_image) }}'); this.onerror=null; this.src='{{ asset('images/static_files/noimagenews.png') }}';"
                          onload="console.log('✅ Image loaded successfully on news detail page:', this.src);">
                 @else
+                    <div class="no-image-placeholder">
+                        <img src="{{ asset('images/static_files/noimagenews.png') }}" 
+                             alt="{{ $news->title }}" 
+                             class="featured-image" 
+                             loading="lazy">
+                    </div>
                     <script>
                         console.warn('⚠️ No image value in database for news detail');
                         console.warn('News ID:', {{ $news->id }});

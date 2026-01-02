@@ -36,8 +36,21 @@
         @forelse($newsArticles as $article)
         <article class="news-item">
             <div class="news-image-container">
-                <img src="{{ ($article->front_image && file_exists(public_path('images/storage/' . $article->front_image))) ? asset('images/storage/' . $article->front_image) : asset('images/static_files/noimagenews.png') }}" 
-                     alt="{{ $article->title }}" class="news-image">
+                @if($article->front_image)
+                <img src="{{ asset('images/storage/' . $article->front_image) }}" 
+                     alt="{{ $article->title }}" 
+                     class="news-image"
+                     onerror="console.error('❌ Category page image failed to load'); console.error('Image URL:', this.src); console.error('Database value:', '{{ $article->front_image }}'); console.error('Article ID:', {{ $article->id }}); console.error('Full path:', '{{ public_path('images/storage/' . $article->front_image) }}'); this.onerror=null; this.src='{{ asset('images/static_files/noimagenews.png') }}';"
+                     onload="console.log('✅ Category page image loaded:', this.src);">
+                @else
+                <img src="{{ asset('images/static_files/noimagenews.png') }}" 
+                     alt="{{ $article->title }}" 
+                     class="news-image">
+                <script>
+                    console.warn('⚠️ No image value in database for category article');
+                    console.warn('Article ID:', {{ $article->id }});
+                </script>
+                @endif
                 <div class="news-category">
                     {{ strtoupper($article->category) }}
                 </div>

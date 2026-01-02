@@ -14,13 +14,17 @@
                          alt="{{ $article['title'] }}" 
                          class="news-image" 
                          loading="lazy"
-                         onerror="console.error('❌ Image failed to load'); console.error('Image URL:', this.src); console.error('Database value:', '{{ $article['image'] }}'); console.error('Article ID:', {{ $article['id'] }}); console.error('Full path:', '{{ public_path('images/storage/' . $article['image']) }}');"
+                         onerror="console.error('❌ Image failed to load'); console.error('Image URL:', this.src); console.error('Database value:', '{{ $article['image'] }}'); console.error('Article ID:', {{ $article['id'] }}); console.error('Full path:', '{{ public_path('images/storage/' . $article['image']) }}'); this.onerror=null; this.src='{{ asset('images/static_files/noimagenews.png') }}';"
                          onload="console.log('✅ Image loaded successfully:', this.src);">
                 @else
-                <script>
-                    console.warn('⚠️ No image value in database for article');
-                    console.warn('Article ID:', {{ $article['id'] }});
-                </script>
+                    <img src="{{ asset('images/static_files/noimagenews.png') }}" 
+                         alt="{{ $article['title'] }}" 
+                         class="news-image" 
+                         loading="lazy">
+                    <script>
+                        console.warn('⚠️ No image value in database for article');
+                        console.warn('Article ID:', {{ $article['id'] }});
+                    </script>
                 @endif
                 <div class="news-category {{ $article['type'] === 'story' ? 'category-success' : '' }}">
                     {{ strtoupper($article['category']) }}

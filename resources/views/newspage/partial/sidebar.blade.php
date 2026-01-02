@@ -148,8 +148,19 @@
                 @foreach($allLatest as $latest)
                 <div class="latest-news-item">
                     <div class="latest-image">
-                        <img src="{{ ($latest['image'] && file_exists(public_path('images/storage/' . $latest['image']))) ? asset('images/storage/' . $latest['image']) : asset('images/static_files/noimagenews.png') }}" 
+                        @if($latest['image'])
+                        <img src="{{ asset('images/storage/' . $latest['image']) }}" 
+                             alt="{{ $latest['title'] }}"
+                             onerror="console.error('❌ Sidebar image failed to load'); console.error('Image URL:', this.src); console.error('Database value:', '{{ $latest['image'] }}'); console.error('Item ID:', {{ $latest['id'] }}); console.error('Full path:', '{{ public_path('images/storage/' . $latest['image']) }}'); this.onerror=null; this.src='{{ asset('images/static_files/noimagenews.png') }}';"
+                             onload="console.log('✅ Sidebar image loaded:', this.src);">
+                        @else
+                        <img src="{{ asset('images/static_files/noimagenews.png') }}" 
                              alt="{{ $latest['title'] }}">
+                        <script>
+                            console.warn('⚠️ No image value in database for sidebar item');
+                            console.warn('Item ID:', {{ $latest['id'] }});
+                        </script>
+                        @endif
                     </div>
                     <div class="latest-content">
                         <div class="latest-category">{{ strtoupper($latest['category']) }}</div>
