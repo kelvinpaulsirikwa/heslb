@@ -101,15 +101,14 @@
 <link rel="stylesheet" href="{{ asset('css/ourproduct.css') }}">
 <link rel="stylesheet" href="{{ asset('css/ourproductheader.css') }}">
 <link rel="stylesheet" href="{{ asset('css/countdowntime.css') }}">
+<link rel="stylesheet" href="{{ asset('css/organization.css') }}">
 @endif
 
 <!-- JS Files - Always Loaded -->
 <script src="{{ asset('js/app.js') }}" defer></script>
 
 <!-- Conditional JS Files - Loaded based on current page -->
-@if(str_starts_with($currentRoute, 'aboutus.'))
-<script src="{{ asset('js/organization.js') }}" defer></script>
-@endif
+ 
 
 @if(in_array($currentRoute, ['contactus.formandregion', 'contactus.getusintouch', 'contact.store']))
 <script src="{{ asset('js/contactus.js') }}" defer></script>
@@ -122,6 +121,7 @@
 @if($currentRoute === 'home')
 <script src="{{ asset('js/countdowntime.js') }}" defer></script>
 <script src="{{ asset('js/ourproduct.js') }}" defer></script>
+<script src="{{ asset('js/organization.js') }}" defer></script>
 @endif
 <!-- <script src="https://chatbot.heslb.go.tz/chatbot_general_obs.js"></script> -->
 
