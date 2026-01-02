@@ -41,13 +41,11 @@
                     {{-- Rich Text Editor Component --}}
                     <div class="mb-3">
                         <label class="form-label">Content</label>
-                        <x-rich-text-editor 
-                            name="content"
-                            placeholder="Write your news article here..."
-                            height="400px"
-                            :image-upload="true"
-                            max-width="100%"
-                        />
+                        <textarea name="content" 
+                                  id="content" 
+                                  class="ckeditor form-control" 
+                                  rows="12" 
+                                  placeholder="Write your news article here..."></textarea>
                     </div>
                 </div>
                 
