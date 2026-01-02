@@ -31,15 +31,15 @@
                                     @if($user->profile_image)
                                         <img src="{{ asset('images/storage/' . $user->profile_image) }}" 
                                              alt="{{ $user->username }}" 
-                                             class="rounded-circle border shadow-sm mx-auto d-block"
+                                             class="rounded-circle border shadow-sm mx-auto d-block user-profile-img-show"
                                              style="width: 250px; height: 250px; object-fit: cover; max-width: 100%;"
                                              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                        <div class="rounded-circle bg-primary bg-opacity-15 d-flex align-items-center justify-content-center mx-auto text-dark fw-bold" 
-                                             style="width: 250px; height: 250px; max-width: 100%; font-size: 6rem; display: none; color: #000;">
+                                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto text-dark fw-bold user-profile-placeholder-show" 
+                                             style="width: 250px; height: 250px; max-width: 100%; font-size: 6rem; display: none !important; color: #000;">
                                             {{ strtoupper(substr($user->email, 0, 1)) }}
                                         </div>
                                     @else
-                                        <div class="rounded-circle bg-primary bg-opacity-15 d-flex align-items-center justify-content-center mx-auto text-dark fw-bold" 
+                                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto text-dark fw-bold" 
                                              style="width: 250px; height: 250px; max-width: 100%; font-size: 6rem; color: #000;">
                                             {{ strtoupper(substr($user->email, 0, 1)) }}
                                         </div>
@@ -450,6 +450,20 @@
 /* User avatar styling */
 .rounded-circle {
     flex-shrink: 0;
+}
+
+/* Ensure only one profile element shows at a time on show page */
+.user-profile-img-show,
+.user-profile-placeholder-show {
+    display: none;
+}
+
+.user-profile-img-show:not([style*="display: none"]) {
+    display: block !important;
+}
+
+.user-profile-placeholder-show:not([style*="display: none"]) {
+    display: flex !important;
 }
 
 /* Typography improvements */

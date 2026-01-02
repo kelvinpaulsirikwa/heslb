@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Contact;
 use App\Models\Userstable;
 use Illuminate\Support\Facades\Auth;
+use App\Services\AuditLogService;
 
 class FeedBackController extends Controller
 {
@@ -89,6 +90,24 @@ class FeedBackController extends Controller
         $contact->status = 'seen';
         $contact->seen_by = Auth::id(); // store user id who saw
         $contact->save();
+        
+        // Audit log
+        AuditLogService::log(
+            'view',
+            'Feedback',
+            $contact->id,
+            null,
+            ['contact_type' => $contact->contact_type, 'status' => 'seen']
+        );
+    } else {
+        // Audit log for viewing already seen feedback
+        AuditLogService::log(
+            'view',
+            'Feedback',
+            $contact->id,
+            null,
+            ['contact_type' => $contact->contact_type]
+        );
     }
 
     return view('adminpages.feedback.show', compact('contact'));
@@ -129,6 +148,15 @@ class FeedBackController extends Controller
             $contact->status = 'seen';
             $contact->seen_by = Auth::id();
             $contact->save();
+            
+            // Audit log
+            AuditLogService::log(
+                'update',
+                'Feedback',
+                $contact->id,
+                ['status' => 'not seen'],
+                ['status' => 'seen']
+            );
         }
         
         return redirect()->back()->with('success', 'Feedback has been marked as reviewed.');
@@ -147,6 +175,15 @@ class FeedBackController extends Controller
         }
         
         $contact = Contact::findOrFail($id);
+
+        // Audit log before deletion
+        AuditLogService::log(
+            'delete',
+            'Feedback',
+            $contact->id,
+            ['contact_type' => $contact->contact_type, 'status' => $contact->status],
+            null
+        );
 
         $contact->delete = 'yes';
         $contact->deleted_by = Auth::id();

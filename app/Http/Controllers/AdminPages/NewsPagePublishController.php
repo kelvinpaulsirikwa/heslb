@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\News;
 use App\Models\Userstable;
 use Illuminate\Support\Facades\Auth;
+use App\Services\AuditLogService;
 
 class NewsPagePublishController extends Controller
 {
@@ -74,7 +75,7 @@ class NewsPagePublishController extends Controller
         $frontImagePath = $request->file('front_image')->store('news_images', 'public');
     }
 
-    News::create([
+    $news = News::create([
         'title'       => $validatedData['title'],
         'content'     => $validatedData['content'],
         'category'    => $validatedData['category'],
@@ -82,6 +83,15 @@ class NewsPagePublishController extends Controller
         'posted_by'   => Auth::id(),
         'front_image' => $frontImagePath
     ]);
+
+    // Audit log
+    AuditLogService::log(
+        'create',
+        'News',
+        $news->id,
+        null,
+        ['title' => $news->title, 'category' => $news->category]
+    );
 
     return redirect()->route('admin.news.index')->with('success', 'News created successfully.');
 }
@@ -117,6 +127,13 @@ class NewsPagePublishController extends Controller
         
         $news = News::findOrFail($id);
 
+        // Store old values for audit log
+        $oldValues = [
+            'title' => $news->title,
+            'category' => $news->category,
+            'date_expire' => $news->date_expire
+        ];
+
         try {
             $validatedData = \App\Services\AdminValidationService::validate($request, 'news_publish');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -129,8 +146,16 @@ class NewsPagePublishController extends Controller
             $validatedData['front_image'] = $request->file('front_image')->store('news_images', 'public');
         }
 
-
         $news->update($validatedData);
+
+        // Audit log
+        AuditLogService::log(
+            'update',
+            'News',
+            $news->id,
+            $oldValues,
+            ['title' => $news->title, 'category' => $news->category, 'date_expire' => $news->date_expire]
+        );
 
         return redirect()->route('admin.news.index')->with('success', 'News updated successfully.');
     }
@@ -149,6 +174,16 @@ class NewsPagePublishController extends Controller
     }
     
     $news = News::findOrFail($id);
+    
+    // Audit log for viewing
+    AuditLogService::log(
+        'view',
+        'News',
+        $news->id,
+        null,
+        ['title' => $news->title]
+    );
+    
     return view('adminpages.newsandevent.show', compact('news'));
 }
 
@@ -162,6 +197,16 @@ class NewsPagePublishController extends Controller
         }
         
         $news = News::findOrFail($id);
+        
+        // Audit log before deletion
+        AuditLogService::log(
+            'delete',
+            'News',
+            $news->id,
+            ['title' => $news->title, 'category' => $news->category],
+            null
+        );
+        
         $news->delete();
 
         return redirect()->route('admin.news.index')->with('success', 'News deleted successfully.');

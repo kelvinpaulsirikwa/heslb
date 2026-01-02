@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use App\Services\AuditLogService;
 
 class AuthController extends Controller
 {
@@ -135,6 +136,15 @@ class AuthController extends Controller
 
         Log::info('Login successful', ['user_id' => $user->id, 'email' => $user->email]);
 
+        // Audit log for successful login
+        AuditLogService::log(
+            'login',
+            'System',
+            $user->id,
+            null,
+            ['email' => $user->email, 'ip_address' => $ipAddress]
+        );
+
         // Enforce password change if required
         if ($user->must_change_password) {
             return redirect()->route('password.change')->with('warning', 'You must change your password before continuing.');
@@ -178,10 +188,25 @@ class AuthController extends Controller
     // Handle logout
     public function logout(Request $request)
     {
+        $user = Auth::user();
+        $userId = $user ? $user->id : null;
+        $userEmail = $user ? $user->email : null;
+
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        // Audit log for logout
+        if ($userId) {
+            AuditLogService::log(
+                'logout',
+                'System',
+                $userId,
+                null,
+                ['email' => $userEmail, 'ip_address' => $request->ip()]
+            );
+        }
 
         // Clear any cached data and prevent back button issues
         return redirect()->route('login.form')

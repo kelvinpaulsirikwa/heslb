@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Services\AuditLogService;
 
 class PhotoGalleryController extends Controller
 {
@@ -69,11 +70,20 @@ class PhotoGalleryController extends Controller
                 ->withInput();
         }
 
-        Taasisevent::create([
+        $event = Taasisevent::create([
             'posted_by'    => auth()->id(),
             'name_of_event'=> $validatedData['name_of_event'],
             'description'    => $validatedData['description'],
         ]);
+
+        // Audit log
+        AuditLogService::log(
+            'create',
+            'Event',
+            $event->id,
+            null,
+            ['name_of_event' => $event->name_of_event]
+        );
 
         return redirect()->route('admin.taasisevents.index')
                          ->with('success', 'Event created successfully.');
@@ -92,6 +102,16 @@ class PhotoGalleryController extends Controller
         }
         
         $event = Taasisevent::with('images', 'user')->findOrFail($id);
+        
+        // Audit log for viewing
+        AuditLogService::log(
+            'view',
+            'Event',
+            $event->id,
+            null,
+            ['name_of_event' => $event->name_of_event]
+        );
+        
         return view('adminpages.taasisevents.show', compact('event'));
     }
 
@@ -133,6 +153,12 @@ class PhotoGalleryController extends Controller
         
         $event = Taasisevent::findOrFail($id);
 
+        // Store old values for audit log
+        $oldValues = [
+            'name_of_event' => $event->name_of_event,
+            'description' => $event->description
+        ];
+
         try {
             $validatedData = \App\Services\AdminValidationService::validate($request, 'photo_gallery_update');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -145,6 +171,15 @@ class PhotoGalleryController extends Controller
             'name_of_event'=> $validatedData['name_of_event'],
             'description'    => $validatedData['description'],
         ]);
+
+        // Audit log
+        AuditLogService::log(
+            'update',
+            'Event',
+            $event->id,
+            $oldValues,
+            ['name_of_event' => $event->name_of_event, 'description' => $event->description]
+        );
 
         return redirect()->route('admin.taasisevents.index')
                          ->with('success', 'Event updated successfully.');
@@ -167,6 +202,15 @@ class PhotoGalleryController extends Controller
         if ($event->images->count() > 0) {
             return back()->with('error', 'Cannot delete event because it has images.');
         }
+
+        // Audit log before deletion
+        AuditLogService::log(
+            'delete',
+            'Event',
+            $event->id,
+            ['name_of_event' => $event->name_of_event],
+            null
+        );
 
         $event->delete();
         return redirect()->route('admin.taasisevents.index')
@@ -216,12 +260,21 @@ class PhotoGalleryController extends Controller
             // Store image using Laravel storage
             $path = $image->store('taasisevents', 'public');
 
-            TaasiseventImage::create([
+            $eventImage = TaasiseventImage::create([
                 'taasisevent_id' => $event->id,
                 'posted_by'      => auth()->id(),
                 'image_link'     => $path,
                 'description'    => $request->descriptions[$index] ?? null,
             ]);
+
+            // Audit log for each image
+            AuditLogService::log(
+                'create',
+                'EventImage',
+                $eventImage->id,
+                null,
+                ['event_id' => $event->id, 'event_name' => $event->name_of_event]
+            );
         }
 
         return redirect()->route('admin.taasisevents.show', $event->id)
@@ -258,6 +311,11 @@ class PhotoGalleryController extends Controller
         
         $image = TaasiseventImage::findOrFail($id);
 
+        // Store old values for audit log
+        $oldValues = [
+            'description' => $image->description
+        ];
+
         try {
             $validatedData = \App\Services\AdminValidationService::validate($request, 'photo_gallery_image_update');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -269,6 +327,15 @@ class PhotoGalleryController extends Controller
         $image->update([
             'description' => $validatedData['description'],
         ]);
+
+        // Audit log
+        AuditLogService::log(
+            'update',
+            'EventImage',
+            $image->id,
+            $oldValues,
+            ['description' => $image->description, 'event_id' => $image->taasisevent_id]
+        );
 
         return redirect()->route('admin.taasisevents.show', $image->taasisevent_id)
                          ->with('success', 'Image updated successfully.');
@@ -288,6 +355,15 @@ class PhotoGalleryController extends Controller
         
         $image = TaasiseventImage::findOrFail($id);
         $eventId = $image->taasisevent_id;
+
+        // Audit log before deletion
+        AuditLogService::log(
+            'delete',
+            'EventImage',
+            $image->id,
+            ['event_id' => $eventId],
+            null
+        );
 
         // Delete from storage
         if (Storage::disk('public')->exists($image->image_link)) {

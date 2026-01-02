@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Userstable;
 use App\Models\Videopodcast;
 use Illuminate\Support\Facades\Auth;
+use App\Services\AuditLogService;
 
 class VideoPodcastsController extends Controller
 {
@@ -68,13 +69,22 @@ class VideoPodcastsController extends Controller
                 ->withInput();
         }
 
-        Videopodcast::create([
+        $video = Videopodcast::create([
             'name'       => $validatedData['name'],
             'link'       => $validatedData['link'],
             'description' => $validatedData['description'] ?? null,
             'posted_by'  => Auth::id(), // Get from logged in user
             'date_posted' => now(),
         ]);
+
+        // Audit log
+        AuditLogService::log(
+            'create',
+            'VideoPodcast',
+            $video->id,
+            null,
+            ['name' => $video->name]
+        );
 
         return redirect()->route('videopodcasts.index')
                          ->with('success', 'Video podcast created successfully.');
@@ -117,11 +127,27 @@ class VideoPodcastsController extends Controller
         }
 
         $video = Videopodcast::findOrFail($id);
+        
+        // Store old values for audit log
+        $oldValues = [
+            'name' => $video->name,
+            'link' => $video->link
+        ];
+        
         $video->update([
             'name' => $validatedData['name'],
             'link' => $validatedData['link'],
             'description' => $validatedData['description'] ?? null,
         ]);
+
+        // Audit log
+        AuditLogService::log(
+            'update',
+            'VideoPodcast',
+            $video->id,
+            $oldValues,
+            ['name' => $video->name, 'link' => $video->link]
+        );
 
         return redirect()->route('videopodcasts.index')
                          ->with('success', 'Video podcast updated successfully.');
@@ -140,6 +166,16 @@ class VideoPodcastsController extends Controller
         }
         
         $video = Videopodcast::findOrFail($id);
+        
+        // Audit log before deletion
+        AuditLogService::log(
+            'delete',
+            'VideoPodcast',
+            $video->id,
+            ['name' => $video->name],
+            null
+        );
+        
         $video->delete();
 
         return redirect()->route('videopodcasts.index')

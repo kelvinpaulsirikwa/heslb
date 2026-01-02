@@ -8,6 +8,7 @@ use App\Models\Application;
 use App\Models\Userstable;
 use App\Models\WindowApplication;
 use Illuminate\Support\Facades\Auth;
+use App\Services\AuditLogService;
 
 class WindowApplicationController extends Controller
 {
@@ -80,7 +81,16 @@ public function store(Request $request)
     }
 
 
-    WindowApplication::create($validatedData);
+    $application = WindowApplication::create($validatedData);
+
+    // Audit log
+    AuditLogService::log(
+        'create',
+        'WindowApplication',
+        $application->id,
+        null,
+        ['extension_type' => $application->extension_type ?? 'N/A']
+    );
 
     return redirect()->route('admin.window_applications.index')
                      ->with('success', 'Application window created successfully.');
@@ -98,6 +108,16 @@ public function store(Request $request)
         }
         
         $application = WindowApplication::with('user')->findOrFail($id);
+        
+        // Audit log for viewing
+        AuditLogService::log(
+            'view',
+            'WindowApplication',
+            $application->id,
+            null,
+            ['extension_type' => $application->extension_type ?? 'N/A']
+        );
+        
         return view('adminpages.dirishalausajili.show', compact('application'));
     }
 
@@ -129,6 +149,11 @@ public function store(Request $request)
         
         $application = WindowApplication::findOrFail($id);
 
+        // Store old values for audit log
+        $oldValues = [
+            'extension_type' => $application->extension_type ?? 'N/A'
+        ];
+
         try {
             $validatedData = \App\Services\AdminValidationService::validate($request, 'window_application');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -146,6 +171,15 @@ public function store(Request $request)
 
         $application->update($validatedData);
 
+        // Audit log
+        AuditLogService::log(
+            'update',
+            'WindowApplication',
+            $application->id,
+            $oldValues,
+            ['extension_type' => $application->extension_type ?? 'N/A']
+        );
+
         return redirect()->route('admin.window_applications.index')->with('success', 'Application window updated successfully.');
     }
 
@@ -160,6 +194,16 @@ public function store(Request $request)
         }
         
         $application = WindowApplication::findOrFail($id);
+        
+        // Audit log before deletion
+        AuditLogService::log(
+            'delete',
+            'WindowApplication',
+            $application->id,
+            ['extension_type' => $application->extension_type ?? 'N/A'],
+            null
+        );
+        
         $application->delete();
 
         return redirect()->route('admin.window_applications.index')->with('success', 'Application deleted.');

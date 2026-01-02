@@ -8,6 +8,7 @@ use App\Models\Link;
 use App\Models\Userstable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Services\AuditLogService;
 
 class ShortCutLinksController extends Controller
 {
@@ -77,7 +78,7 @@ class ShortCutLinksController extends Controller
                     ->withInput();
             }
 
-            Link::create([
+            $createdLink = Link::create([
                 'link_name' => $validatedData['link_name'],
                 'link' => $link,
                 'is_file' => false,
@@ -90,13 +91,22 @@ class ShortCutLinksController extends Controller
             // Store the file in the public disk storage folder, e.g. storage/app/public/files
             $path = $file->store('files', 'public');
 
-            Link::create([
+            $createdLink = Link::create([
                 'link_name' => $validatedData['link_name'],
                 'link' => $path,
                 'is_file' => true,
                 'posted_by' => Auth::id(),
             ]);
         }
+
+        // Audit log
+        AuditLogService::log(
+            'create',
+            'ShortcutLink',
+            $createdLink->id,
+            null,
+            ['link_name' => $createdLink->link_name, 'is_file' => $createdLink->is_file]
+        );
 
         return redirect()->route('shortcut-links.index')
                          ->with('success', 'Link created successfully.');
@@ -112,6 +122,16 @@ class ShortCutLinksController extends Controller
         }
         
         $link = Link::with('user')->findOrFail($id);
+        
+        // Audit log for viewing
+        AuditLogService::log(
+            'view',
+            'ShortcutLink',
+            $link->id,
+            null,
+            ['link_name' => $link->link_name]
+        );
+        
         return view('adminpages.shortcutlinks.show', compact('link'));
     }
 
@@ -138,6 +158,12 @@ class ShortCutLinksController extends Controller
         }
         
         $link = Link::findOrFail($id);
+
+        // Store old values for audit log
+        $oldValues = [
+            'link_name' => $link->link_name,
+            'is_file' => $link->is_file
+        ];
 
         try {
             $validatedData = \App\Services\AdminValidationService::validate($request, 'shortcut_links_update');
@@ -200,6 +226,15 @@ class ShortCutLinksController extends Controller
             }
         }
 
+        // Audit log
+        AuditLogService::log(
+            'update',
+            'ShortcutLink',
+            $link->id,
+            $oldValues,
+            ['link_name' => $link->link_name, 'is_file' => $link->is_file]
+        );
+
         return redirect()->route('shortcut-links.index')
                          ->with('success', 'Link updated successfully.');
     }
@@ -214,6 +249,15 @@ class ShortCutLinksController extends Controller
         }
         
         $link = Link::findOrFail($id);
+
+        // Audit log before deletion
+        AuditLogService::log(
+            'delete',
+            'ShortcutLink',
+            $link->id,
+            ['link_name' => $link->link_name, 'is_file' => $link->is_file],
+            null
+        );
 
         // Delete file if applicable
         if ($link->is_file && Storage::disk('public')->exists($link->link)) {

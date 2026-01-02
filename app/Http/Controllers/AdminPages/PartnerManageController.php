@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Services\AuditLogService;
 
 class PartnerManageController extends Controller
 {
@@ -99,7 +100,16 @@ class PartnerManageController extends Controller
             $data['image_path'] = $imageName;
         }
 
-        Partner::create($data);
+        $partner = Partner::create($data);
+
+        // Audit log
+        AuditLogService::log(
+            'create',
+            'Partner',
+            $partner->id,
+            null,
+            ['name' => $partner->name, 'acronym_name' => $partner->acronym_name]
+        );
 
         return redirect()->route('admin.partners.index')
                         ->with('success', 'Partner created successfully.');
@@ -116,6 +126,15 @@ class PartnerManageController extends Controller
         if (!$user || !$user->hasPermission('manage_partners')) {
             abort(403, 'You do not have permission to manage partners.');
         }
+        
+        // Audit log for viewing
+        AuditLogService::log(
+            'view',
+            'Partner',
+            $partner->id,
+            null,
+            ['name' => $partner->name]
+        );
         
         return view('adminpages.partners.show', compact('partner'));
     }
@@ -168,6 +187,13 @@ class PartnerManageController extends Controller
                 ->withInput();
         }
 
+        // Store old values for audit log
+        $oldValues = [
+            'name' => $partner->name,
+            'acronym_name' => $partner->acronym_name,
+            'link' => $partner->link
+        ];
+
         $data = [
             'name' => $validatedData['name'],
             'acronym_name' => $validatedData['acronym_name'],
@@ -191,6 +217,15 @@ class PartnerManageController extends Controller
 
         $partner->update($data);
 
+        // Audit log
+        AuditLogService::log(
+            'update',
+            'Partner',
+            $partner->id,
+            $oldValues,
+            ['name' => $partner->name, 'acronym_name' => $partner->acronym_name, 'link' => $partner->link]
+        );
+
         return redirect()->route('admin.partners.index')
                         ->with('success', 'Partner updated successfully.');
     }
@@ -207,6 +242,15 @@ class PartnerManageController extends Controller
             abort(403, 'You do not have permission to manage partners.');
         }
         
+        // Audit log before deletion
+        AuditLogService::log(
+            'delete',
+            'Partner',
+            $partner->id,
+            ['name' => $partner->name, 'acronym_name' => $partner->acronym_name],
+            null
+        );
+
         // Delete image if exists
         if ($partner->image_path) {
             Storage::disk('public')->delete('partner_image/' . $partner->image_path);
