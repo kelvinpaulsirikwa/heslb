@@ -5,6 +5,7 @@ namespace App\Http\Controllers\AdminPages;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Link;
+use App\Models\Userstable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,6 +13,13 @@ class ShortCutLinksController extends Controller
 {
     public function index(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_shortcut_links')) {
+            abort(403, 'You do not have permission to manage shortcut links.');
+        }
+        
         $query = Link::with('user');
         
         // Filter by user if provided
@@ -25,11 +33,25 @@ class ShortCutLinksController extends Controller
 
     public function create()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_shortcut_links')) {
+            abort(403, 'You do not have permission to manage shortcut links.');
+        }
+        
         return view('adminpages.shortcutlinks.create');
     }
 
     public function store(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_shortcut_links')) {
+            abort(403, 'You do not have permission to manage shortcut links.');
+        }
+        
         try {
             $validatedData = \App\Services\AdminValidationService::validate($request, 'shortcut_links');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -82,18 +104,39 @@ class ShortCutLinksController extends Controller
 
     public function show($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_shortcut_links')) {
+            abort(403, 'You do not have permission to manage shortcut links.');
+        }
+        
         $link = Link::with('user')->findOrFail($id);
         return view('adminpages.shortcutlinks.show', compact('link'));
     }
 
     public function edit($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_shortcut_links')) {
+            abort(403, 'You do not have permission to manage shortcut links.');
+        }
+        
         $link = Link::findOrFail($id);
         return view('adminpages.shortcutlinks.edit', compact('link'));
     }
 
     public function update(Request $request, $id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_shortcut_links')) {
+            abort(403, 'You do not have permission to manage shortcut links.');
+        }
+        
         $link = Link::findOrFail($id);
 
         try {
@@ -163,6 +206,13 @@ class ShortCutLinksController extends Controller
 
     public function destroy($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_shortcut_links')) {
+            abort(403, 'You do not have permission to manage shortcut links.');
+        }
+        
         $link = Link::findOrFail($id);
 
         // Delete file if applicable

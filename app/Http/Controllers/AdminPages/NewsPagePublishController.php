@@ -15,6 +15,13 @@ class NewsPagePublishController extends Controller
      */
     public function index(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_news')) {
+            abort(403, 'You do not have permission to manage news.');
+        }
+        
         $query = News::query();
         
         // Filter by user if provided
@@ -31,6 +38,13 @@ class NewsPagePublishController extends Controller
      */
     public function create()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_news')) {
+            abort(403, 'You do not have permission to manage news.');
+        }
+        
         $categories = ['general news', 'successful stories'];
         return view('adminpages.newsandevent.create', compact('categories'));
     }
@@ -40,6 +54,13 @@ class NewsPagePublishController extends Controller
      */
  public function store(Request $request)
 {
+    // Server-side permission check
+    /** @var Userstable $user */
+    $user = Auth::user();
+    if (!$user || !$user->hasPermission('manage_news')) {
+        abort(403, 'You do not have permission to manage news.');
+    }
+    
     try {
         $validatedData = \App\Services\AdminValidationService::validate($request, 'news_publish');
     } catch (\Illuminate\Validation\ValidationException $e) {
@@ -70,6 +91,13 @@ class NewsPagePublishController extends Controller
      */
     public function edit($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_news')) {
+            abort(403, 'You do not have permission to manage news.');
+        }
+        
         $news = News::findOrFail($id);
         $categories = ['general news', 'successful stories'];
         return view('adminpages.newsandevent.edit', compact('news', 'categories'));
@@ -80,6 +108,13 @@ class NewsPagePublishController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_news')) {
+            abort(403, 'You do not have permission to manage news.');
+        }
+        
         $news = News::findOrFail($id);
 
         try {
@@ -106,12 +141,26 @@ class NewsPagePublishController extends Controller
 
     public function show($id)
 {
+    // Server-side permission check
+    /** @var Userstable $user */
+    $user = Auth::user();
+    if (!$user || !$user->hasPermission('manage_news')) {
+        abort(403, 'You do not have permission to manage news.');
+    }
+    
     $news = News::findOrFail($id);
     return view('adminpages.newsandevent.show', compact('news'));
 }
 
     public function destroy($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_news')) {
+            abort(403, 'You do not have permission to manage news.');
+        }
+        
         $news = News::findOrFail($id);
         $news->delete();
 

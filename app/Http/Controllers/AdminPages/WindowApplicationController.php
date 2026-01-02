@@ -7,12 +7,20 @@ use Illuminate\Http\Request;
 use App\Models\Application;
 use App\Models\Userstable;
 use App\Models\WindowApplication;
+use Illuminate\Support\Facades\Auth;
 
 class WindowApplicationController extends Controller
 {
     // Show all applications, optionally filtered by extension type
     public function index(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_applications')) {
+            abort(403, 'You do not have permission to manage applications.');
+        }
+        
         $extensionType = $request->input('extension_type');
         
         $query = WindowApplication::with('user');
@@ -34,6 +42,13 @@ class WindowApplicationController extends Controller
     // Show form to create a new application
     public function create()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_applications')) {
+            abort(403, 'You do not have permission to manage applications.');
+        }
+        
         $users = Userstable::all();
         return view('adminpages.dirishalausajili.create', compact('users'));
     }
@@ -41,6 +56,13 @@ class WindowApplicationController extends Controller
     // Store a new application
 public function store(Request $request)
 {
+    // Server-side permission check
+    /** @var Userstable $user */
+    $user = Auth::user();
+    if (!$user || !$user->hasPermission('manage_applications')) {
+        abort(403, 'You do not have permission to manage applications.');
+    }
+    
     try {
         $validatedData = \App\Services\AdminValidationService::validate($request, 'window_application');
     } catch (\Illuminate\Validation\ValidationException $e) {
@@ -68,6 +90,13 @@ public function store(Request $request)
     // Show one application
     public function show($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_applications')) {
+            abort(403, 'You do not have permission to manage applications.');
+        }
+        
         $application = WindowApplication::with('user')->findOrFail($id);
         return view('adminpages.dirishalausajili.show', compact('application'));
     }
@@ -75,6 +104,13 @@ public function store(Request $request)
     // Show form to edit an application
     public function edit($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_applications')) {
+            abort(403, 'You do not have permission to manage applications.');
+        }
+        
         $application = WindowApplication::findOrFail($id);
         $users = Userstable::all();
 
@@ -84,6 +120,13 @@ public function store(Request $request)
     // Update an application
     public function update(Request $request, $id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_applications')) {
+            abort(403, 'You do not have permission to manage applications.');
+        }
+        
         $application = WindowApplication::findOrFail($id);
 
         try {
@@ -109,6 +152,13 @@ public function store(Request $request)
     // Delete an application
     public function destroy($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_applications')) {
+            abort(403, 'You do not have permission to manage applications.');
+        }
+        
         $application = WindowApplication::findOrFail($id);
         $application->delete();
 

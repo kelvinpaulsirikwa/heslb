@@ -4,6 +4,7 @@ namespace App\Http\Controllers\AdminPages;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Userstable;
 use App\Models\Videopodcast;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,6 +15,13 @@ class VideoPodcastsController extends Controller
      */
     public function index(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_video_podcasts')) {
+            abort(403, 'You do not have permission to manage video podcasts.');
+        }
+        
         $query = Videopodcast::with('user');
         
         // Filter by user if provided
@@ -30,6 +38,13 @@ class VideoPodcastsController extends Controller
      */
     public function create()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_video_podcasts')) {
+            abort(403, 'You do not have permission to manage video podcasts.');
+        }
+        
         return view('adminpages.videopodcast.create');
     }
 
@@ -38,6 +53,13 @@ class VideoPodcastsController extends Controller
      */
     public function store(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_video_podcasts')) {
+            abort(403, 'You do not have permission to manage video podcasts.');
+        }
+        
         try {
             $validatedData = \App\Services\AdminValidationService::validate($request, 'video_podcasts');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -63,6 +85,13 @@ class VideoPodcastsController extends Controller
      */
     public function edit($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_video_podcasts')) {
+            abort(403, 'You do not have permission to manage video podcasts.');
+        }
+        
         $video = Videopodcast::findOrFail($id);
         return view('adminpages.videopodcast.edit', compact('video'));
     }
@@ -72,6 +101,13 @@ class VideoPodcastsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_video_podcasts')) {
+            abort(403, 'You do not have permission to manage video podcasts.');
+        }
+        
         try {
             $validatedData = \App\Services\AdminValidationService::validate($request, 'video_podcasts');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -96,6 +132,13 @@ class VideoPodcastsController extends Controller
      */
     public function destroy($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_video_podcasts')) {
+            abort(403, 'You do not have permission to manage video podcasts.');
+        }
+        
         $video = Videopodcast::findOrFail($id);
         $video->delete();
 

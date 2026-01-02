@@ -32,49 +32,48 @@
                 <div class="bg-white shadow-sm border rounded-3 overflow-hidden">
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
-                            <thead class="bg-light">
+                            <thead class="bg-secondary" style="position: relative; z-index: 10;">
                                 <tr>
-                                    <th class="fw-semibold text-dark py-3 px-4 border-0" style="width: 60px;">ID</th>
-                                    <th class="fw-semibold text-dark py-3 px-4 border-0" style="min-width: 150px;">User</th>
-                                    <th class="fw-semibold text-dark py-3 px-4 border-0" style="min-width: 200px;">Email</th>
-                                    <th class="fw-semibold text-dark py-3 px-4 border-0" style="min-width: 130px;">Telephone</th>
-                                    <th class="fw-semibold text-dark py-3 px-4 border-0" style="width: 100px;">Role</th>
-                                    <th class="fw-semibold text-dark py-3 px-4 border-0" style="width: 100px;">Status</th>
-                                    <th class="fw-semibold text-dark py-3 px-4 border-0" style="min-width: 300px;">Actions</th>
+                                    <th class="fw-bold text-white py-3 px-4 border-0" style="min-width: 150px; font-size: 1rem; white-space: nowrap;">User</th>
+                                    <th class="fw-bold text-white py-3 px-4 border-0" style="min-width: 200px; font-size: 1rem; white-space: nowrap;">Email</th>
+                                    <th class="fw-bold text-white py-3 px-4 border-0" style="min-width: 130px; font-size: 1rem; white-space: nowrap;">Telephone</th>
+                                    <th class="fw-bold text-white py-3 px-4 border-0" style="width: 100px; font-size: 1rem; white-space: nowrap;">Role</th>
+                                    <th class="fw-bold text-white py-3 px-4 border-0" style="width: 100px; font-size: 1rem; white-space: nowrap;">Status</th>
+                                    <th class="fw-bold text-white py-3 px-4 border-0" style="min-width: 150px; font-size: 1rem; white-space: nowrap;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($users as $user)
                                 <tr class="border-bottom">
                                     <td class="py-3 px-4 align-middle">
-                                        <span class="badge bg-light text-dark border">{{ $user->id }}</span>
-                                    </td>
-                                    <td class="py-3 px-4 align-middle">
                                         <div class="d-flex align-items-center">
                                             @if($user->profile_image)
                                                 <img src="{{ asset('images/storage/' . $user->profile_image) }}" 
                                                      alt="{{ $user->username }}" 
-                                                     class="rounded-circle me-2" 
-                                                     style="width: 32px; height: 32px; object-fit: cover;"
+                                                     class="rounded-circle me-2 border" 
+                                                     style="width: 40px; height: 40px; object-fit: cover;"
                                                      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                            @endif
-                                            @if(!$user->profile_image)
-                                                <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center me-2" 
-                                                     style="width: 32px; height: 32px;">
-                                                    <i class="fas fa-user text-primary small"></i>
+                                                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-2 border" 
+                                                     style="width: 40px; height: 40px; display: none; color: #000; font-weight: bold; font-size: 1rem;">
+                                                    {{ strtoupper(substr($user->email, 0, 1)) }}
+                                                </div>
+                                            @else
+                                                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-2 border" 
+                                                     style="width: 40px; height: 40px; color: #000; font-weight: bold; font-size: 1rem;">
+                                                    {{ strtoupper(substr($user->email, 0, 1)) }}
                                                 </div>
                                             @endif
                                             <span class="fw-medium text-dark">{{ $user->username }}</span>
                                         </div>
                                     </td>
                                     <td class="py-3 px-4 align-middle">
-                                        <div class="text-dark">
-                                            <i class="fas fa-envelope text-muted me-2 small"></i>{{ $user->email }}
+                                        <div class="text-dark text-break word-wrap-break-word" style="max-width: 200px; line-height: 1.4;">
+                                            {{ $user->email }}
                                         </div>
                                     </td>
                                     <td class="py-3 px-4 align-middle">
                                         <div class="text-dark">
-                                            <i class="fas fa-phone text-muted me-2 small"></i>{{ $user->telephone }}
+                                            {{ $user->telephone }}
                                         </div>
                                     </td>
                                     <td class="py-3 px-4 align-middle">
@@ -82,13 +81,23 @@
                                             $roleColors = [
                                                 'admin' => 'danger',
                                                 'staff' => 'primary',
-                                                'user' => 'secondary'
+                                                'user' => 'dark'
                                             ];
-                                            $roleColor = $roleColors[strtolower($user->role)] ?? 'secondary';
+                                            $roleColor = $roleColors[strtolower($user->role)] ?? 'dark';
                                         @endphp
-                                        <span class="badge bg-{{ $roleColor }} bg-opacity-10 text-{{ $roleColor }} border border-{{ $roleColor }} border-opacity-25">
-                                            {{ ucfirst($user->role) }}
-                                        </span>
+                                        @if(strtolower($user->role) === 'admin')
+                                            <span class="badge bg-danger text-white border border-danger px-3 py-2 fw-semibold">
+                                                {{ ucfirst($user->role) }}
+                                            </span>
+                                        @elseif(strtolower($user->role) === 'user')
+                                            <span class="badge bg-dark text-white border border-dark px-3 py-2 fw-semibold">
+                                                {{ ucfirst($user->role) }}
+                                            </span>
+                                        @else
+                                            <span class="badge bg-{{ $roleColor }} text-white border border-{{ $roleColor }} px-3 py-2 fw-semibold">
+                                                {{ ucfirst($user->role) }}
+                                            </span>
+                                        @endif
                                     </td>
                                     <td class="py-3 px-4 align-middle">
                                         @if($user->status === 'active')
@@ -102,25 +111,24 @@
                                         @endif
                                     </td>
                                     <td class="py-3 px-4 align-middle">
-                                        <div class="d-flex flex-wrap gap-1">
-                                            <a href="{{ route('admin.users.show', $user) }}" class="btn btn-outline-info btn-sm px-2">
-                                                <i class="fas fa-eye me-1"></i>View
+                                        <div class="d-grid gap-1" style="grid-template-columns: repeat(2, 1fr);">
+                                            <a href="{{ route('admin.users.show', $user) }}" class="btn btn-info btn-sm px-2 text-center">
+                                                View
                                             </a>
                                             @if(auth()->user()->hasPermission('edit_users'))
-                                            <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-outline-primary btn-sm px-2">
-                                                <i class="fas fa-edit me-1"></i>Edit
+                                            <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-primary btn-sm px-2 text-center">
+                                                Edit
                                             </a>
                                             @endif
                                             @if(auth()->user()->id != $user->id && auth()->user()->hasPermission('reset_user_password'))
-                                            <a href="{{ route('admin.users.reset-password.form', $user) }}" class="btn btn-outline-warning btn-sm px-2">
-                                                <i class="fas fa-key me-1"></i>Reset
+                                            <a href="{{ route('admin.users.reset-password.form', $user) }}" class="btn btn-warning btn-sm px-2 text-center">
+                                                Reset
                                             </a>
                                             @endif
                                             
                                             <!-- Block/Unblock Button with Modal -->
-                                            <button class="btn btn-outline-{{ $user->status === 'active' ? 'danger' : 'success' }} btn-sm px-2" 
+                                            <button class="btn btn-{{ $user->status === 'active' ? 'danger' : 'success' }} btn-sm px-2 text-center" 
                                                     data-bs-toggle="modal" data-bs-target="#statusModal{{ $user->id }}">
-                                                <i class="fas fa-{{ $user->status === 'active' ? 'ban' : 'check' }} me-1"></i>
                                                 {{ $user->status === 'active' ? 'Block' : 'Unblock' }}
                                             </button>
 
@@ -286,14 +294,68 @@
 }
 
 /* Action buttons container */
-.d-flex.flex-wrap {
+.d-grid {
     gap: 0.25rem !important;
+    min-width: 200px;
+}
+
+.d-grid .btn {
+    white-space: nowrap;
+    width: 100%;
 }
 
 /* Telephone and email styling */
 .fas.fa-envelope,
 .fas.fa-phone {
     opacity: 0.6;
+}
+
+/* Text wrapping for email */
+.word-wrap-break-word {
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.4;
+    max-height: 2.8em;
+    overflow: hidden;
+}
+
+/* Make header more visible */
+.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+thead th {
+    font-weight: 700 !important;
+    letter-spacing: 0.5px;
+    background-color: #6c757d !important;
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Ensure header text is visible */
+thead.bg-secondary th {
+    color: #ffffff !important;
+    background-color: #6c757d !important;
+}
+
+/* Make role badge more visible */
+.badge.bg-dark {
+    background-color: #495057 !important;
+    color: #ffffff !important;
+    border-color: #343a40 !important;
+}
+
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    border-color: #dc3545 !important;
 }
 </style>
 @endsection

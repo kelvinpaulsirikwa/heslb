@@ -5,6 +5,7 @@ namespace App\Http\Controllers\AdminPages;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Contact;
+use App\Models\Userstable;
 use Illuminate\Support\Facades\Auth;
 
 class FeedBackController extends Controller
@@ -14,6 +15,13 @@ class FeedBackController extends Controller
      */
     public function index()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_feedback')) {
+            abort(403, 'You do not have permission to manage feedback.');
+        }
+        
         $contacts = Contact::where('status', 'not seen')
                             ->where('delete', 'no')
                             ->orderBy('created_at', 'desc')
@@ -27,6 +35,13 @@ class FeedBackController extends Controller
      */
     public function seen()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_feedback')) {
+            abort(403, 'You do not have permission to manage feedback.');
+        }
+        
         $contacts = Contact::where('status', 'seen')
                             ->where('delete', 'no')
                             ->orderBy('created_at', 'desc')
@@ -40,6 +55,13 @@ class FeedBackController extends Controller
      */
     public function deleted()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_feedback')) {
+            abort(403, 'You do not have permission to manage feedback.');
+        }
+        
         $contacts = Contact::where('delete', 'yes')
                             ->with('deletedByUser')
                             ->orderBy('created_at', 'desc')
@@ -53,6 +75,13 @@ class FeedBackController extends Controller
      */
  public function show($id)
 {
+    // Server-side permission check
+    /** @var Userstable $user */
+    $user = Auth::user();
+    if (!$user || !$user->hasPermission('manage_feedback')) {
+        abort(403, 'You do not have permission to manage feedback.');
+    }
+    
     $contact = Contact::findOrFail($id);
 
     // Mark as seen if not already
@@ -71,6 +100,13 @@ class FeedBackController extends Controller
      */
     public function print($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_feedback')) {
+            abort(403, 'You do not have permission to manage feedback.');
+        }
+        
         $contact = Contact::findOrFail($id);
         return view('adminpages.feedback.print', compact('contact'));
     }
@@ -80,6 +116,13 @@ class FeedBackController extends Controller
      */
     public function markAsSeen($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_feedback')) {
+            abort(403, 'You do not have permission to manage feedback.');
+        }
+        
         $contact = Contact::findOrFail($id);
         
         if ($contact->status !== 'seen') {
@@ -96,6 +139,13 @@ class FeedBackController extends Controller
      */
     public function destroy($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_feedback')) {
+            abort(403, 'You do not have permission to manage feedback.');
+        }
+        
         $contact = Contact::findOrFail($id);
 
         $contact->delete = 'yes';
@@ -111,6 +161,13 @@ class FeedBackController extends Controller
  */
 public function byType($type)
 {
+    // Server-side permission check
+    /** @var Userstable $user */
+    $user = Auth::user();
+    if (!$user || !$user->hasPermission('manage_feedback')) {
+        abort(403, 'You do not have permission to manage feedback.');
+    }
+    
     $contacts = Contact::where('contact_type', $type)
                         ->where('delete', 'no')
                         ->orderBy('created_at', 'desc')

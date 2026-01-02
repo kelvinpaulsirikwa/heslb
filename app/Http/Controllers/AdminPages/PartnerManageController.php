@@ -4,6 +4,7 @@ namespace App\Http\Controllers\AdminPages;
 
 use App\Http\Controllers\Controller;
 use App\Models\Partner;
+use App\Models\Userstable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -16,6 +17,13 @@ class PartnerManageController extends Controller
      */
     public function index(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_partners')) {
+            abort(403, 'You do not have permission to manage partners.');
+        }
+        
         $query = Partner::with('user');
         
         // Filter by user if provided
@@ -32,6 +40,13 @@ class PartnerManageController extends Controller
      */
     public function create()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_partners')) {
+            abort(403, 'You do not have permission to manage partners.');
+        }
+        
         return view('adminpages.partners.create');
     }
 
@@ -40,6 +55,13 @@ class PartnerManageController extends Controller
      */
     public function store(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_partners')) {
+            abort(403, 'You do not have permission to manage partners.');
+        }
+        
         try {
             $validatedData = \App\Services\AdminValidationService::validate($request, 'partners');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -88,6 +110,13 @@ class PartnerManageController extends Controller
      */
     public function show(Partner $partner)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_partners')) {
+            abort(403, 'You do not have permission to manage partners.');
+        }
+        
         return view('adminpages.partners.show', compact('partner'));
     }
 
@@ -96,6 +125,13 @@ class PartnerManageController extends Controller
      */
     public function edit(Partner $partner)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_partners')) {
+            abort(403, 'You do not have permission to manage partners.');
+        }
+        
         return view('adminpages.partners.edit', compact('partner'));
     }
 
@@ -104,6 +140,13 @@ class PartnerManageController extends Controller
      */
     public function update(Request $request, Partner $partner)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_partners')) {
+            abort(403, 'You do not have permission to manage partners.');
+        }
+        
         try {
             $validatedData = \App\Services\AdminValidationService::validate($request, 'partners_update');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -157,6 +200,13 @@ class PartnerManageController extends Controller
      */
     public function destroy(Partner $partner)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_partners')) {
+            abort(403, 'You do not have permission to manage partners.');
+        }
+        
         // Delete image if exists
         if ($partner->image_path) {
             Storage::disk('public')->delete('partner_image/' . $partner->image_path);

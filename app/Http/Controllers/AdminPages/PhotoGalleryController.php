@@ -5,16 +5,25 @@ namespace App\Http\Controllers\AdminPages;
 use App\Http\Controllers\Controller;
 use App\Models\Taasisevent;
 use App\Models\TaasiseventImage;
+use App\Models\Userstable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class PhotoGalleryController extends Controller
 {
    
     public function index(Request $request)
     {
-        $query = Taasisevent::with('user', 'images');
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_events')) {
+            abort(403, 'You do not have permission to manage events.');
+        }
+        
+        $query = Taasisevent::with(['user', 'images']);
         
         // Filter by user if provided
         if ($request->filled('user_id')) {
@@ -30,6 +39,13 @@ class PhotoGalleryController extends Controller
      */
     public function create()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_events')) {
+            abort(403, 'You do not have permission to manage events.');
+        }
+        
         return view('adminpages.taasisevents.create');
     }
 
@@ -38,6 +54,13 @@ class PhotoGalleryController extends Controller
      */
     public function store(Request $request)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_events')) {
+            abort(403, 'You do not have permission to manage events.');
+        }
+        
         try {
             $validatedData = \App\Services\AdminValidationService::validate($request, 'photo_gallery');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -61,6 +84,13 @@ class PhotoGalleryController extends Controller
      */
     public function show($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_events')) {
+            abort(403, 'You do not have permission to manage events.');
+        }
+        
         $event = Taasisevent::with('images', 'user')->findOrFail($id);
         return view('adminpages.taasisevents.show', compact('event'));
     }
@@ -70,6 +100,13 @@ class PhotoGalleryController extends Controller
      */
   public function edit($id)
 {
+    // Server-side permission check
+    /** @var Userstable $user */
+    $user = Auth::user();
+    if (!$user || !$user->hasPermission('manage_events')) {
+        abort(403, 'You do not have permission to manage events.');
+    }
+    
     // Fetch the event
     $event = Taasisevent::findOrFail($id);
 
@@ -87,6 +124,13 @@ class PhotoGalleryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_events')) {
+            abort(403, 'You do not have permission to manage events.');
+        }
+        
         $event = Taasisevent::findOrFail($id);
 
         try {
@@ -111,6 +155,13 @@ class PhotoGalleryController extends Controller
      */
     public function destroy($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_events')) {
+            abort(403, 'You do not have permission to manage events.');
+        }
+        
         $event = Taasisevent::with('images')->findOrFail($id);
 
         if ($event->images->count() > 0) {
@@ -128,6 +179,13 @@ class PhotoGalleryController extends Controller
     
     public function addImageForm($eventId)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_events')) {
+            abort(403, 'You do not have permission to manage events.');
+        }
+        
         $event = Taasisevent::findOrFail($eventId);
         return view('adminpages.taasisevents.add_image', compact('event'));
     }
@@ -137,6 +195,13 @@ class PhotoGalleryController extends Controller
      */
     public function storeImage(Request $request, $eventId)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_events')) {
+            abort(403, 'You do not have permission to manage events.');
+        }
+        
         $event = Taasisevent::findOrFail($eventId);
 
         try {
@@ -168,6 +233,13 @@ class PhotoGalleryController extends Controller
      */
     public function editImage($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_events')) {
+            abort(403, 'You do not have permission to manage events.');
+        }
+        
         $image = TaasiseventImage::findOrFail($id);
         return view('adminpages.taasisevents.edit_image', compact('image'));
     }
@@ -177,6 +249,13 @@ class PhotoGalleryController extends Controller
      */
     public function updateImage(Request $request, $id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_events')) {
+            abort(403, 'You do not have permission to manage events.');
+        }
+        
         $image = TaasiseventImage::findOrFail($id);
 
         try {
@@ -200,6 +279,13 @@ class PhotoGalleryController extends Controller
      */
     public function destroyImage($id)
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('manage_events')) {
+            abort(403, 'You do not have permission to manage events.');
+        }
+        
         $image = TaasiseventImage::findOrFail($id);
         $eventId = $image->taasisevent_id;
 

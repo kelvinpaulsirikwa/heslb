@@ -9,28 +9,35 @@ use App\Models\Permission;
 use App\Models\UserPermission;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Services\AuditLogService;
 
 class UserManagementController extends Controller
 {
     /**
-     * Constructor to ensure only admins can access user management.
+     * Get list of admin-level permissions that should not be assigned to standard users
      */
-    public function __construct()
+    private function getAdminLevelPermissions(): array
     {
-        $this->middleware(function ($request, $next) {
-            if (!Auth::check() || strtolower(Auth::user()->role) !== 'admin') {
-                if ($request->expectsJson()) {
-                    return response()->json([
-                        'error' => 'Access denied. Admin privileges required.',
-                        'status' => 'forbidden'
-                    ], 403);
-                }
-                return redirect()->route('dashboard')->with('error', 'Access denied. You do not have permission to access this page.');
-            }
-            return $next($request);
-        });
+        return [
+            'manage_users',
+            'view_users',
+            'create_users',
+            'edit_users',
+            'delete_users',
+            'reset_user_password',
+            'view_audit_logs',
+            'manage_settings',
+        ];
+    }
+
+    /**
+     * Check if a permission is admin-level
+     */
+    private function isAdminLevelPermission(string $permissionName): bool
+    {
+        return in_array($permissionName, $this->getAdminLevelPermissions());
     }
 
     /**
@@ -38,6 +45,13 @@ class UserManagementController extends Controller
      */
     public function index()
     {
+        // Server-side permission check
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('view_users')) {
+            abort(403, 'You do not have permission to view users.');
+        }
+        
         $users = Userstable::all();
         return view('adminpages.usermanagement.index', compact('users'));
     }
@@ -48,7 +62,9 @@ class UserManagementController extends Controller
     public function create()
     {
         // Server-side permission check
-        if (!Auth::user()->hasPermission('create_users')) {
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('create_users')) {
             abort(403, 'You do not have permission to create users.');
         }
         
@@ -61,7 +77,7 @@ class UserManagementController extends Controller
         
         // Debug: Check if permissions exist
         if ($permissions->isEmpty()) {
-            \Log::warning('No permissions found in database');
+            Log::warning('No permissions found in database');
         }
         
         return view('adminpages.usermanagement.create', compact('permissions'));
@@ -73,7 +89,9 @@ class UserManagementController extends Controller
     public function store(Request $request)
     {
         // Server-side permission check
-        if (!Auth::user()->hasPermission('create_users')) {
+        /** @var Userstable $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasPermission('create_users')) {
             abort(403, 'You do not have permission to create users.');
         }
         
@@ -107,6 +125,25 @@ class UserManagementController extends Controller
             // If role is "user", assign individual permissions
             if (strtolower($validatedData['role']) === 'user' && $request->has('permissions')) {
                 $permissionIds = $request->input('permissions', []);
+                
+                // Validate that no admin-level permissions are being assigned to standard users
+                $adminPermissionIds = Permission::whereIn('name', $this->getAdminLevelPermissions())
+                    ->where('guard_name', 'web')
+                    ->pluck('id')
+                    ->toArray();
+                
+                $attemptedAdminPermissions = array_intersect($permissionIds, $adminPermissionIds);
+                
+                if (!empty($attemptedAdminPermissions)) {
+                    $adminPermissionNames = Permission::whereIn('id', $attemptedAdminPermissions)
+                        ->pluck('display_name')
+                        ->toArray();
+                    
+                    return redirect()->back()
+                        ->withErrors(['permissions' => 'Cannot assign admin-level permissions (' . implode(', ', $adminPermissionNames) . ') to standard users.'])
+                        ->withInput();
+                }
+                
                 foreach ($permissionIds as $permissionId) {
                     UserPermission::create([
                         'user_id' => $user->id,
@@ -157,6 +194,13 @@ class UserManagementController extends Controller
      */
     public function show(Userstable $user)
     {
+        // Server-side permission check
+        /** @var Userstable $authUser */
+        $authUser = Auth::user();
+        if (!$authUser || !$authUser->hasPermission('view_users')) {
+            abort(403, 'You do not have permission to view users.');
+        }
+        
         // Show warning if user is blocked
         if ($user->status === 'blocked') {
             session()->flash('warning', 'This user is currently blocked and cannot make any changes to the system.');
@@ -181,7 +225,40 @@ class UserManagementController extends Controller
         // Check if user has uploaded any data
         $hasUploadedData = array_sum($stats) > 0;
         
-        return view('adminpages.usermanagement.show', compact('user', 'stats', 'hasUploadedData'));
+        // Get user's permissions (only for 'user' role, admins have all permissions)
+        $userPermissions = [];
+        $permissionsByCategory = [];
+        
+        if (strtolower($user->role) === 'user') {
+            // Get user-specific permissions
+            $userPermissionIds = \App\Models\UserPermission::where('user_id', $user->id)
+                ->pluck('permission_id')
+                ->toArray();
+            
+            // Get all permissions grouped by category
+            $allPermissions = \App\Models\Permission::where('guard_name', 'web')
+                ->orderBy('category')
+                ->orderBy('display_name')
+                ->get();
+            
+            // Get user's assigned permissions
+            $userPermissions = \App\Models\Permission::whereIn('id', $userPermissionIds)
+                ->orderBy('category')
+                ->orderBy('display_name')
+                ->get();
+            
+            // Group by category for display
+            $permissionsByCategory = $userPermissions->groupBy('category');
+        } else {
+            // For admin role, show all available permissions (they have all)
+            $allPermissions = \App\Models\Permission::where('guard_name', 'web')
+                ->orderBy('category')
+                ->orderBy('display_name')
+                ->get();
+            $permissionsByCategory = $allPermissions->groupBy('category');
+        }
+        
+        return view('adminpages.usermanagement.show', compact('user', 'stats', 'hasUploadedData', 'userPermissions', 'permissionsByCategory'));
     }
 
     /**
@@ -190,7 +267,9 @@ class UserManagementController extends Controller
     public function edit(Userstable $user)
     {
         // Server-side permission check
-        if (!Auth::user()->hasPermission('edit_users')) {
+        /** @var Userstable $authUser */
+        $authUser = Auth::user();
+        if (!$authUser || !$authUser->hasPermission('edit_users')) {
             abort(403, 'You do not have permission to edit users.');
         }
         
@@ -223,7 +302,9 @@ class UserManagementController extends Controller
     public function update(Request $request, Userstable $user)
     {
         // Server-side permission check
-        if (!Auth::user()->hasPermission('edit_users')) {
+        /** @var Userstable $authUser */
+        $authUser = Auth::user();
+        if (!$authUser || !$authUser->hasPermission('edit_users')) {
             abort(403, 'You do not have permission to edit users.');
         }
         
@@ -269,6 +350,24 @@ class UserManagementController extends Controller
             if (strtolower($data['role']) === 'user') {
                 // Get selected permission IDs
                 $selectedPermissions = $request->input('permissions', []);
+                
+                // Validate that no admin-level permissions are being assigned to standard users
+                $adminPermissionIds = Permission::whereIn('name', $this->getAdminLevelPermissions())
+                    ->where('guard_name', 'web')
+                    ->pluck('id')
+                    ->toArray();
+                
+                $attemptedAdminPermissions = array_intersect($selectedPermissions, $adminPermissionIds);
+                
+                if (!empty($attemptedAdminPermissions)) {
+                    $adminPermissionNames = Permission::whereIn('id', $attemptedAdminPermissions)
+                        ->pluck('display_name')
+                        ->toArray();
+                    
+                    return redirect()->back()
+                        ->withErrors(['permissions' => 'Cannot assign admin-level permissions (' . implode(', ', $adminPermissionNames) . ') to standard users.'])
+                        ->withInput();
+                }
                 
                 // Get current user permissions
                 $currentPermissionIds = UserPermission::where('user_id', $user->id)
@@ -349,6 +448,13 @@ class UserManagementController extends Controller
      */
     public function destroy(Userstable $user)
     {
+        // Server-side permission check
+        /** @var Userstable $authUser */
+        $authUser = Auth::user();
+        if (!$authUser || !$authUser->hasPermission('manage_users')) {
+            abort(403, 'You do not have permission to manage users.');
+        }
+        
         // Prevent admin.users from blocking themselves
         if (auth()->user()->id == $user->id) {
             return redirect()->route('admin.users.index')->with('error', 'You cannot block your own account.');
@@ -377,6 +483,13 @@ class UserManagementController extends Controller
      */
     public function resetPassword(Request $request, Userstable $user)
     {
+        // Server-side permission check
+        /** @var Userstable $authUser */
+        $authUser = Auth::user();
+        if (!$authUser || !$authUser->hasPermission('reset_user_password')) {
+            abort(403, 'You do not have permission to reset user passwords.');
+        }
+        
         // Prevent admins from resetting their own password
         if (auth()->user()->id == $user->id) {
             return redirect()->route('admin.users.index')->with('error', 'You cannot reset your own password. Use the profile management to change your password.');
@@ -410,6 +523,13 @@ class UserManagementController extends Controller
      */
     public function showResetPasswordForm(Userstable $user)
     {
+        // Server-side permission check
+        /** @var Userstable $authUser */
+        $authUser = Auth::user();
+        if (!$authUser || !$authUser->hasPermission('reset_user_password')) {
+            abort(403, 'You do not have permission to reset user passwords.');
+        }
+        
         return view('adminpages.usermanagement.reset-password', compact('user'));
     }
 
@@ -419,7 +539,9 @@ class UserManagementController extends Controller
     public function deleteUser(Userstable $user)
     {
         // Server-side permission check
-        if (!Auth::user()->hasPermission('delete_users')) {
+        /** @var Userstable $authUser */
+        $authUser = Auth::user();
+        if (!$authUser || !$authUser->hasPermission('delete_users')) {
             abort(403, 'You do not have permission to delete users.');
         }
         

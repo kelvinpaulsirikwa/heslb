@@ -104,6 +104,9 @@ public function taasiseventImages()
 
     /**
      * Check if user has a specific permission
+     * 
+     * @param string $permission The permission name to check
+     * @return bool True if user has the permission, false otherwise
      */
     public function hasPermission(string $permission): bool
     {
