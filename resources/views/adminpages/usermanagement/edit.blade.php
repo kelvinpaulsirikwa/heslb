@@ -51,17 +51,17 @@
                                         @if($user->profile_image)
                                             <img src="{{ asset('images/storage/' . $user->profile_image) }}" 
                                                  alt="{{ $user->username }}" 
-                                                 class="rounded-circle border shadow-sm mx-auto d-block"
+                                                 class="rounded-circle border shadow-sm mx-auto d-block user-profile-img-edit"
                                                  style="width: 250px; height: 250px; object-fit: cover; max-width: 100%;"
                                                  id="profileImagePreview"
                                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                            <div class="rounded-circle bg-primary bg-opacity-15 d-flex align-items-center justify-content-center mx-auto text-dark fw-bold" 
-                                                 style="width: 250px; height: 250px; max-width: 100%; font-size: 6rem; display: none; color: #000;"
+                                            <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto text-dark fw-bold user-profile-placeholder-edit" 
+                                                 style="width: 250px; height: 250px; max-width: 100%; font-size: 6rem; display: none !important; color: #000;"
                                                  id="profileImagePlaceholder">
                                                 {{ strtoupper(substr($user->email, 0, 1)) }}
                                             </div>
                                         @else
-                                            <div class="rounded-circle bg-primary bg-opacity-15 d-flex align-items-center justify-content-center mx-auto text-dark fw-bold" 
+                                            <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto text-dark fw-bold" 
                                                  style="width: 250px; height: 250px; max-width: 100%; font-size: 6rem; color: #000;"
                                                  id="profileImagePlaceholder">
                                                 {{ strtoupper(substr($user->email, 0, 1)) }}
@@ -380,6 +380,20 @@ h2.text-break {
     }
 }
 
+/* Ensure only one profile element shows at a time on edit page */
+.user-profile-img-edit,
+.user-profile-placeholder-edit {
+    display: none;
+}
+
+.user-profile-img-edit:not([style*="display: none"]) {
+    display: block !important;
+}
+
+.user-profile-placeholder-edit:not([style*="display: none"]) {
+    display: flex !important;
+}
+
 /* Card improvements */
 .bg-white {
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -572,24 +586,36 @@ document.addEventListener('DOMContentLoaded', function() {
                         profileImagePreview.src = e.target.result;
                         profileImagePreview.style.display = 'block';
                         if (profileImagePlaceholder) {
-                            profileImagePlaceholder.style.display = 'none';
+                            profileImagePlaceholder.style.display = 'none !important';
                         }
                     } else {
                         // Create new image element if it doesn't exist
                         const img = document.createElement('img');
                         img.src = e.target.result;
-                        img.className = 'rounded-circle border shadow-sm mx-auto d-block';
+                        img.className = 'rounded-circle border shadow-sm mx-auto d-block user-profile-img-edit';
                         img.style.cssText = 'width: 250px; height: 250px; object-fit: cover; max-width: 100%;';
                         img.id = 'profileImagePreview';
                         profileImageInput.parentElement.insertBefore(img, profileImageInput);
                         if (profileImagePlaceholder) {
-                            profileImagePlaceholder.style.display = 'none';
+                            profileImagePlaceholder.style.display = 'none !important';
                         }
                     }
                 };
                 reader.readAsDataURL(file);
             }
         });
+    }
+    
+    // Ensure only one shows on page load
+    if (profileImagePreview && profileImagePlaceholder) {
+        if (profileImagePreview.complete && profileImagePreview.naturalHeight !== 0) {
+            // Image loaded successfully
+            profileImagePlaceholder.style.display = 'none !important';
+        } else {
+            // Image failed to load or doesn't exist
+            profileImagePreview.style.display = 'none';
+            profileImagePlaceholder.style.display = 'flex !important';
+        }
     }
 });
 </script>
