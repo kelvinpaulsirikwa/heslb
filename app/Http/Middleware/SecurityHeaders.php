@@ -43,7 +43,7 @@ class SecurityHeaders
             "object-src 'none'", // Block plugins
             "base-uri 'self'",
             "form-action 'self'",
-            "upgrade-insecure-requests" // Upgrade HTTP to HTTPS
+            // "upgrade-insecure-requests" // Upgrade HTTP to HTTPS - COMMENTED OUT: Disabled due to SSL certificate issues
         ];
         
         $cspHeader = implode('; ', $cspDirectives);
@@ -57,12 +57,13 @@ class SecurityHeaders
         // HTTP Strict Transport Security (HSTS)
         // Tells browsers to only access the site over HTTPS, even if user types HTTP
         // Only set on HTTPS connections and in non-local environments
-        if ($request->secure() && !app()->environment('local')) {
-            // max-age: 1 year (31536000 seconds)
-            // includeSubDomains: Apply to all subdomains
-            // preload: Allow inclusion in browser HSTS preload lists
-            $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-        }
+        // COMMENTED OUT: Disabled due to SSL certificate issues
+        // if ($request->secure() && !app()->environment('local')) {
+        //     // max-age: 1 year (31536000 seconds)
+        //     // includeSubDomains: Apply to all subdomains
+        //     // preload: Allow inclusion in browser HSTS preload lists
+        //     $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+        // }
         
         return $response;
     }
