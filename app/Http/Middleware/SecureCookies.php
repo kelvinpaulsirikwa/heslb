@@ -19,8 +19,10 @@ class SecureCookies
     {
         $response = $next($request);
 
-        // Only enforce Secure + HttpOnly in non-local environments over HTTPS
-        if (!app()->environment('local') && $request->secure()) {
+        // Enforce Secure + HttpOnly for all cookies when using HTTPS
+        // In local environment, allow HTTP cookies for development
+        // In production, this prevents session hijacking and cookie theft
+        if ($request->secure() || app()->environment('local')) {
             $cookies = $response->headers->getCookies();
 
             foreach ($cookies as $cookie) {

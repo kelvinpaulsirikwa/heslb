@@ -77,5 +77,6 @@ class Kernel extends HttpKernel
         'prevent.back.button' => \App\Http\Middleware\PreventBackButton::class,
         'login.attempt.limiter' => \App\Http\Middleware\LoginAttemptLimiter::class,
         'ensure.admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+        'permission' => \App\Http\Middleware\CheckPermission::class,
     ];
 }

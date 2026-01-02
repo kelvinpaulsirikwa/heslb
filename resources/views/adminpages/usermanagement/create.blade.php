@@ -84,6 +84,115 @@
                         </div>
                     </div>
 
+                    <!-- Inline script to toggle permissions immediately -->
+                    <script>
+                    (function() {
+                        var attempts = 0;
+                        var maxAttempts = 10;
+                        
+                        function checkRoleAndToggle() {
+                            attempts++;
+                            var roleSelect = document.querySelector('#field_role') || 
+                                            document.querySelector('select[name="role"]') ||
+                                            document.querySelector('select.form-select[name="role"]');
+                            var permissionsSection = document.getElementById('permissionsSection');
+                            
+                            if (roleSelect && permissionsSection) {
+                                console.log('Found elements! Role value:', roleSelect.value);
+                                
+                                function showHidePermissions() {
+                                    if (roleSelect.value === 'user') {
+                                        console.log('Showing permissions section');
+                                        permissionsSection.style.display = 'block';
+                                        permissionsSection.style.visibility = 'visible';
+                                    } else {
+                                        console.log('Hiding permissions section');
+                                        permissionsSection.style.display = 'none';
+                                        permissionsSection.style.visibility = 'hidden';
+                                    }
+                                }
+                                
+                                // Check immediately
+                                showHidePermissions();
+                                
+                                // Listen for changes
+                                roleSelect.addEventListener('change', showHidePermissions);
+                                roleSelect.addEventListener('input', showHidePermissions);
+                                
+                                // Also check on click (for dropdowns)
+                                roleSelect.addEventListener('click', function() {
+                                    setTimeout(showHidePermissions, 200);
+                                });
+                                
+                                // Check periodically in case value changes programmatically
+                                setInterval(showHidePermissions, 500);
+                                
+                            } else if (attempts < maxAttempts) {
+                                console.log('Elements not found, retrying... Attempt', attempts);
+                                setTimeout(checkRoleAndToggle, 200);
+                            } else {
+                                console.error('Could not find role select or permissions section after', maxAttempts, 'attempts');
+                            }
+                        }
+                        
+                        // Start checking immediately
+                        if (document.readyState === 'loading') {
+                            document.addEventListener('DOMContentLoaded', checkRoleAndToggle);
+                        } else {
+                            checkRoleAndToggle();
+                        }
+                    })();
+                    </script>
+
+                    <!-- User-Specific Permissions Section (only for user role) -->
+                    <div class="row mt-4" id="permissionsSection" style="display: none;">
+                        <div class="col-12">
+                            <div class="bg-light border rounded-3 p-4">
+                                <h5 class="text-gray-700 mb-3">
+                                    <i class="fas fa-shield-alt me-2 text-primary"></i>User-Specific Permissions
+                                </h5>
+                                <p class="text-muted small mb-3">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Select specific permissions for this user. Administrators automatically have all permissions.
+                                </p>
+                                
+                                <div class="permission-list" style="max-height: 400px; overflow-y: auto;">
+                                    @if(isset($permissions) && $permissions->count() > 0)
+                                        @foreach($permissions as $category => $categoryPermissions)
+                                        <div class="mb-3">
+                                            <h6 class="text-muted fw-semibold mb-2 border-bottom pb-2">
+                                                <i class="fas fa-folder me-2"></i>{{ ucfirst(str_replace('_', ' ', $category)) }}
+                                            </h6>
+                                            <div class="ps-3">
+                                                @foreach($categoryPermissions as $permission)
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" 
+                                                           type="checkbox" 
+                                                           name="permissions[]" 
+                                                           value="{{ $permission->id }}" 
+                                                           id="permission_{{ $permission->id }}">
+                                                    <label class="form-check-label" for="permission_{{ $permission->id }}">
+                                                        <strong>{{ $permission->display_name }}</strong>
+                                                        @if($permission->description)
+                                                            <br><small class="text-muted">{{ $permission->description }}</small>
+                                                        @endif
+                                                    </label>
+                                                </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    @else
+                                        <div class="alert alert-warning">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            No permissions found. Please run the PermissionSeeder.
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Profile Image Section -->
                     <div class="row">
                         <div class="col-12">
@@ -128,5 +237,115 @@
 
 @push('scripts')
 <script src="{{ asset('js/admin-validation.js') }}"></script>
+<script>
+// Wait for everything to load
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        initPermissionToggle();
+    }, 100);
+});
+
+function initPermissionToggle() {
+    // Try multiple selectors to find the role select
+    let roleSelect = document.querySelector('#field_role');
+    if (!roleSelect) {
+        roleSelect = document.querySelector('select[name="role"]');
+    }
+    if (!roleSelect) {
+        // Try finding by class
+        roleSelect = document.querySelector('.form-select[name="role"]');
+    }
+    
+    const permissionsSection = document.getElementById('permissionsSection');
+    
+    if (!roleSelect) {
+        console.error('Role select field not found. Trying again...');
+        setTimeout(initPermissionToggle, 500);
+        return;
+    }
+    
+    if (!permissionsSection) {
+        console.error('Permissions section not found');
+        return;
+    }
+    
+    console.log('Role select found:', roleSelect);
+    console.log('Permissions section found:', permissionsSection);
+    
+    function togglePermissionsSection() {
+        const selectedValue = roleSelect.value;
+        console.log('Role changed to:', selectedValue);
+        
+        if (selectedValue === 'user') {
+            console.log('SHOWING permissions section');
+            permissionsSection.style.display = 'block';
+            permissionsSection.style.visibility = 'visible';
+            permissionsSection.style.opacity = '1';
+            permissionsSection.style.height = 'auto';
+            permissionsSection.classList.add('fade-in');
+        } else {
+            console.log('HIDING permissions section');
+            permissionsSection.style.display = 'none';
+            permissionsSection.style.visibility = 'hidden';
+            permissionsSection.style.opacity = '0';
+            permissionsSection.style.height = '0';
+            // Uncheck all permission checkboxes when role is not "user"
+            document.querySelectorAll('input[name="permissions[]"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+    }
+    
+    // Check immediately
+    togglePermissionsSection();
+    
+    // Listen for all possible events
+    roleSelect.addEventListener('change', function(e) {
+        console.log('Change event fired:', e.target.value);
+        togglePermissionsSection();
+    });
+    
+    roleSelect.addEventListener('input', function(e) {
+        console.log('Input event fired:', e.target.value);
+        togglePermissionsSection();
+    });
+    
+    // Also watch for clicks (in case of programmatic changes)
+    roleSelect.addEventListener('click', function() {
+        setTimeout(togglePermissionsSection, 50);
+    });
+    
+    // Use MutationObserver as fallback
+    const observer = new MutationObserver(function(mutations) {
+        togglePermissionsSection();
+    });
+    
+    observer.observe(roleSelect, {
+        attributes: true,
+        attributeFilter: ['value', 'selectedIndex']
+    });
+}
+</script>
+<style>
+#permissionsSection {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+#permissionsSection.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
 @endpush
 @endsection

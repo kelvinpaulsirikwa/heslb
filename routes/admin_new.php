@@ -44,9 +44,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 //Admin pages
 Route::middleware(['auth','prevent.blocked.actions', 'check.user.status'])->group(function () {
     
-    //Dashboard - accessible to all authenticated users
+    //Dashboard - requires view_analytics permission
     Route::get('/dashboard', [DashboardController::class, 'showdashboard'])
-        ->name('dashboard');
+        ->name('dashboard')
+        ->middleware('permission:view_analytics');
 
     // News page management system - requires manage_news permission
     Route::get('/newsdashboard', [NewsAndEventController::class, 'showallnews'])
@@ -196,47 +197,26 @@ Route::middleware(['auth','prevent.blocked.actions', 'check.user.status'])->grou
         });
     });
 
-    // Audit Logs - requires view_audit_logs permission
-    Route::prefix('admin')->name('admin.')->middleware(['permission:view_audit_logs'])->group(function () {
-        Route::get('audit-logs', [\App\Http\Controllers\AdminPages\AuditLogController::class, 'index'])->name('audit-logs.index');
-        Route::get('audit-logs/{auditLog}', [\App\Http\Controllers\AdminPages\AuditLogController::class, 'show'])->name('audit-logs.show');
-    });
+    // User Management - requires manage_users permission
+    Route::prefix('admin')->name('admin.')->middleware(['permission:manage_users'])->group(function () {
+        Route::resource('users', UserManagementController::class)->names([
+           'index' => 'users.index',
+           'create' => 'users.create',
+           'store' => 'users.store',
+           'show' => 'users.show',
+           'edit' => 'users.edit',
+           'update' => 'users.update',
+           'destroy' => 'users.destroy',
+        ]);
 
-    // User Management - requires view_users permission for index/show, specific permissions for actions
-    Route::prefix('admin')->name('admin.')->middleware(['permission:view_users'])->group(function () {
-        // View routes - only need view_users permission
-        Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
-        
-        // Create routes - require create_users permission (MUST come before {user} route to avoid conflicts)
-        Route::middleware('permission:create_users')->group(function () {
-            Route::get('users/create', [UserManagementController::class, 'create'])->name('users.create');
-            Route::post('users', [UserManagementController::class, 'store'])->name('users.store');
-        });
-        
-        // Show user details - must come after create
-        Route::get('users/{user}', [UserManagementController::class, 'show'])->name('users.show');
-        
-        // Edit routes - require edit_users permission
-        Route::middleware('permission:edit_users')->group(function () {
-            Route::get('users/{user}/edit', [UserManagementController::class, 'edit'])->name('users.edit');
-            Route::put('users/{user}', [UserManagementController::class, 'update'])->name('users.update');
-        });
-        
-        // Block/Unblock - require manage_users permission
-        Route::middleware('permission:manage_users')->group(function () {
-            Route::delete('users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
-        });
-        
-        // Reset password - requires reset_user_password permission
+        //Reset password - requires reset_user_password permission
         Route::middleware('permission:reset_user_password')->group(function () {
             Route::get('users/{user}/reset-password', [UserManagementController::class, 'showResetPasswordForm'])->name('users.reset-password.form');
             Route::post('users/{user}/reset-password', [UserManagementController::class, 'resetPassword'])->name('users.reset-password');
         });
 
-        // Delete user (only if no data uploaded) - requires delete_users permission
-        Route::middleware('permission:delete_users')->group(function () {
-            Route::delete('users/{user}/delete', [UserManagementController::class, 'deleteUser'])->name('users.delete');
-        });
+        // Delete user (only if no data uploaded)
+        Route::delete('users/{user}/delete', [UserManagementController::class, 'deleteUser'])->name('users.delete');
     });
 });
 

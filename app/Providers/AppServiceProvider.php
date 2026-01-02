@@ -31,9 +31,11 @@ class AppServiceProvider extends ServiceProvider
 
 public function boot(): void
 {
-    // Force HTTPS for all generated URLs (routes, assets, etc.)
-    // This ensures forms and links always use HTTPS in non-local environments
-    // This fixes the security issue where forms submit to HTTP instead of HTTPS
+    // Force HTTPS for all generated URLs (routes, assets, etc.) in production/staging
+    // This ensures forms and links always use HTTPS in production
+    // This fixes the security issue where credentials are transmitted over HTTP
+    // CRITICAL: This prevents credentials from being sent in cleartext in production
+    // Allow HTTP in local environment for development
     if (!app()->environment('local')) {
         URL::forceScheme('https');
     }

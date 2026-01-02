@@ -31,7 +31,7 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 120),
+    'lifetime' => env('SESSION_LIFETIME', 30), // Reduced from 120 to 30 minutes for security
 
     'expire_on_close' => false,
 
@@ -46,7 +46,7 @@ return [
     |
     */
 
-    'encrypt' => false,
+    'encrypt' => env('SESSION_ENCRYPT', true), // Enable session encryption for security
 
     /*
     |--------------------------------------------------------------------------
@@ -171,7 +171,7 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE', env('APP_ENV') !== 'local'),
+    'secure' => env('SESSION_SECURE_COOKIE', env('APP_ENV') !== 'local'), // Require HTTPS in production, allow HTTP in local
 
     /*
     |--------------------------------------------------------------------------
@@ -199,6 +199,6 @@ return [
     |
     */
 
-    'same_site' => 'lax',
+    'same_site' => env('SESSION_SAME_SITE', 'lax'), // Use 'lax' or 'strict' for CSRF protection
 
 ];

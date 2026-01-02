@@ -167,6 +167,9 @@ class AuthController extends Controller
         $user->must_change_password = false;
         $user->save();
 
+        // Regenerate session after password change to prevent session fixation
+        $request->session()->regenerate();
+
         return redirect()->route('dashboard')->with('success', 'Password changed successfully.');
     }
 

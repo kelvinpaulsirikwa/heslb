@@ -85,4 +85,74 @@ public function taasiseventImages()
     {
         return $this->username . ' (' . $this->email . ')';
     }
+
+    /**
+     * Get audit logs for this user
+     */
+    public function auditLogs()
+    {
+        return $this->hasMany(AuditLog::class, 'user_id');
+    }
+
+    /**
+     * Get user-specific permissions
+     */
+    public function userPermissions()
+    {
+        return $this->hasMany(UserPermission::class, 'user_id');
+    }
+
+    /**
+     * Check if user has a specific permission
+     */
+    public function hasPermission(string $permission): bool
+    {
+        // Admin role has all permissions automatically
+        if (strtolower($this->role) === 'admin') {
+            return true;
+        }
+
+        // Check if permission exists
+        $permissionExists = Permission::where('name', $permission)
+            ->where('guard_name', 'web')
+            ->exists();
+        
+        if (!$permissionExists) {
+            return false;
+        }
+
+        // Get the permission ID
+        $permissionModel = Permission::where('name', $permission)
+            ->where('guard_name', 'web')
+            ->first();
+        
+        if (!$permissionModel) {
+            return false;
+        }
+
+        // Check if user has individual permission assigned
+        $hasUserPermission = UserPermission::where('user_id', $this->id)
+            ->where('permission_id', $permissionModel->id)
+            ->exists();
+        
+        if ($hasUserPermission) {
+            return true;
+        }
+
+        // Check if user's role has this permission
+        return RolePermission::where('role', $this->role)
+            ->where('permission_id', $permissionModel->id)
+            ->exists();
+    }
+
+    /**
+     * Get all permissions for this user's role
+     */
+    public function getPermissions(): \Illuminate\Support\Collection
+    {
+        return RolePermission::where('role', $this->role)
+            ->with('permission')
+            ->get()
+            ->pluck('permission');
+    }
 }

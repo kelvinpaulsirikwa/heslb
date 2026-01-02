@@ -12,9 +12,11 @@
                             <h2 class="mb-1 text-dark fw-bold">User Management</h2>
                             <p class="text-muted mb-0 small">Manage system users and their permissions</p>
                         </div>
+                        @if(auth()->user()->hasPermission('create_users'))
                         <a href="{{ route('admin.users.create') }}" class="btn btn-success px-4 py-2">
                             <i class="fas fa-user-plus me-2"></i>Add New User
                         </a>
+                        @endif
                     </div>
                 </div>
 
@@ -104,10 +106,12 @@
                                             <a href="{{ route('admin.users.show', $user) }}" class="btn btn-outline-info btn-sm px-2">
                                                 <i class="fas fa-eye me-1"></i>View
                                             </a>
+                                            @if(auth()->user()->hasPermission('edit_users'))
                                             <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-outline-primary btn-sm px-2">
                                                 <i class="fas fa-edit me-1"></i>Edit
                                             </a>
-                                            @if(auth()->user()->id != $user->id)
+                                            @endif
+                                            @if(auth()->user()->id != $user->id && auth()->user()->hasPermission('reset_user_password'))
                                             <a href="{{ route('admin.users.reset-password.form', $user) }}" class="btn btn-outline-warning btn-sm px-2">
                                                 <i class="fas fa-key me-1"></i>Reset
                                             </a>

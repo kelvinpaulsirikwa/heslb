@@ -5,9 +5,12 @@ namespace App\Http\Controllers\AdminPages;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Userstable;
+use App\Models\Permission;
+use App\Models\UserPermission;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Services\AuditLogService;
 
 class UserManagementController extends Controller
 {
@@ -44,7 +47,24 @@ class UserManagementController extends Controller
      */
     public function create()
     {
-        return view('adminpages.usermanagement.create');
+        // Server-side permission check
+        if (!Auth::user()->hasPermission('create_users')) {
+            abort(403, 'You do not have permission to create users.');
+        }
+        
+        // Get all permissions grouped by category for user role
+        $permissions = Permission::where('guard_name', 'web')
+            ->orderBy('category')
+            ->orderBy('display_name')
+            ->get()
+            ->groupBy('category');
+        
+        // Debug: Check if permissions exist
+        if ($permissions->isEmpty()) {
+            \Log::warning('No permissions found in database');
+        }
+        
+        return view('adminpages.usermanagement.create', compact('permissions'));
     }
 
     /**
@@ -52,6 +72,11 @@ class UserManagementController extends Controller
      */
     public function store(Request $request)
     {
+        // Server-side permission check
+        if (!Auth::user()->hasPermission('create_users')) {
+            abort(403, 'You do not have permission to create users.');
+        }
+        
         try {
             $validatedData = \App\Services\AdminValidationService::validate($request, 'user_management');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -68,7 +93,7 @@ class UserManagementController extends Controller
         $temporaryPassword = Str::random(10);
 
         try {
-            Userstable::create([
+            $user = Userstable::create([
                 'username'  => $validatedData['username'],
                 'email'     => $validatedData['email'],
                 'profile_image' => $imagePath,
@@ -78,6 +103,31 @@ class UserManagementController extends Controller
                 'status'    => 'active',
                 'must_change_password' => true,
             ]);
+
+            // If role is "user", assign individual permissions
+            if (strtolower($validatedData['role']) === 'user' && $request->has('permissions')) {
+                $permissionIds = $request->input('permissions', []);
+                foreach ($permissionIds as $permissionId) {
+                    UserPermission::create([
+                        'user_id' => $user->id,
+                        'permission_id' => $permissionId
+                    ]);
+                }
+            }
+
+            // Audit log
+            $newValues = ['username' => $user->username, 'email' => $user->email, 'role' => $user->role];
+            if (strtolower($validatedData['role']) === 'user' && $request->has('permissions')) {
+                $newValues['permissions'] = $request->input('permissions', []);
+            }
+            
+            AuditLogService::log(
+                'create',
+                'User',
+                $user->id,
+                null,
+                $newValues
+            );
 
             return redirect()->route('admin.users.index')->with('success', 'User created successfully. Temporary password: ' . $temporaryPassword);
         } catch (\Illuminate\Database\QueryException $e) {
@@ -139,12 +189,32 @@ class UserManagementController extends Controller
      */
     public function edit(Userstable $user)
     {
+        // Server-side permission check
+        if (!Auth::user()->hasPermission('edit_users')) {
+            abort(403, 'You do not have permission to edit users.');
+        }
+        
         // Prevent editing blocked users
         if ($user->status === 'blocked') {
             return redirect()->route('admin.users.index')->with('error', 'Blocked users cannot be edited. Unblock them first.');
         }
         
-        return view('adminpages.usermanagement.edit', compact('user'));
+        // Get all permissions grouped by category
+        $permissions = Permission::where('guard_name', 'web')
+            ->orderBy('category')
+            ->orderBy('display_name')
+            ->get()
+            ->groupBy('category');
+        
+        // Get user's current permissions (only for user role)
+        $userPermissionIds = [];
+        if (strtolower($user->role) === 'user') {
+            $userPermissionIds = UserPermission::where('user_id', $user->id)
+                ->pluck('permission_id')
+                ->toArray();
+        }
+        
+        return view('adminpages.usermanagement.edit', compact('user', 'permissions', 'userPermissionIds'));
     }
 
     /**
@@ -152,6 +222,11 @@ class UserManagementController extends Controller
      */
     public function update(Request $request, Userstable $user)
     {
+        // Server-side permission check
+        if (!Auth::user()->hasPermission('edit_users')) {
+            abort(403, 'You do not have permission to edit users.');
+        }
+        
         // Prevent updating blocked users
         if ($user->status === 'blocked') {
             return redirect()->route('admin.users.index')->with('error', 'Blocked users cannot be updated. Unblock them first.');
@@ -176,12 +251,75 @@ class UserManagementController extends Controller
             $data['profile_image'] = $request->file('profile_image')->store('uploads/profile_images', 'public');
         }
 
+        $oldValues = [
+            'username' => $user->username,
+            'email' => $user->email,
+            'telephone' => $user->telephone,
+            'role' => $user->role,
+        ];
+
         try {
             $user->update($data);
 
             if ($request->filled('password')) {
                 $user->update(['password' => $request->password]); // hashed by mutator
             }
+
+            // Handle user permissions if role is "user"
+            if (strtolower($data['role']) === 'user') {
+                // Get selected permission IDs
+                $selectedPermissions = $request->input('permissions', []);
+                
+                // Get current user permissions
+                $currentPermissionIds = UserPermission::where('user_id', $user->id)
+                    ->pluck('permission_id')
+                    ->toArray();
+                
+                // Find permissions to add
+                $permissionsToAdd = array_diff($selectedPermissions, $currentPermissionIds);
+                
+                // Find permissions to remove
+                $permissionsToRemove = array_diff($currentPermissionIds, $selectedPermissions);
+                
+                // Add new permissions
+                foreach ($permissionsToAdd as $permissionId) {
+                    UserPermission::create([
+                        'user_id' => $user->id,
+                        'permission_id' => $permissionId
+                    ]);
+                }
+                
+                // Remove permissions
+                UserPermission::where('user_id', $user->id)
+                    ->whereIn('permission_id', $permissionsToRemove)
+                    ->delete();
+            } else {
+                // If role changed from "user" to something else, remove all user-specific permissions
+                UserPermission::where('user_id', $user->id)->delete();
+            }
+
+            // Regenerate session if role or permissions changed (prevents session fixation)
+            if ($oldValues['role'] !== $data['role'] || 
+                (strtolower($data['role']) === 'user' && $request->has('permissions'))) {
+                // If updating own account, regenerate session to reflect new permissions
+                if (Auth::id() == $user->id) {
+                    $request->session()->regenerate();
+                }
+            }
+
+            // Audit log
+            $newValues = array_merge($oldValues, $data);
+            if (strtolower($data['role']) === 'user' && $request->has('permissions')) {
+                $newValues['permissions'] = $request->input('permissions', []);
+            }
+            
+            AuditLogService::log(
+                'update',
+                'User',
+                $user->id,
+                $oldValues,
+                $newValues
+            );
 
             return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
         } catch (\Illuminate\Database\QueryException $e) {
@@ -217,8 +355,18 @@ class UserManagementController extends Controller
         }
 
         // Toggle the status: active -> blocked, blocked -> active
+        $oldStatus = $user->status;
         $user->status = $user->status === 'active' ? 'blocked' : 'active';
         $user->save();
+
+        // Audit log
+        AuditLogService::log(
+            $user->status === 'active' ? 'unblock' : 'block',
+            'User',
+            $user->id,
+            ['status' => $oldStatus],
+            ['status' => $user->status]
+        );
 
         $action = $user->status === 'active' ? 'unblocked' : 'blocked';
         return redirect()->route('admin.users.index')->with('success', "User successfully {$action}.");
@@ -245,6 +393,15 @@ class UserManagementController extends Controller
         $user->must_change_password = true;
         $user->save();
 
+        // Audit log
+        AuditLogService::log(
+            'reset_password',
+            'User',
+            $user->id,
+            null,
+            ['username' => $user->username]
+        );
+
         return redirect()->route('admin.users.index')->with('success', 'Temporary password generated: ' . $temporaryPassword);
     }
     
@@ -261,6 +418,11 @@ class UserManagementController extends Controller
      */
     public function deleteUser(Userstable $user)
     {
+        // Server-side permission check
+        if (!Auth::user()->hasPermission('delete_users')) {
+            abort(403, 'You do not have permission to delete users.');
+        }
+        
         // Prevent users from deleting themselves
         if (auth()->user()->id == $user->id) {
             return redirect()->route('admin.users.show', $user)->with('error', 'You cannot delete your own account.');
@@ -286,7 +448,23 @@ class UserManagementController extends Controller
 
         // Delete the user
         $username = $user->username;
+        $userId = $user->id;
+        $userData = [
+            'username' => $user->username,
+            'email' => $user->email,
+            'role' => $user->role,
+        ];
+        
         $user->delete();
+
+        // Audit log
+        AuditLogService::log(
+            'delete',
+            'User',
+            $userId,
+            $userData,
+            null
+        );
 
         return redirect()->route('admin.users.index')->with('success', "User '{$username}' has been successfully deleted from the system.");
     }

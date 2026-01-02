@@ -251,9 +251,11 @@
                         <i class="fas fa-tools text-primary me-2"></i>Quick Actions
                     </h6>
                     <div class="d-flex flex-column flex-md-row flex-wrap gap-2">
+                        @if(auth()->user()->hasPermission('edit_users'))
                         <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-primary">
                             <i class="fas fa-edit me-2"></i>Edit User Profile
                         </a>
+                        @endif
                         @if(auth()->user()->id != $user->id)
                         <a href="{{ route('admin.users.reset-password.form', $user) }}" class="btn btn-warning">
                             <i class="fas fa-key me-2"></i>Reset Password

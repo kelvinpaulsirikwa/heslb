@@ -43,7 +43,7 @@
     </div>
 
     <ul class="side-menu">
-        <!-- Common Links (user + admin) -->
+        <!-- Common Links (accessible to all authenticated users) -->
         <li>
             <a href="{{ route('dashboard') }}" class="active">
                 <i class="bx bxs-dashboard icon"></i>
@@ -57,81 +57,144 @@
             </a>
         </li>
 
-        <li class="divider" data-text="Content Management"></li>
+        @php
+            $hasContentManagement = $user->hasPermission('manage_news') || 
+                                   $user->hasPermission('manage_feedback') ||
+                                   $user->hasPermission('manage_applications') ||
+                                   $user->hasPermission('manage_publications') ||
+                                   $user->hasPermission('manage_events') ||
+                                   $user->hasPermission('manage_video_podcasts') ||
+                                   $user->hasPermission('manage_scholarships') ||
+                                   $user->hasPermission('manage_shortcut_links') ||
+                                   $user->hasPermission('manage_partners') ||
+                                   $user->hasPermission('manage_board_directors') ||
+                                   $user->hasPermission('manage_executive_directors') ||
+                                   $user->hasPermission('manage_application_guidelines') ||
+                                   $user->hasPermission('manage_faqs') ||
+                                   $user->hasPermission('manage_user_stories');
+        @endphp
 
+        @if($hasContentManagement)
+        <li class="divider" data-text="Content Management"></li>
+        @endif
+
+        @if($user->hasPermission('manage_news'))
         <li>
             <a href="{{ route('admin.news.index') }}">
                 <i class="bx bxs-news icon"></i>
                 News and Event
             </a>
         </li>
+        @endif
+
+        @if($user->hasPermission('manage_feedback') || $user->hasPermission('view_feedback'))
         <li>
             <a href="{{ route('adminpages.feedback.index') }}">
                 <i class="bx bxs-comment-detail icon"></i>
                 Feedbacks
             </a>
         </li>
+        @endif
+
+        @if($user->hasPermission('manage_applications'))
         <li>
             <a href="{{ route('admin.window_applications.index') }}">
                 <i class="bx bxs-time icon"></i>
                 Dirisha la Usajili
             </a>
         </li>
+        @endif
+
+        @if($user->hasPermission('manage_publications'))
         <li>
             <a href="{{ route('admin.publications.index') }}">
                 <i class="bx bxs-group icon"></i>
                 Publications
             </a>
         </li>
+        @endif
+
+        @if($user->hasPermission('manage_events'))
         <li>
             <a href="{{ route('admin.taasisevents.index') }}">
                 <i class="bx bxs-photo-album icon"></i>
                 Photo Gallery
             </a>
         </li>
+        @endif
+
+        @if($user->hasPermission('manage_video_podcasts'))
         <li>
             <a href="{{ route('videopodcasts.index') }}">
                 <i class="bx bxs-videos icon"></i>
                 Video Podcasts
             </a>
         </li>
+        @endif
+
+        @if($user->hasPermission('manage_scholarships'))
         <li>
             <a href="{{ route('admin.scholarships.index') }}">
                 <i class="bx bxs-graduation icon"></i>
                 Scholarships
             </a>
         </li>
+        @endif
+
+        @if($user->hasPermission('manage_shortcut_links'))
         <li>
             <a href="{{ route('shortcut-links.index') }}">
                 <i class="bx bx-link-alt icon"></i>
                 Shortcut Links
             </a>
         </li>
+        @endif
+
+        @if($user->hasPermission('manage_partners'))
         <li>
             <a href="{{ route('admin.partners.index') }}">
                 <i class="bx bxs-group icon"></i>
                 Strategic Partners
             </a>
         </li>
+        @endif
+
+        @if($user->hasPermission('manage_board_directors'))
         <li>
             <a href="{{ route('admin.board-of-directors.index') }}">
                 <i class="bx bxs-user-badge icon"></i>
                 Board of Directors
             </a>
         </li>
+        @endif
+
+        @if($user->hasPermission('manage_executive_directors'))
         <li>
             <a href="{{ route('admin.executive-directors.index') }}">
                 <i class="bx bxs-user-circle icon"></i>
                 Executive Directors
             </a>
         </li>
+        @endif
+
+        @if($user->hasPermission('manage_application_guidelines'))
         <li>
             <a href="{{ route('admin.application-guidelines.index') }}">
                 <i class="bx bxs-file-doc icon"></i>
                 Application Guidelines
             </a>
         </li>
+        @endif
 
+        @php
+            // Check FAQ permissions - only show FAQ if user has at least one specific FAQ permission
+            $hasLoanApplicationFaq = $user->hasPermission('manage_loan_application_faqs');
+            $hasLoanRepaymentFaq = $user->hasPermission('manage_loan_repayment_faqs');
+            // Only show FAQ menu if user has at least one of the specific FAQ permissions
+            $hasFaqPermission = $hasLoanApplicationFaq || $hasLoanRepaymentFaq;
+        @endphp
+
+        @if($hasFaqPermission)
         <!-- FAQ Dropdown -->
         <li>
             <a href="#">
@@ -139,40 +202,66 @@
                 <i class='bx bx-chevron-right icon-right'></i>
             </a>
             <ul class="side-dropdown">
-                <li><a href="{{ route('loan-application-faqs.index') }}">Loan Application</a></li>
-                <li><a href="{{ route('loan-repayment-faqs.index') }}">Loan Repayment</a></li>
+                @if($hasLoanApplicationFaq)
+                <li>
+                    <a href="{{ route('loan-application-faqs.index') }}">
+                        Loan Application
+                    </a>
+                </li>
+                @endif
+                @if($hasLoanRepaymentFaq)
+                <li>
+                    <a href="{{ route('loan-repayment-faqs.index') }}">
+                        Loan Repayment
+                    </a>
+                </li>
+                @endif
             </ul>
         </li>
+        @endif
       
+        @if($user->hasPermission('manage_user_stories'))
         <li>
             <a href="{{ route('admin.user-stories.index') }}">
                 <i class="bx bxs-book icon"></i>
                 User Stories
             </a>
         </li>
+        @endif
+
+        @if($user->hasPermission('view_validation_documentation'))
         <li>
     <a href="{{ route('validation-documentation') }}">
         <i class="bx bxs-file-doc icon"></i>
         Validation Rules
     </a>
 </li>
+        @endif
 
-
-        <!-- Role-specific Links -->
-        @if ($role === 'admin')
+        <!-- User Management - requires view_users permission -->
+        @if($user->hasPermission('view_users') || $user->hasPermission('manage_users') || $user->hasPermission('view_audit_logs'))
             <li class="divider" data-text="Account Management"></li>
+            @if($user->hasPermission('view_users') || $user->hasPermission('manage_users'))
             <li>
                 <a href="{{ route('admin.users.index') }}">
                     <i class="bx bxs-user-detail icon"></i>
                     User Management
                 </a>
             </li>
-          
+            @endif
+            @if($user->hasPermission('view_audit_logs'))
+            <li>
+                <a href="{{ route('admin.audit-logs.index') }}">
+                    <i class="bx bxs-file icon"></i>
+                    Audit Logs
+                </a>
+            </li>
+            @endif
         @else
-            <li class="divider" data-text="Account"></li>
+        <li class="divider" data-text="Account"></li>
         @endif
 
-        <!-- Common Account/Profile -->
+        <!-- Common Account/Profile - accessible to all authenticated users -->
         <li>
             <a href="{{ route('profile.edit') }}">
                 <i class="bx bxs-cog alt icon"></i>

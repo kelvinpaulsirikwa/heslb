@@ -137,6 +137,51 @@
                                         <option value="user" {{ old('role', $user->role) == 'user' ? 'selected' : '' }}>User</option>
                                         <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
                                     </select>
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Administrators have all permissions automatically. Users can have specific permissions assigned.
+                                    </small>
+                                </div>
+                            </div>
+                            
+                            <!-- User Permissions Section (only for user role) -->
+                            <div class="col-12 mt-3" id="permissionsSection" style="display: {{ strtolower($user->role) === 'user' ? 'block' : 'none' }};">
+                                <div class="bg-light border rounded-3 p-4">
+                                    <h6 class="text-dark fw-semibold mb-3">
+                                        <i class="fas fa-shield-alt me-2 text-primary"></i>User-Specific Permissions
+                                    </h6>
+                                    <p class="text-muted small mb-3">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Select specific permissions for this user. Only visible when role is "User". Administrators automatically have all permissions.
+                                    </p>
+                                    
+                                    <div class="permission-list" style="max-height: 400px; overflow-y: auto;">
+                                        @foreach($permissions ?? [] as $category => $categoryPermissions)
+                                        <div class="mb-3">
+                                            <h6 class="text-muted fw-semibold mb-2 border-bottom pb-2">
+                                                <i class="fas fa-folder me-2"></i>{{ ucfirst(str_replace('_', ' ', $category)) }}
+                                            </h6>
+                                            <div class="ps-3">
+                                                @foreach($categoryPermissions as $permission)
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" 
+                                                           type="checkbox" 
+                                                           name="permissions[]" 
+                                                           value="{{ $permission->id }}" 
+                                                           id="permission_edit_{{ $permission->id }}"
+                                                           {{ in_array($permission->id, $userPermissionIds ?? []) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="permission_edit_{{ $permission->id }}">
+                                                        <strong>{{ $permission->display_name }}</strong>
+                                                        @if($permission->description)
+                                                            <br><small class="text-muted">{{ $permission->description }}</small>
+                                                        @endif
+                                                    </label>
+                                                </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -264,5 +309,47 @@ h5.fw-semibold {
 .form-label i {
     opacity: 0.8;
 }
+
+.permission-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.permission-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.permission-list::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.permission-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const roleSelect = document.getElementById('role');
+    const permissionsSection = document.getElementById('permissionsSection');
+    
+    function togglePermissionsSection() {
+        if (roleSelect.value === 'user') {
+            permissionsSection.style.display = 'block';
+        } else {
+            permissionsSection.style.display = 'none';
+            // Uncheck all permission checkboxes when role is not "user"
+            document.querySelectorAll('input[name="permissions[]"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+    }
+    
+    // Listen for role changes
+    if (roleSelect) {
+        roleSelect.addEventListener('change', togglePermissionsSection);
+    }
+});
+</script>
 @endsection
