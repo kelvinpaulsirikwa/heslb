@@ -11,7 +11,20 @@
             <div class="news-image-container">
                 @if($article['image'] && file_exists(public_path('images/storage/' . $article['image'])))
                     <img src="{{ asset('images/storage/' . $article['image']) }}" 
-                         alt="{{ $article['title'] }}" class="news-image" loading="lazy">
+                         alt="{{ $article['title'] }}" 
+                         class="news-image" 
+                         loading="lazy"
+                         onerror="console.error('Image failed to load:', this.src); console.error('Image path:', '{{ public_path('images/storage/' . $article['image']) }}'); console.error('Database value:', '{{ $article['image'] }}'); console.error('Article ID:', '{{ $article['id'] }}');">
+                @else
+                <script>
+                    console.warn('No image found for article');
+                    console.warn('Article ID:', {{ $article['id'] }});
+                    console.warn('Image value:', '{{ $article['image'] }}');
+                    @if($article['image'])
+                    console.warn('Expected path:', '{{ public_path('images/storage/' . $article['image']) }}');
+                    console.warn('Asset URL:', '{{ asset('images/storage/' . $article['image']) }}');
+                    @endif
+                </script>
                 @endif
                 <div class="news-category {{ $article['type'] === 'story' ? 'category-success' : '' }}">
                     {{ strtoupper($article['category']) }}

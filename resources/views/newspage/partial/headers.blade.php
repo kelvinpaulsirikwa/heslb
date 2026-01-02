@@ -12,7 +12,20 @@
                         <div class="heslb-v2-img-wrapper">
                             @if($latestNews->front_image && file_exists(public_path('images/storage/' . $latestNews->front_image)))
                             <img src="{{ asset('images/storage/' . $latestNews->front_image) }}"
-                                 alt="{{ $latestNews->title }}" class="heslb-v2-featured-img" loading="lazy">
+                                 alt="{{ $latestNews->title }}" 
+                                 class="heslb-v2-featured-img" 
+                                 loading="lazy"
+                                 onerror="console.error('Image failed to load:', this.src); console.error('Image path:', '{{ public_path('images/storage/' . $latestNews->front_image) }}'); console.error('Database value:', '{{ $latestNews->front_image }}');">
+                            @else
+                            <script>
+                                console.warn('No image found for latest news');
+                                console.warn('News ID:', {{ $latestNews->id }});
+                                console.warn('Front image value:', '{{ $latestNews->front_image }}');
+                                @if($latestNews->front_image)
+                                console.warn('Expected path:', '{{ public_path('images/storage/' . $latestNews->front_image) }}');
+                                console.warn('Asset URL:', '{{ asset('images/storage/' . $latestNews->front_image) }}');
+                                @endif
+                            </script>
                             @endif
                             <div class="heslb-v2-img-badge">
                                 <span class="heslb-v2-category-tag">HABARI MPYA</span>
