@@ -264,6 +264,12 @@
                             <i class="fas fa-{{ $user->status === 'active' ? 'ban' : 'check' }} me-2"></i>
                             {{ $user->status === 'active' ? 'Block User' : 'Unblock User' }}
                         </button>
+                        @if(!$hasUploadedData && auth()->user()->id != $user->id)
+                        <button class="btn btn-danger" 
+                                data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="fas fa-trash me-2"></i>Delete User
+                        </button>
+                        @endif
                         <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary">
                             <i class="fas fa-list me-2"></i>View All Users
                         </a>
@@ -302,6 +308,40 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Delete User Modal -->
+                @if(!$hasUploadedData && auth()->user()->id != $user->id)
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 shadow">
+                            <div class="modal-header bg-danger text-white border-0">
+                                <h5 class="modal-title fw-semibold" id="deleteModalLabel">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    Confirm Delete User
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body py-4">
+                                <p class="mb-0 text-dark">
+                                    Are you sure you want to permanently delete user <strong>{{ $user->username }}</strong>? 
+                                    This action cannot be undone and will remove the user from the system completely.
+                                </p>
+                            </div>
+                            <div class="modal-footer border-0 bg-light">
+                                <form action="{{ route('admin.users.delete', $user) }}" method="POST" class="d-flex gap-2">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-danger px-4">
+                                        <i class="fas fa-trash me-1"></i>
+                                        Delete User
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>

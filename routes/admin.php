@@ -177,6 +177,9 @@ Route::middleware(['auth','prevent.blocked.actions', 'check.user.status'])->grou
     Route::get('admin/users/{user}/reset-password', [UserManagementController::class, 'showResetPasswordForm'])->name('admin.users.reset-password.form');
     Route::post('admin/users/{user}/reset-password', [UserManagementController::class, 'resetPassword'])->name('admin.users.reset-password');
 
+    // Delete user (only if no data uploaded)
+    Route::delete('admin/users/{user}/delete', [UserManagementController::class, 'deleteUser'])->name('admin.users.delete');
+
     // User Management - resource + custom routes
     Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.user.status', 'prevent.blocked.actions'])->group(function () {
         Route::resource('users', UserManagementController::class)->names([

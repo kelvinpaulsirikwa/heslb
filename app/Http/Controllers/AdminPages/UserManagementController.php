@@ -108,7 +108,10 @@ class UserManagementController extends Controller
             'scholarships' => \App\Models\Scholarship::where('posted_by', $user->id)->count(),
         ];
         
-        return view('adminpages.usermanagement.show', compact('user', 'stats'));
+        // Check if user has uploaded any data
+        $hasUploadedData = array_sum($stats) > 0;
+        
+        return view('adminpages.usermanagement.show', compact('user', 'stats', 'hasUploadedData'));
     }
 
     /**
@@ -231,6 +234,41 @@ class UserManagementController extends Controller
     public function showResetPasswordForm(Userstable $user)
     {
         return view('adminpages.usermanagement.reset-password', compact('user'));
+    }
+
+    /**
+     * Delete user from the system if they haven't uploaded any data.
+     */
+    public function deleteUser(Userstable $user)
+    {
+        // Prevent users from deleting themselves
+        if (auth()->user()->id == $user->id) {
+            return redirect()->route('admin.users.show', $user)->with('error', 'You cannot delete your own account.');
+        }
+
+        // Check if user has uploaded any data
+        $hasData = \App\Models\News::where('posted_by', $user->id)->exists() ||
+                   \App\Models\Publication::where('posted_by', $user->id)->exists() ||
+                   \App\Models\Link::where('posted_by', $user->id)->exists() ||
+                   \App\Models\Videopodcast::where('posted_by', $user->id)->exists() ||
+                   \App\Models\WindowApplication::where('user_id', $user->id)->exists() ||
+                   \App\Models\Taasisevent::where('posted_by', $user->id)->exists() ||
+                   \App\Models\TaasiseventImage::where('posted_by', $user->id)->exists() ||
+                   \App\Models\Partner::where('posted_by', $user->id)->exists() ||
+                   \App\Models\FAQ::where('posted_by', $user->id)->exists() ||
+                   \App\Models\BoardOfDirector::where('posted_by', $user->id)->exists() ||
+                   \App\Models\ExecutiveDirector::where('posted_by', $user->id)->exists() ||
+                   \App\Models\Scholarship::where('posted_by', $user->id)->exists();
+
+        if ($hasData) {
+            return redirect()->route('admin.users.show', $user)->with('error', 'Cannot delete user. This user has uploaded data to the system.');
+        }
+
+        // Delete the user
+        $username = $user->username;
+        $user->delete();
+
+        return redirect()->route('admin.users.index')->with('success', "User '{$username}' has been successfully deleted from the system.");
     }
 
 }
