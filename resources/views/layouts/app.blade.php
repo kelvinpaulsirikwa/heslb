@@ -7,7 +7,7 @@
 
     <!-- Primary Meta Tags -->
     <meta name="title" content="HESLB | Higher Education Students' Loans Board">
-    <meta name="description" content="Higher Education Students' Loans Board (HESLB) - Providing financial     assistance to Tanzanian students pursuing higher education. Apply for loans, manage repayments, and access educational resources.">
+    <meta name="description" content="Higher Education Students' Loans Board (HESLB) - Providing financial assistance to Tanzanian students pursuing higher education. Apply for loans, manage repayments, and access educational resources.">
     <meta name="keywords" content="HESLB, Higher Education Students Loans Board, student loans, Tanzania, education loans, loan application, loan repayment, scholarships, higher education, Tanzania education">
     <meta name="author" content="Higher Education Students' Loans Board">
     <meta name="robots" content="index, follow">
@@ -47,88 +47,51 @@
  
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-
-  <!-- CSS Files - Always Loaded -->
-<link rel="stylesheet" href="{{ asset('css/app.css') }}">
-<link rel="stylesheet" href="{{ asset('css/footers.css') }}">
-<link rel="stylesheet" href="{{ asset('css/organization.css') }}">
-
-
-<script src="{{ asset('js/organization.js') }}" defer></script>
-
-
 @php
     $currentRoute = Route::currentRouteName();
-    $routePrefix = explode('.', $currentRoute)[0] ?? '';
 @endphp
 
+  <!-- CSS Files -->
 
+  <!-- all the css -->
+   
+<link rel="stylesheet" href="{{ asset('css/app.css') }}">
+<link rel="stylesheet" href="{{ asset('css/footers.css') }}">
+<script src="{{ asset('js/organization.js') }}" defer></script>
+<link rel="stylesheet" href="{{ asset('css/organization.css') }}">
 
-<!-- Conditional CSS Files - Loaded based on current page -->
-@if(in_array($currentRoute, ['loanapplication.faqs', 'loanrepayment.faqs']))
+@if($currentRoute === 'home')
+<!-- Home page specific CSS -->
+<link rel="stylesheet" href="{{ asset('css/ourproductheader.css') }}">
+<link rel="stylesheet" href="{{ asset('css/countdowntime.css') }}">
+@else
+<!-- All CSS files for other pages -->
 <link rel="stylesheet" href="{{ asset('css/faq.css') }}">
-@endif
-
-@if(in_array($currentRoute, ['contactus.formandregion', 'contactus.getusintouch', 'contact.store']))
 <link rel="stylesheet" href="{{ asset('css/contactus.css') }}">
-@endif
-
-@if(str_starts_with($currentRoute, 'newscenter.'))
 <link rel="stylesheet" href="{{ asset('css/newscenter.css') }}">
-@endif
-
-@if($currentRoute === 'newscenter.searching' || $currentRoute === 'story.search')
+<link rel="stylesheet" href="{{ asset('css/countdowntime.css') }}">
+<link rel="stylesheet" href="{{ asset('css/publication.css') }}">
+<link rel="stylesheet" href="{{ asset('css/ourproduct.css') }}">
+<link rel="stylesheet" href="{{ asset('css/tellusstories.css') }}">
+<link rel="stylesheet" href="{{ asset('css/ourservice.css') }}">
+<link rel="stylesheet" href="{{ asset('css/ourproductheader.css') }}">
+<link rel="stylesheet" href="{{ asset('css/applicationlink.css') }}">
+<link rel="stylesheet" href="{{ asset('css/showstories.css') }}">
+<link rel="stylesheet" href="{{ asset('css/storycontent.css') }}">
 <link rel="stylesheet" href="{{ asset('css/searching.css') }}">
 @endif
 
-
-
-@if(str_starts_with($currentRoute, 'publications.'))
-<link rel="stylesheet" href="{{ asset('css/publication.css') }}">
-@endif
-
-@if(str_starts_with($currentRoute, 'story.'))
-<link rel="stylesheet" href="{{ asset('css/tellusstories.css') }}">
-<link rel="stylesheet" href="{{ asset('css/showstories.css') }}">
-@endif
-
-@if($currentRoute === 'story.showspecific')
-<link rel="stylesheet" href="{{ asset('css/storycontent.css') }}">
-@endif
-
-@if($currentRoute === 'loanapplication.applicationlink')
-<link rel="stylesheet" href="{{ asset('css/applicationlink.css') }}">
-@endif
-
-@if($currentRoute === 'home' || str_starts_with($currentRoute, 'aboutus.'))
-<link rel="stylesheet" href="{{ asset('css/ourproduct.css') }}">
-@endif
-
-@if($currentRoute === 'home')
-<link rel="stylesheet" href="{{ asset('css/ourproductheader.css') }}">
-<link rel="stylesheet" href="{{ asset('css/countdowntime.css') }}">
-@endif
-
-<!-- JS Files - Always Loaded -->
+<!-- JS Files -->
 <script src="{{ asset('js/app.js') }}" defer></script>
-
-<!-- Conditional JS Files - Loaded based on current page -->
- 
-
-@if(in_array($currentRoute, ['contactus.formandregion', 'contactus.getusintouch', 'contact.store']))
-<script src="{{ asset('js/contactus.js') }}" defer></script>
-@endif
-
-@if(str_starts_with($currentRoute, 'newscenter.'))
-<script src="{{ asset('js/newscenter.js') }}" defer></script>
-@endif
-
 @if($currentRoute === 'home')
 <script src="{{ asset('js/countdowntime.js') }}" defer></script>
 <script src="{{ asset('js/ourproduct.js') }}" defer></script>
+@else
+<script src="{{ asset('js/contactus.js') }}" defer></script>
+<script src="{{ asset('js/newscenter.js') }}" defer></script>
+<script src="{{ asset('js/ourproduct.js') }}" defer></script>
 @endif
 <!-- <script src="https://chatbot.heslb.go.tz/chatbot_general_obs.js"></script> -->
-
 
     <style>
         /* Global Font Family for Website (excluding admin pages) */
