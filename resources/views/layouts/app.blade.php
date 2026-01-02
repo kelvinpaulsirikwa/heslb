@@ -64,6 +64,8 @@
 <!-- Home page specific CSS -->
 <link rel="stylesheet" href="{{ asset('css/ourproductheader.css') }}">
 <link rel="stylesheet" href="{{ asset('css/countdowntime.css') }}">
+
+<link rel="stylesheet" href="{{ asset('css/ourproduct.css') }}">
 @else
 <!-- All CSS files for other pages -->
 <link rel="stylesheet" href="{{ asset('css/faq.css') }}">
