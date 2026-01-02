@@ -10,21 +10,17 @@
                 <div class="heslb-v2-flex-row heslb-v2-align-center">
                     <div class="heslb-v2-img-col">
                         <div class="heslb-v2-img-wrapper">
-                            @if($latestNews->front_image && file_exists(public_path('images/storage/' . $latestNews->front_image)))
+                            @if($latestNews->front_image)
                             <img src="{{ asset('images/storage/' . $latestNews->front_image) }}"
                                  alt="{{ $latestNews->title }}" 
                                  class="heslb-v2-featured-img" 
                                  loading="lazy"
-                                 onerror="console.error('Image failed to load:', this.src); console.error('Image path:', '{{ public_path('images/storage/' . $latestNews->front_image) }}'); console.error('Database value:', '{{ $latestNews->front_image }}');">
+                                 onerror="console.error('❌ Image failed to load'); console.error('Image URL:', this.src); console.error('Database value:', '{{ $latestNews->front_image }}'); console.error('News ID:', {{ $latestNews->id }}); console.error('Full path:', '{{ public_path('images/storage/' . $latestNews->front_image) }}');"
+                                 onload="console.log('✅ Image loaded successfully:', this.src);">
                             @else
                             <script>
-                                console.warn('No image found for latest news');
+                                console.warn('⚠️ No image value in database for latest news');
                                 console.warn('News ID:', {{ $latestNews->id }});
-                                console.warn('Front image value:', '{{ $latestNews->front_image }}');
-                                @if($latestNews->front_image)
-                                console.warn('Expected path:', '{{ public_path('images/storage/' . $latestNews->front_image) }}');
-                                console.warn('Asset URL:', '{{ asset('images/storage/' . $latestNews->front_image) }}');
-                                @endif
                             </script>
                             @endif
                             <div class="heslb-v2-img-badge">
