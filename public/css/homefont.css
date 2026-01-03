@@ -1,0 +1,15 @@
+body{font-family:Tahoma,Geneva,-serif !important;background: none !important;background-color: white !important;}
+/* Apply font family to text elements only, NOT to icons */
+h1, h2, h3, h4, h5, h6, p, span, div, a, button, input, textarea, select, label {font-family: Tahoma, Geneva, sans-serif !important;}
+
+/* IMPORTANT: Preserve icon font families */
+.fas, .far, .fab, .fa, i[class*="fa-"] {font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "FontAwesome" !important;}
+
+.bi, i[class*="bi-"] {font-family: "Bootstrap Icons" !important;}
+
+/* Ensure category icons are visible */
+.category-icon i,.category-icon .fas,.category-icon .far,.category-icon .fab {font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "FontAwesome" !important;display: inline-block !important;visibility: visible !important;}
+
+/* Debug: Make sure icons are visible */
+.category-icon {position: relative;}
+.category-icon i {position: relative;z-index: 10;}

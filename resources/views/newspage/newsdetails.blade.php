@@ -434,8 +434,8 @@
                          onerror="this.onerror=null; this.src='{{ asset('images/static_files/noimagenews.png') }}';">
                 @else
                     <div class="no-image-placeholder">
-                        <img src="{{ asset('images/static_files/noimagenews.png') }}" 
-                             alt="{{ $news->title }}" 
+                    <img src="{{ asset('images/static_files/noimagenews.png') }}" 
+                         alt="{{ $news->title }}" 
                              class="featured-image" 
                              loading="lazy">
                     </div>
