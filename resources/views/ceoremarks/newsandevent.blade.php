@@ -25,7 +25,7 @@
                         <span></span>
                         <img src="{{ asset('images/static_files/new.gif') }}" 
                                      alt="NEW" 
-                                     style="width: 36px; height: 36px; margin-right: 4px;"
+                                     style="width: 36px; height: 36px; margin-right: 4px; object-fit: cover;"
                                      onerror="this.style.display='none'">
                            
                         @endif
