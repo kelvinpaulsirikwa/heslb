@@ -36,9 +36,9 @@ public function boot(): void
     // This fixes the security issue where credentials are transmitted over HTTP
     // CRITICAL: This prevents credentials from being sent in cleartext in production
     // Allow HTTP in local environment for development
-    if (!app()->environment('local')) {
-        URL::forceScheme('https');
-    }
+    // if (!app()->environment('local')) {
+    //     URL::forceScheme('https');
+    // }
     
     App::setLocale(Session::get('locale', config('app.locale')));
     

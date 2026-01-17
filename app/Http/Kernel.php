@@ -16,13 +16,16 @@ class Kernel extends HttpKernel
     protected $middleware = [
         // \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class, // Trust reverse proxies 
-        \App\Http\Middleware\ForceHttps::class, // Force HTTPS redirects
         \Illuminate\Http\Middleware\HandleCors::class,
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \App\Http\Middleware\SecurityHeaders::class, // Security headers
+
+        // addition middleware
+        \App\Http\Middleware\SecurityHeaders::class, 
+        \App\Http\Middleware\ForceHttps::class, // Force HTTPS redirects
+
     ];
 
     /**
@@ -40,8 +43,10 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\SetLocale::class, 
             \App\Http\Middleware\LogUniqueVisits::class,
-            \App\Http\Middleware\EnforcePasswordChange::class,
+
+            // addition middleware
             \App\Http\Middleware\SecureCookies::class, // Ensure all cookies have Secure flag
+            \App\Http\Middleware\EnforcePasswordChange::class,
 
 
 
