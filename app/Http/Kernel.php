@@ -22,9 +22,9 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
 
-        // // addition middleware
-        // \App\Http\Middleware\SecurityHeaders::class, 
-        // \App\Http\Middleware\ForceHttps::class, // Force HTTPS redirects
+        // addition middleware
+        \App\Http\Middleware\SecurityHeaders::class, 
+        \App\Http\Middleware\ForceHttps::class, // Force HTTPS redirects
 
     ];
 
@@ -44,9 +44,9 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\SetLocale::class, 
             \App\Http\Middleware\LogUniqueVisits::class,
 
-            // // addition middleware
-            // \App\Http\Middleware\SecureCookies::class, // Ensure all cookies have Secure flag
-            // \App\Http\Middleware\EnforcePasswordChange::class,
+            // addition middleware
+            \App\Http\Middleware\SecureCookies::class, // Ensure all cookies have Secure flag
+            \App\Http\Middleware\EnforcePasswordChange::class,
 
 
 
