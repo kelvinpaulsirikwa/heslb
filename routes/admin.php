@@ -37,9 +37,20 @@ Route::middleware('auth')->group(function () {
 });
 
 //login and logout ones
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.form')->middleware(['guest', 'cache.headers:private,no-store,must-revalidate', 'prevent.back.button']);
-Route::post('/login', [AuthController::class, 'login'])->name('login.submit')->middleware(['guest', 'cache.headers:private,no-store,must-revalidate', 'prevent.back.button', 'login.attempt.limiter']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware(['web'])->group(function () {
+
+    Route::get('/login', [AuthController::class, 'showLoginForm'])
+        ->name('login.form')
+        ->middleware(['guest', 'cache.headers:private,no-store,must-revalidate', 'prevent.back.button']);
+
+    Route::post('/login', [AuthController::class, 'login'])
+        ->name('login.submit')
+        ->middleware(['guest', 'cache.headers:private,no-store,must-revalidate', 'prevent.back.button', 'login.attempt.limiter']);
+
+    Route::post('/logout', [AuthController::class, 'logout'])
+        ->name('logout');
+});
+
 
 //Admin pages
 Route::middleware(['auth','prevent.blocked.actions', 'check.user.status'])->group(function () {
