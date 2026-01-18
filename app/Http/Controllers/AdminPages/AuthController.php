@@ -132,7 +132,7 @@ class AuthController extends Controller
         }
 
         auth()->login($user);
-        $request->session()->regenerate();
+        // $request->session()->regenerate();
 
         Log::info('Login successful', ['user_id' => $user->id, 'email' => $user->email]);
 
@@ -194,9 +194,8 @@ class AuthController extends Controller
 
         Auth::logout();
 
-        // Don't invalidate session on logout - it breaks the session
-        // $request->session()->invalidate();
-        // $request->session()->regenerateToken();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         // Audit log for logout - pass user_id explicitly since user is already logged out
         if ($userId) {
