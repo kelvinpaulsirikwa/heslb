@@ -194,8 +194,9 @@ class AuthController extends Controller
 
         Auth::logout();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        // Don't invalidate session on logout - it breaks the session
+        // $request->session()->invalidate();
+        // $request->session()->regenerateToken();
 
         // Audit log for logout - pass user_id explicitly since user is already logged out
         if ($userId) {
