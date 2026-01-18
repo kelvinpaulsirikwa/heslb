@@ -45,7 +45,7 @@ Route::middleware(['web'])->group(function () {
 
     Route::post('/login', [AuthController::class, 'login'])
         ->name('login.submit')
-        ->middleware(['guest', 'cache.headers:private,no-store,must-revalidate', 'prevent.back.button', 'login.attempt.limiter']);
+        ->middleware(['cache.headers:private,no-store,must-revalidate', 'prevent.back.button', 'login.attempt.limiter']);
 
     Route::post('/logout', [AuthController::class, 'logout'])
         ->name('logout');
