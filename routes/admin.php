@@ -24,6 +24,8 @@ use App\Http\Controllers\AdminPages\ExecutiveDirectorAdminController;
 use App\Http\Controllers\AdminPages\PublicationAdminController;
 use App\Http\Controllers\AdminPages\ScholarshipAdminController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 
 // ------------------------------
