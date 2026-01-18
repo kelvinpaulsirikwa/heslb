@@ -132,28 +132,39 @@ class SessionDebugMiddleware
             $cookieDomain = $sessionConfig['domain'];
             $requestHost = request()->getHost();
             
-            // If request is to www subdomain but domain is base domain without www,
-            // we need to use a domain that works for subdomains
+            // CRITICAL FIX: If request is to www subdomain but domain is base domain,
+            // we MUST use leading dot to make cookie work for subdomains
             // Example: request to www.heslb.go.tz but domain is heslb.go.tz
             // Solution: Use .heslb.go.tz (leading dot) to work for all subdomains
-            if (!empty($cookieDomain) && strpos($requestHost, $cookieDomain) === false) {
+            
+            // Check if request host is different from cookie domain
+            if ($requestHost !== $cookieDomain) {
                 // Check if request is to a subdomain of the configured domain
-                // e.g., www.heslb.go.tz vs heslb.go.tz
-                if (str_ends_with($requestHost, '.' . $cookieDomain)) {
+                // e.g., www.heslb.go.tz ends with .heslb.go.tz
+                if (!empty($cookieDomain) && str_ends_with($requestHost, '.' . $cookieDomain)) {
                     // Request is to a subdomain - use leading dot for cookie domain
                     $cookieDomain = '.' . $cookieDomain;
                     Log::channel('daily')->info('=== FIXING DOMAIN FOR SUBDOMAIN ===', [
                         'original_domain' => $sessionConfig['domain'],
                         'new_domain' => $cookieDomain,
                         'request_host' => $requestHost,
+                        'reason' => 'Request to subdomain requires leading dot',
                     ]);
-                } else {
-                    // Domain mismatch - use null to let browser handle it (exact host match)
+                } elseif (!empty($cookieDomain) && strpos($requestHost, $cookieDomain) === false) {
+                    // Domain doesn't match at all - use null to let browser handle it (exact host match)
                     Log::channel('daily')->warning('=== DOMAIN MISMATCH: USING NULL DOMAIN ===', [
                         'cookie_domain' => $cookieDomain,
                         'request_host' => $requestHost,
                     ]);
                     $cookieDomain = null;
+                } elseif (strpos($requestHost, 'www.') === 0 && !empty($cookieDomain)) {
+                    // Request is to www but domain is base - add leading dot
+                    $cookieDomain = '.' . $cookieDomain;
+                    Log::channel('daily')->info('=== FIXING DOMAIN: ADDING LEADING DOT FOR WWW ===', [
+                        'original_domain' => $sessionConfig['domain'],
+                        'new_domain' => $cookieDomain,
+                        'request_host' => $requestHost,
+                    ]);
                 }
             } elseif (empty($cookieDomain) && strpos($requestHost, 'www.') === 0) {
                 // No domain configured but request is to www subdomain
