@@ -40,6 +40,11 @@ public function boot(): void
     //     URL::forceScheme('https');
     // }
     
+    // Log session configuration on boot (only in production for debugging)
+    if (app()->environment('production')) {
+        $this->logSessionBootConfig();
+    }
+    
     App::setLocale(Session::get('locale', config('app.locale')));
     
     // Set custom pagination view
@@ -63,6 +68,42 @@ public function boot(): void
         return "<?php echo config('links.contact.' . {$type}); ?>";
     });
 
+}
+
+/**
+ * Log session configuration on application boot
+ */
+private function logSessionBootConfig(): void
+{
+    try {
+        \Illuminate\Support\Facades\Log::channel('daily')->info('=== APPLICATION BOOT: SESSION CONFIG ===', [
+            'session_driver' => config('session.driver'),
+            'session_cookie_name' => config('session.cookie'),
+            'session_domain' => config('session.domain'),
+            'session_secure' => config('session.secure'),
+            'session_http_only' => config('session.http_only'),
+            'session_same_site' => config('session.same_site'),
+            'session_path' => config('session.path'),
+            'session_lifetime' => config('session.lifetime'),
+            'session_files_path' => config('session.files'),
+            'env_vars' => [
+                'APP_ENV' => env('APP_ENV'),
+                'APP_DEBUG' => env('APP_DEBUG'),
+                'APP_URL' => env('APP_URL'),
+                'SESSION_DRIVER' => env('SESSION_DRIVER'),
+                'SESSION_DOMAIN' => env('SESSION_DOMAIN'),
+                'SESSION_SECURE_COOKIE' => env('SESSION_SECURE_COOKIE'),
+                'SESSION_LIFETIME' => env('SESSION_LIFETIME'),
+            ],
+            'php_session_status' => session_status(),
+            'php_session_save_path' => session_save_path(),
+            'php_session_name' => session_name(),
+        ]);
+    } catch (\Exception $e) {
+        \Illuminate\Support\Facades\Log::channel('daily')->error('Error logging session boot config', [
+            'error' => $e->getMessage(),
+        ]);
+    }
 }
 
 }

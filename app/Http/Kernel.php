@@ -46,6 +46,7 @@ class Kernel extends HttpKernel
 
             // addition middleware
             \App\Http\Middleware\SecureCookies::class, // Ensure all cookies have Secure flag
+            \App\Http\Middleware\SessionDebugMiddleware::class, // Debug session and cookies
             \App\Http\Middleware\EnforcePasswordChange::class,
 
 
