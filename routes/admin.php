@@ -24,8 +24,6 @@ use App\Http\Controllers\AdminPages\ExecutiveDirectorAdminController;
 use App\Http\Controllers\AdminPages\PublicationAdminController;
 use App\Http\Controllers\AdminPages\ScholarshipAdminController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 
 // ------------------------------
@@ -47,7 +45,7 @@ Route::middleware(['web'])->group(function () {
 
     Route::post('/login', [AuthController::class, 'login'])
         ->name('login.submit')
-        ->middleware(['cache.headers:private,no-store,must-revalidate', 'prevent.back.button', 'login.attempt.limiter']);
+        ->middleware(['guest', 'cache.headers:private,no-store,must-revalidate', 'prevent.back.button', 'login.attempt.limiter']);
 
     Route::post('/logout', [AuthController::class, 'logout'])
         ->name('logout');

@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Services\AuditLogService;
-use App\Services\CustomCookieManager;
-use App\Helpers\CookieHelper;
 
 class AuthController extends Controller
 {
@@ -58,10 +56,6 @@ class AuthController extends Controller
         $userAgent = $request->userAgent();
         
         Log::info('Login attempt received', ['email' => $email, 'ip' => $ipAddress]);
-        Log::info('Request method: ' . $request->method());
-        Log::info('Session data: ' . json_encode(session()->all()));
-        Log::info('Request headers: ' . json_encode($request->headers->all()));
-        Log::info('Request input: ' . json_encode($request->all()));
 
         $request->validate([
             'email' => 'required|email',
@@ -137,7 +131,6 @@ class AuthController extends Controller
             ]);
         }
 
-        // Use Laravel's default authentication
         auth()->login($user);
         $request->session()->regenerate();
 
@@ -152,22 +145,11 @@ class AuthController extends Controller
             ['email' => $user->email, 'ip_address' => $ipAddress]
         );
 
-        // Set success message using Laravel session
-        session()->flash('success', 'Login successful!');
-
-        Log::info('About to redirect', [
-            'user_id' => $user->id,
-            'must_change_password' => $user->must_change_password,
-            'redirect_to' => $user->must_change_password ? 'password.change' : 'dashboard'
-        ]);
-
         // Enforce password change if required
         if ($user->must_change_password) {
-            Log::info('Redirecting to password change', ['user_id' => $user->id]);
-            return redirect()->route('password.change');
+            return redirect()->route('password.change')->with('warning', 'You must change your password before continuing.');
         }
 
-        Log::info('Redirecting to dashboard', ['user_id' => $user->id]);
         return redirect()->route('dashboard');
     }
 
@@ -210,10 +192,10 @@ class AuthController extends Controller
         $userId = $user ? $user->id : null;
         $userEmail = $user ? $user->email : null;
 
-        // Clear custom cookies
-        CookieHelper::logout();
-
         Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         // Audit log for logout - pass user_id explicitly since user is already logged out
         if ($userId) {
@@ -230,6 +212,7 @@ class AuthController extends Controller
 
         // Clear any cached data and prevent back button issues
         return redirect()->route('login.form')
+            ->with('message', 'Logged out successfully')
             ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
             ->header('Pragma', 'no-cache')
             ->header('Expires', '0');

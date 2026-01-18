@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Log;
 
 class CheckUserStatus
 {
@@ -22,19 +21,8 @@ class CheckUserStatus
         if (Auth::check()) {
             $user = Auth::user();
             
-            Log::info('CheckUserStatus: User authenticated', [
-                'user_id' => $user->id,
-                'email' => $user->email,
-                'status' => $user->status
-            ]);
-            
             // Check if user is blocked or suspended
             if ($user->status === 'blocked' || $user->status === 'suspended') {
-                Log::warning('CheckUserStatus: User blocked/suspended', [
-                    'user_id' => $user->id,
-                    'email' => $user->email,
-                    'status' => $user->status
-                ]);
                 // Logout the user
                 Auth::logout();
                 

@@ -17,11 +17,7 @@ class DashboardController extends Controller
 {
     public function showdashboard()
     {
-        Log::info('DashboardController: showdashboard called', [
-            'user_authenticated' => Auth::check(),
-            'user_id' => Auth::user() ? Auth::user()->id : null,
-            'user_email' => Auth::user() ? Auth::user()->email : null
-        ]);
+        Log::info('Auth check:', ['user' => Auth::user()]);
 
         if (!Auth::check()) {
             Log::warning('User is not authenticated. Redirecting...');
