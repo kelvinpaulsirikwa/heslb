@@ -152,8 +152,8 @@ class AuthController extends Controller
             ['email' => $user->email, 'ip_address' => $ipAddress]
         );
 
-        // Set success message using custom flash
-        CookieHelper::flash('success', 'Login successful!');
+        // Set success message using Laravel session
+        session()->flash('success', 'Login successful!');
 
         // Enforce password change if required
         if ($user->must_change_password) {
