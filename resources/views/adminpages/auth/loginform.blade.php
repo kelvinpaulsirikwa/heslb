@@ -24,9 +24,9 @@
         @endif
 
         {{-- Custom Flash Messages --}}
-        @if($flash)
-            <div class="alert alert-{{ $flash['type'] }}">
-                {{ $flash['message'] }}
+        @if(isset($flash) && $flash)
+            <div class="alert alert-{{ $flash['type'] ?? 'info' }}">
+                {{ $flash['message'] ?? '' }}
             </div>
         @endif
 
