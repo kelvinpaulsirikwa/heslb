@@ -177,6 +177,20 @@ class SessionDebugMiddleware
                 ]);
             }
             
+            // CRITICAL FIX: Validate and cap session lifetime to prevent overflow
+            $lifetime = (int)$sessionConfig['lifetime'];
+            
+            // Cap lifetime at reasonable maximum (1 year = 525600 minutes)
+            // This prevents cookie expiration date overflow
+            $maxLifetime = 525600; // 1 year in minutes
+            if ($lifetime > $maxLifetime || $lifetime < 1) {
+                Log::channel('daily')->warning('=== INVALID SESSION LIFETIME, CAPPING ===', [
+                    'original_lifetime' => $lifetime,
+                    'capped_lifetime' => $maxLifetime,
+                ]);
+                $lifetime = $maxLifetime;
+            }
+            
             Log::channel('daily')->debug('=== MANUAL COOKIE SET ATTEMPT ===', [
                 'session_id' => $sessionId,
                 'cookie_name' => $sessionConfig['cookie'],
@@ -186,14 +200,15 @@ class SessionDebugMiddleware
                 'cookie_secure' => $sessionConfig['secure'],
                 'cookie_http_only' => $sessionConfig['http_only'],
                 'cookie_same_site' => $sessionConfig['same_site'],
-                'session_lifetime' => $sessionConfig['lifetime'],
+                'session_lifetime' => $lifetime,
+                'original_lifetime_config' => $sessionConfig['lifetime'],
             ]);
             
             // Create cookie manually using Laravel's cookie helper
             $cookie = cookie(
                 $sessionConfig['cookie'],
                 $sessionId,
-                $sessionConfig['lifetime'], // minutes
+                $lifetime, // minutes (validated and capped)
                 $sessionConfig['path'],
                 $cookieDomain,
                 $sessionConfig['secure'],
@@ -220,6 +235,12 @@ class SessionDebugMiddleware
                 // Log the actual cookie that was set
                 foreach ($cookiesAfter as $setCookie) {
                     if ($setCookie->getName() === $sessionConfig['cookie']) {
+                        $expiresTime = $setCookie->getExpiresTime();
+                        $expiresDate = $expiresTime ? date('Y-m-d H:i:s', $expiresTime) : 'session';
+                        $expiresTimestamp = $expiresTime ?? 0;
+                        $now = time();
+                        $daysUntilExpiry = $expiresTime ? round(($expiresTime - $now) / 86400, 2) : 'session';
+                        
                         Log::channel('daily')->info('=== MANUAL COOKIE DETAILS ===', [
                             'name' => $setCookie->getName(),
                             'domain' => $setCookie->getDomain(),
@@ -227,8 +248,20 @@ class SessionDebugMiddleware
                             'secure' => $setCookie->isSecure(),
                             'http_only' => $setCookie->isHttpOnly(),
                             'same_site' => $setCookie->getSameSite(),
-                            'expires' => $setCookie->getExpiresTime() ? date('Y-m-d H:i:s', $setCookie->getExpiresTime()) : 'session',
+                            'expires_timestamp' => $expiresTimestamp,
+                            'expires_date' => $expiresDate,
+                            'days_until_expiry' => $daysUntilExpiry,
+                            'cookie_string' => $setCookie->__toString(),
                         ]);
+                        
+                        // Check if expiration is reasonable (not in the far future)
+                        if ($expiresTime && $expiresTime > ($now + (365 * 24 * 60 * 60))) {
+                            Log::channel('daily')->warning('=== COOKIE EXPIRATION TOO FAR IN FUTURE ===', [
+                                'expires_date' => $expiresDate,
+                                'days_until_expiry' => $daysUntilExpiry,
+                                'warning' => 'Browsers may reject cookies with expiration > 1 year',
+                            ]);
+                        }
                         break;
                     }
                 }

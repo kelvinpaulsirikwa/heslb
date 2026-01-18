@@ -31,7 +31,7 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 1440), // 24 hours (1440 minutes)
+    'lifetime' => min((int)env('SESSION_LIFETIME', 1440), 525600), // Max 1 year, default 24 hours (1440 minutes)
 
     'expire_on_close' => false,
 
