@@ -16,7 +16,9 @@ class Authenticate extends Middleware
         Log::info('Authenticate: User not authenticated, redirecting to login', [
             'path' => $request->path(),
             'session_id' => session()->getId(),
-            'auth_check' => auth()->check()
+            'auth_check' => auth()->check(),
+            'session_data' => session()->all(),
+            'cookies' => $request->cookie()
         ]);
         
         return $request->expectsJson() ? null : route('login.form');
