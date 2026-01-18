@@ -43,12 +43,10 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\SetLocale::class, 
             \App\Http\Middleware\LogUniqueVisits::class,
-
-            // addition middleware
-            \App\Http\Middleware\SecureCookies::class, // Ensure all cookies have Secure flag
             \App\Http\Middleware\EnforcePasswordChange::class,
 
-
+            // SecureCookies temporarily disabled for debugging
+            // \App\Http\Middleware\SecureCookies::class,
 
         ],
 
