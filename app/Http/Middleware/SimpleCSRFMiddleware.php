@@ -31,10 +31,10 @@ class SimpleCSRFMiddleware
             'method' => $request->method(),
             'submitted_token' => $token,
             'session_token' => $sessionToken,
-            'tokens_match' => hash_equals($sessionToken, $token)
+            'tokens_match' => hash_equals((string)$sessionToken, (string)$token)
         ]);
 
-        if (!$token || !hash_equals($sessionToken, $token)) {
+        if (!$token || !hash_equals((string)$sessionToken, (string)$token)) {
             Log::warning('CSRF token mismatch', [
                 'submitted' => $token,
                 'session' => $sessionToken
