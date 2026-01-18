@@ -137,8 +137,20 @@ class SessionDebugMiddleware
             // Example: request to www.heslb.go.tz but domain is heslb.go.tz
             // Solution: Use .heslb.go.tz (leading dot) to work for all subdomains
             
-            // Check if request host is different from cookie domain
-            if ($requestHost !== $cookieDomain) {
+            // CRITICAL FIX: Browsers reject cookies when domain exactly matches hostname
+            // If domain is exactly the hostname (e.g., www.heslb.go.tz), browsers reject it
+            // Solution: Use null domain (browser uses exact host) OR use leading dot for subdomain support
+            
+            if ($requestHost === $cookieDomain) {
+                // Domain exactly matches hostname - browsers reject this!
+                // Use null to let browser handle it (exact host match, no subdomain support)
+                Log::channel('daily')->warning('=== DOMAIN MATCHES HOSTNAME: USING NULL (BROWSER REJECTS EXACT MATCH) ===', [
+                    'cookie_domain' => $cookieDomain,
+                    'request_host' => $requestHost,
+                    'reason' => 'Browsers reject cookies when domain exactly matches hostname',
+                ]);
+                $cookieDomain = null;
+            } elseif ($requestHost !== $cookieDomain) {
                 // Check if request is to a subdomain of the configured domain
                 // e.g., www.heslb.go.tz ends with .heslb.go.tz
                 if (!empty($cookieDomain) && str_ends_with($requestHost, '.' . $cookieDomain)) {
