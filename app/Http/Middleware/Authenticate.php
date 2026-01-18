@@ -11,7 +11,7 @@ class Authenticate extends Middleware
     /**
      * Get the path the user should be redirected to when they are not authenticated.
      */
-    protected function redirectTo(Request $request): ?string
+    protected function redirectTo($request)
     {
         Log::info('Authenticate: User not authenticated, redirecting to login', [
             'path' => $request->path(),
