@@ -23,6 +23,13 @@
             </div>
         @endif
 
+        {{-- Custom Flash Messages --}}
+        @if($flash)
+            <div class="alert alert-{{ $flash['type'] }}">
+                {{ $flash['message'] }}
+            </div>
+        @endif
+
         {{-- Lockout Message --}}
         @if($isLockedOut)
             <div class="alert alert-danger" style="background-color: #dc3545; color: white; border: 2px solid #c82333;">

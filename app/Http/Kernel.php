@@ -36,8 +36,8 @@ class Kernel extends HttpKernel
     protected $middlewareGroups = [
         'web' => [
             // Custom Cookie Management System
-            \App\Http\Middleware\CustomAuthMiddleware::class,
             \App\Http\Middleware\CustomCSRFMiddleware::class,
+            \App\Http\Middleware\CustomAuthMiddleware::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\SetLocale::class, 
             \App\Http\Middleware\LogUniqueVisits::class,
