@@ -155,11 +155,19 @@ class AuthController extends Controller
         // Set success message using Laravel session
         session()->flash('success', 'Login successful!');
 
+        Log::info('About to redirect', [
+            'user_id' => $user->id,
+            'must_change_password' => $user->must_change_password,
+            'redirect_to' => $user->must_change_password ? 'password.change' : 'dashboard'
+        ]);
+
         // Enforce password change if required
         if ($user->must_change_password) {
+            Log::info('Redirecting to password change', ['user_id' => $user->id]);
             return redirect()->route('password.change');
         }
 
+        Log::info('Redirecting to dashboard', ['user_id' => $user->id]);
         return redirect()->route('dashboard');
     }
 
