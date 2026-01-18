@@ -182,7 +182,7 @@ class SessionDebugMiddleware
                 // No domain configured but request is to www subdomain
                 // Extract base domain and use leading dot
                 $baseDomain = substr($requestHost, 4); // Remove 'www.'
-                $cookieDomain = '.' . $baseDomain;
+                $cookieDomain = $baseDomain;
                 Log::channel('daily')->info('=== SETTING DOMAIN FOR WWW SUBDOMAIN ===', [
                     'request_host' => $requestHost,
                     'cookie_domain' => $cookieDomain,
