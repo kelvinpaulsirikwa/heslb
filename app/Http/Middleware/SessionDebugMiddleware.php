@@ -29,13 +29,146 @@ class SessionDebugMiddleware
         // Process request
         $response = $next($request);
         
+        // CRITICAL: Check cookies BEFORE and AFTER session save
+        $this->logCookiesBeforeSessionSave($response);
+        
+        // Force session save and check again
+        try {
+            if (Session::isStarted()) {
+                Session::save();
+                Log::channel('daily')->debug('=== SESSION SAVE CALLED ===');
+            }
+        } catch (\Exception $e) {
+            Log::channel('daily')->error('Error saving session', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+        }
+        
         // Log response cookies
         $this->logResponseCookies($response);
         
         // Log session status after request
         $this->logSessionStatus();
         
+        // Check if cookie was added after session save
+        $this->logCookiesAfterSessionSave($response);
+        
         return $response;
+    }
+    
+    private function logCookiesBeforeSessionSave(Response $response): void
+    {
+        $cookies = $response->headers->getCookies();
+        $sessionCookieName = config('session.cookie');
+        
+        Log::channel('daily')->debug('=== COOKIES BEFORE SESSION SAVE ===', [
+            'total_cookies' => count($cookies),
+            'session_cookie_name' => $sessionCookieName,
+            'has_session_cookie' => $this->hasCookie($cookies, $sessionCookieName),
+        ]);
+    }
+    
+    private function logCookiesAfterSessionSave(Response $response): void
+    {
+        $cookies = $response->headers->getCookies();
+        $sessionCookieName = config('session.cookie');
+        
+        Log::channel('daily')->debug('=== COOKIES AFTER SESSION SAVE ===', [
+            'total_cookies' => count($cookies),
+            'session_cookie_name' => $sessionCookieName,
+            'has_session_cookie' => $this->hasCookie($cookies, $sessionCookieName),
+        ]);
+        
+        // If still no cookie, try to manually add it
+        if (!$this->hasCookie($cookies, $sessionCookieName) && Session::isStarted()) {
+            Log::channel('daily')->warning('=== ATTEMPTING TO MANUALLY SET SESSION COOKIE ===');
+            $this->attemptManualCookieSet($response);
+        }
+    }
+    
+    private function hasCookie(array $cookies, string $name): bool
+    {
+        foreach ($cookies as $cookie) {
+            if ($cookie->getName() === $name) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private function attemptManualCookieSet(Response $response): void
+    {
+        try {
+            $sessionConfig = config('session');
+            $sessionId = Session::getId();
+            
+            // Get the domain - use configured domain or derive from request
+            $cookieDomain = $sessionConfig['domain'];
+            
+            // If domain has leading dot and might cause issues, try without it
+            // But first try with the configured domain
+            Log::channel('daily')->debug('=== MANUAL COOKIE SET ATTEMPT ===', [
+                'session_id' => $sessionId,
+                'cookie_name' => $sessionConfig['cookie'],
+                'cookie_domain' => $cookieDomain,
+                'cookie_path' => $sessionConfig['path'],
+                'cookie_secure' => $sessionConfig['secure'],
+                'cookie_http_only' => $sessionConfig['http_only'],
+                'cookie_same_site' => $sessionConfig['same_site'],
+                'session_lifetime' => $sessionConfig['lifetime'],
+            ]);
+            
+            // Create cookie manually using Laravel's cookie helper
+            $cookie = cookie(
+                $sessionConfig['cookie'],
+                $sessionId,
+                $sessionConfig['lifetime'], // minutes
+                $sessionConfig['path'],
+                $cookieDomain,
+                $sessionConfig['secure'],
+                $sessionConfig['http_only'],
+                false, // raw
+                $sessionConfig['same_site']
+            );
+            
+            // Set the cookie in response headers
+            $response->headers->setCookie($cookie);
+            
+            // Verify it was set
+            $cookiesAfter = $response->headers->getCookies();
+            $wasSet = $this->hasCookie($cookiesAfter, $sessionConfig['cookie']);
+            
+            Log::channel('daily')->info('=== MANUAL COOKIE SET ' . ($wasSet ? 'SUCCESS' : 'FAILED') . ' ===', [
+                'cookie_name' => $sessionConfig['cookie'],
+                'cookie_domain' => $cookieDomain,
+                'cookie_was_set' => $wasSet,
+                'total_cookies_after' => count($cookiesAfter),
+            ]);
+            
+            if ($wasSet) {
+                // Log the actual cookie that was set
+                foreach ($cookiesAfter as $setCookie) {
+                    if ($setCookie->getName() === $sessionConfig['cookie']) {
+                        Log::channel('daily')->info('=== MANUAL COOKIE DETAILS ===', [
+                            'name' => $setCookie->getName(),
+                            'domain' => $setCookie->getDomain(),
+                            'path' => $setCookie->getPath(),
+                            'secure' => $setCookie->isSecure(),
+                            'http_only' => $setCookie->isHttpOnly(),
+                            'same_site' => $setCookie->getSameSite(),
+                            'expires' => $setCookie->getExpiresTime() ? date('Y-m-d H:i:s', $setCookie->getExpiresTime()) : 'session',
+                        ]);
+                        break;
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            Log::channel('daily')->error('Error manually setting cookie', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+        }
     }
     
     private function logSessionConfig(): void
