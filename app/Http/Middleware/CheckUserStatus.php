@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 
 class CheckUserStatus
 {
@@ -18,8 +19,20 @@ class CheckUserStatus
      */
     public function handle(Request $request, Closure $next)
     {
+        Log::info('CheckUserStatus: Starting', [
+            'path' => $request->path(),
+            'auth_check' => Auth::check(),
+            'user_id' => Auth::user() ? Auth::user()->id : null
+        ]);
+
         if (Auth::check()) {
             $user = Auth::user();
+            
+            Log::info('CheckUserStatus: User found', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'status' => $user->status
+            ]);
             
             // Check if user is blocked or suspended
             if ($user->status === 'blocked' || $user->status === 'suspended') {
