@@ -2,27 +2,24 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
+use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
 
-class VerifyCsrfToken extends Middleware
+class SimpleCSRFMiddleware
 {
-    /**
-     * The URIs that should be excluded from CSRF verification.
-     *
-     * @var array<int, string>
-     */
-    protected $except = [
-        //
-    ];
-
     /**
      * Handle an incoming request.
      */
-    public function handle($request, \Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
         // Skip CSRF validation for safe HTTP methods
         if (in_array($request->method(), ['GET', 'HEAD', 'OPTIONS'])) {
+            // Generate token only if it doesn't exist
+            if (!session('_token')) {
+                session(['_token' => csrf_token()]);
+            }
             return $next($request);
         }
 
@@ -30,7 +27,8 @@ class VerifyCsrfToken extends Middleware
         $token = $request->input('_token') ?? $request->header('X-CSRF-TOKEN');
         $sessionToken = session('_token');
 
-        Log::info('CSRF Validation', [
+        Log::info('Simple CSRF Validation', [
+            'method' => $request->method(),
             'submitted_token' => $token,
             'session_token' => $sessionToken,
             'tokens_match' => hash_equals($sessionToken, $token)
@@ -45,20 +43,12 @@ class VerifyCsrfToken extends Middleware
             if ($request->expectsJson()) {
                 return response()->json([
                     'message' => 'CSRF token mismatch',
-                    'error' => 'CSRF_TOKEN_INVALID',
-                    'debug' => [
-                        'submitted' => $token,
-                        'session' => $sessionToken
-                    ]
+                    'error' => 'CSRF_TOKEN_INVALID'
                 ], 419);
             }
 
             return response()->view('errors.csrf', [
-                'message' => 'CSRF token mismatch',
-                'debug' => [
-                    'submitted' => $token,
-                    'session' => $sessionToken
-                ]
+                'message' => 'CSRF token mismatch'
             ], 419);
         }
 

@@ -35,21 +35,17 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
-            // Legacy middleware (temporarily restored to fix 500 error)
+            // Simple CSRF Middleware to prevent token mismatches
+            \App\Http\Middleware\SimpleCSRFMiddleware::class,
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\SetLocale::class, 
             \App\Http\Middleware\LogUniqueVisits::class,
             \App\Http\Middleware\EnforcePasswordChange::class,
             \App\Http\Middleware\SecureCookies::class,
-
-            // Custom Cookie Management System (temporarily disabled)
-            // \App\Http\Middleware\CustomCSRFMiddleware::class,
-            // \App\Http\Middleware\CustomAuthMiddleware::class,
 
         ],
 
