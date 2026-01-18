@@ -33,10 +33,19 @@ class SessionDebugMiddleware
         $this->logCookiesBeforeSessionSave($response);
         
         // Force session save and check again
+        // Note: Session might be closed by this point, but we can still get the ID
         try {
+            $sessionId = Session::getId();
             if (Session::isStarted()) {
                 Session::save();
-                Log::channel('daily')->debug('=== SESSION SAVE CALLED ===');
+                Log::channel('daily')->debug('=== SESSION SAVE CALLED ===', [
+                    'session_id' => $sessionId,
+                ]);
+            } else {
+                Log::channel('daily')->debug('=== SESSION NOT STARTED (may be closed) ===', [
+                    'session_id' => $sessionId,
+                    'has_session_id' => !empty($sessionId),
+                ]);
             }
         } catch (\Exception $e) {
             Log::channel('daily')->error('Error saving session', [
@@ -81,9 +90,20 @@ class SessionDebugMiddleware
         ]);
         
         // If still no cookie, try to manually add it
-        if (!$this->hasCookie($cookies, $sessionCookieName) && Session::isStarted()) {
-            Log::channel('daily')->warning('=== ATTEMPTING TO MANUALLY SET SESSION COOKIE ===');
+        // Check if we have a session ID (even if session is closed, we can still set the cookie)
+        $sessionId = Session::getId();
+        if (!$this->hasCookie($cookies, $sessionCookieName) && !empty($sessionId)) {
+            Log::channel('daily')->warning('=== ATTEMPTING TO MANUALLY SET SESSION COOKIE ===', [
+                'session_id' => $sessionId,
+                'session_started' => Session::isStarted(),
+                'has_session_id' => !empty($sessionId),
+            ]);
             $this->attemptManualCookieSet($response);
+        } elseif (!$this->hasCookie($cookies, $sessionCookieName)) {
+            Log::channel('daily')->error('=== CANNOT SET SESSION COOKIE: NO SESSION ID ===', [
+                'session_id' => $sessionId,
+                'session_started' => Session::isStarted(),
+            ]);
         }
     }
     
@@ -103,15 +123,54 @@ class SessionDebugMiddleware
             $sessionConfig = config('session');
             $sessionId = Session::getId();
             
-            // Get the domain - use configured domain or derive from request
-            $cookieDomain = $sessionConfig['domain'];
+            if (empty($sessionId)) {
+                Log::channel('daily')->error('=== CANNOT SET COOKIE: EMPTY SESSION ID ===');
+                return;
+            }
             
-            // If domain has leading dot and might cause issues, try without it
-            // But first try with the configured domain
+            // Get the domain - handle www subdomain issue
+            $cookieDomain = $sessionConfig['domain'];
+            $requestHost = request()->getHost();
+            
+            // If request is to www subdomain but domain is base domain without www,
+            // we need to use a domain that works for subdomains
+            // Example: request to www.heslb.go.tz but domain is heslb.go.tz
+            // Solution: Use .heslb.go.tz (leading dot) to work for all subdomains
+            if (!empty($cookieDomain) && strpos($requestHost, $cookieDomain) === false) {
+                // Check if request is to a subdomain of the configured domain
+                // e.g., www.heslb.go.tz vs heslb.go.tz
+                if (str_ends_with($requestHost, '.' . $cookieDomain)) {
+                    // Request is to a subdomain - use leading dot for cookie domain
+                    $cookieDomain = '.' . $cookieDomain;
+                    Log::channel('daily')->info('=== FIXING DOMAIN FOR SUBDOMAIN ===', [
+                        'original_domain' => $sessionConfig['domain'],
+                        'new_domain' => $cookieDomain,
+                        'request_host' => $requestHost,
+                    ]);
+                } else {
+                    // Domain mismatch - use null to let browser handle it (exact host match)
+                    Log::channel('daily')->warning('=== DOMAIN MISMATCH: USING NULL DOMAIN ===', [
+                        'cookie_domain' => $cookieDomain,
+                        'request_host' => $requestHost,
+                    ]);
+                    $cookieDomain = null;
+                }
+            } elseif (empty($cookieDomain) && strpos($requestHost, 'www.') === 0) {
+                // No domain configured but request is to www subdomain
+                // Extract base domain and use leading dot
+                $baseDomain = substr($requestHost, 4); // Remove 'www.'
+                $cookieDomain = '.' . $baseDomain;
+                Log::channel('daily')->info('=== SETTING DOMAIN FOR WWW SUBDOMAIN ===', [
+                    'request_host' => $requestHost,
+                    'cookie_domain' => $cookieDomain,
+                ]);
+            }
+            
             Log::channel('daily')->debug('=== MANUAL COOKIE SET ATTEMPT ===', [
                 'session_id' => $sessionId,
                 'cookie_name' => $sessionConfig['cookie'],
-                'cookie_domain' => $cookieDomain,
+                'cookie_domain' => $cookieDomain ?? '(null - will use request host)',
+                'request_host' => $requestHost,
                 'cookie_path' => $sessionConfig['path'],
                 'cookie_secure' => $sessionConfig['secure'],
                 'cookie_http_only' => $sessionConfig['http_only'],
