@@ -45,7 +45,7 @@ Route::middleware(['web'])->group(function () {
 
     Route::post('/login', [AuthController::class, 'login'])
         ->name('login.submit')
-        ->middleware(['cache.headers:private,no-store,must-revalidate', 'prevent.back.button']);
+        ->middleware(['guest', 'cache.headers:private,no-store,must-revalidate', 'prevent.back.button', 'login.attempt.limiter']);
 
     Route::post('/logout', [AuthController::class, 'logout'])
         ->name('logout');
@@ -53,7 +53,7 @@ Route::middleware(['web'])->group(function () {
 
 
 //Admin pages
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','prevent.blocked.actions', 'check.user.status'])->group(function () {
     
     //Dashboard - accessible to all authenticated users
     Route::get('/dashboard', [DashboardController::class, 'showdashboard'])

@@ -35,9 +35,6 @@
         {{-- Login Form --}}
         <form method="POST" action="{{ route('login.submit') }}">
             @csrf
-            {{-- Debug CSRF Token --}}
-            <input type="hidden" name="debug_csrf_token" value="{{ csrf_token() }}">
-            <input type="hidden" name="debug_session_id" value="{{ session()->getId() }}">
 
             <div class="form-group">
                 <label for="email" class="form-label">Email Address</label>
