@@ -131,8 +131,26 @@ class AuthController extends Controller
             ]);
         }
 
+        Log::info('Before login', [
+            'session_id' => session()->getId(),
+            'auth_check' => auth()->check()
+        ]);
+
         auth()->login($user);
+        
+        Log::info('After login, before regenerate', [
+            'session_id' => session()->getId(),
+            'auth_check' => auth()->check(),
+            'user_id' => auth()->user() ? auth()->user()->id : null
+        ]);
+
         $request->session()->regenerate();
+        
+        Log::info('After regenerate', [
+            'session_id' => session()->getId(),
+            'auth_check' => auth()->check(),
+            'user_id' => auth()->user() ? auth()->user()->id : null
+        ]);
 
         Log::info('Login successful', ['user_id' => $user->id, 'email' => $user->email]);
 
