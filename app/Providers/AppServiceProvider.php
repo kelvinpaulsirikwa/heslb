@@ -8,10 +8,9 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\Paginator;
 use App\Services\LinkService;
-use App\Services\CustomCookieManager;
-use App\Helpers\CookieHelper;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,10 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register CustomCookieManager as singleton
-        $this->app->singleton(CustomCookieManager::class, function ($app) {
-            return new CustomCookieManager();
-        });
+        //
     }
 
     /**
@@ -68,26 +64,18 @@ public function boot(): void
         return "<?php echo config('links.contact.' . {$type}); ?>";
     });
     
-    // Custom Cookie Management System Blade Directives
-    Blade::directive('csrf', function () {
-        return '<?php echo \App\Helpers\CookieHelper::csrfToken(); ?>';
-    });
-
-    Blade::if('authcookie', function () {
-        return CookieHelper::check();
-    });
-
-    // Share flash messages with all views
+    // Share flash messages with all views (using Laravel sessions)
     view()->composer('*', function ($view) {
-        $flash = CookieHelper::getFlash();
-        if ($flash) {
-            $view->with('flash', $flash);
+        // Using Laravel's default session system
+        if (session()->has('flash')) {
+            $view->with('flash', session('flash'));
+            session()->forget('flash');
         }
     });
 
-    // Share current user with all views
+    // Share current user with all views (using Laravel's Auth)
     view()->composer('*', function ($view) {
-        $view->with('currentUser', CookieHelper::user());
+        $view->with('currentUser', Auth::user());
     });
 
 }
