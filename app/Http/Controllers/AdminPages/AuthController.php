@@ -58,6 +58,10 @@ class AuthController extends Controller
         $userAgent = $request->userAgent();
         
         Log::info('Login attempt received', ['email' => $email, 'ip' => $ipAddress]);
+        Log::info('Request method: ' . $request->method());
+        Log::info('Session data: ' . json_encode(session()->all()));
+        Log::info('Request headers: ' . json_encode($request->headers->all()));
+        Log::info('Request input: ' . json_encode($request->all()));
 
         $request->validate([
             'email' => 'required|email',
