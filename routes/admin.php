@@ -53,7 +53,7 @@ Route::middleware(['web'])->group(function () {
 
 
 //Admin pages
-Route::middleware(['auth','prevent.blocked.actions', 'check.user.status'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     
     //Dashboard - accessible to all authenticated users
     Route::get('/dashboard', [DashboardController::class, 'showdashboard'])
