@@ -138,15 +138,7 @@ class AuthController extends Controller
 
         auth()->login($user);
         
-        Log::info('After login, before regenerate', [
-            'session_id' => session()->getId(),
-            'auth_check' => auth()->check(),
-            'user_id' => auth()->user() ? auth()->user()->id : null
-        ]);
-
-        $request->session()->regenerate();
-        
-        Log::info('After regenerate', [
+        Log::info('After login', [
             'session_id' => session()->getId(),
             'auth_check' => auth()->check(),
             'user_id' => auth()->user() ? auth()->user()->id : null
