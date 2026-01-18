@@ -137,10 +137,9 @@ class AuthController extends Controller
             ]);
         }
 
-        // Use custom cookie authentication
-        $remember = $request->has('remember');
-        $cookieManager = app(CustomCookieManager::class);
-        $cookieManager->setAuthCookie($user, $remember);
+        // Use Laravel's default authentication
+        auth()->login($user);
+        $request->session()->regenerate();
 
         Log::info('Login successful', ['user_id' => $user->id, 'email' => $user->email]);
 
