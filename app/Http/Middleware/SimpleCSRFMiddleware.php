@@ -16,10 +16,6 @@ class SimpleCSRFMiddleware
     {
         // Skip CSRF validation for safe HTTP methods
         if (in_array($request->method(), ['GET', 'HEAD', 'OPTIONS'])) {
-            // Generate token only if it doesn't exist
-            if (!session('_token')) {
-                session(['_token' => csrf_token()]);
-            }
             return $next($request);
         }
 
