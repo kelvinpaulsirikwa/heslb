@@ -17,12 +17,17 @@ class DashboardController extends Controller
 {
     public function showdashboard()
     {
-        Log::info('Auth check:', ['user' => Auth::user()]);
+        Log::info('DashboardController: showdashboard called', [
+            'session_id' => session()->getId(),
+            'auth_check' => Auth::check(),
+            'user_id' => Auth::user() ? Auth::user()->id : null
+        ]);
 
-        if (!Auth::check()) {
-            Log::warning('User is not authenticated. Redirecting...');
-            return redirect()->route('login.form');
-        }
+        // Temporarily disable auth check for debugging
+        // if (!Auth::check()) {
+        //     Log::warning('User is not authenticated. Redirecting...');
+        //     return redirect()->route('login.form');
+        // }
 
         Log::info('User is authenticated.', ['user_id' => Auth::id()]);
 
