@@ -35,20 +35,21 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
-            \App\Http\Middleware\EncryptCookies::class,
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Session\Middleware\StartSession::class,
-            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
+            // Custom Cookie Management System
+            \App\Http\Middleware\CustomAuthMiddleware::class,
+            \App\Http\Middleware\CustomCSRFMiddleware::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\SetLocale::class, 
             \App\Http\Middleware\LogUniqueVisits::class,
-
-            // addition middleware
-            \App\Http\Middleware\SecureCookies::class, // Ensure all cookies have Secure flag
             \App\Http\Middleware\EnforcePasswordChange::class,
 
-
+            // Legacy middleware (commented out - replaced by custom system)
+            // \App\Http\Middleware\EncryptCookies::class,
+            // \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            // \Illuminate\Session\Middleware\StartSession::class,
+            // \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            // \App\Http\Middleware\VerifyCsrfToken::class,
+            // \App\Http\Middleware\SecureCookies::class,
 
         ],
 

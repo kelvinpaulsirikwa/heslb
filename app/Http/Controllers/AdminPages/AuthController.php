@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Services\AuditLogService;
+use App\Services\CustomCookieManager;
+use App\Helpers\CookieHelper;
 
 class AuthController extends Controller
 {
@@ -131,8 +133,10 @@ class AuthController extends Controller
             ]);
         }
 
-        auth()->login($user);
-        $request->session()->regenerate();
+        // Use custom cookie authentication
+        $remember = $request->has('remember');
+        $cookieManager = app(CustomCookieManager::class);
+        $cookieManager->setAuthCookie($user, $remember);
 
         Log::info('Login successful', ['user_id' => $user->id, 'email' => $user->email]);
 
@@ -145,9 +149,12 @@ class AuthController extends Controller
             ['email' => $user->email, 'ip_address' => $ipAddress]
         );
 
+        // Set success message using custom flash
+        CookieHelper::flash('success', 'Login successful!');
+
         // Enforce password change if required
         if ($user->must_change_password) {
-            return redirect()->route('password.change')->with('warning', 'You must change your password before continuing.');
+            return redirect()->route('password.change');
         }
 
         return redirect()->route('dashboard');
@@ -192,10 +199,10 @@ class AuthController extends Controller
         $userId = $user ? $user->id : null;
         $userEmail = $user ? $user->email : null;
 
-        Auth::logout();
+        // Clear custom cookies
+        CookieHelper::logout();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        Auth::logout();
 
         // Audit log for logout - pass user_id explicitly since user is already logged out
         if ($userId) {
@@ -212,7 +219,6 @@ class AuthController extends Controller
 
         // Clear any cached data and prevent back button issues
         return redirect()->route('login.form')
-            ->with('message', 'Logged out successfully')
             ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
             ->header('Pragma', 'no-cache')
             ->header('Expires', '0');

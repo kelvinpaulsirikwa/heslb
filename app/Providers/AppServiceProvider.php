@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Pagination\Paginator;
 use App\Services\LinkService;
+use App\Services\CustomCookieManager;
+use App\Helpers\CookieHelper;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,7 +22,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Register CustomCookieManager as singleton
+        $this->app->singleton(CustomCookieManager::class, function ($app) {
+            return new CustomCookieManager();
+        });
     }
 
     /**
@@ -61,6 +66,28 @@ public function boot(): void
     
     Blade::directive('contactInfo', function ($type) {
         return "<?php echo config('links.contact.' . {$type}); ?>";
+    });
+    
+    // Custom Cookie Management System Blade Directives
+    Blade::directive('csrf', function () {
+        return '<?php echo \App\Helpers\CookieHelper::csrfToken(); ?>';
+    });
+
+    Blade::if('authcookie', function () {
+        return CookieHelper::check();
+    });
+
+    // Share flash messages with all views
+    view()->composer('*', function ($view) {
+        $flash = CookieHelper::getFlash();
+        if ($flash) {
+            $view->with('flash', $flash);
+        }
+    });
+
+    // Share current user with all views
+    view()->composer('*', function ($view) {
+        $view->with('currentUser', CookieHelper::user());
     });
 
 }
