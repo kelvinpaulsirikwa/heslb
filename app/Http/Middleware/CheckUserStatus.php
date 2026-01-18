@@ -26,8 +26,8 @@ class CheckUserStatus
                 // Logout the user
                 Auth::logout();
                 
-                // Clear the session
-                Session::flush();
+                // Don't flush session - it breaks everything
+                // Session::flush();
                 
                 // Determine message based on status
                 $message = $user->status === 'blocked' 
